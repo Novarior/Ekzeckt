@@ -15,6 +15,7 @@ bin/*
 
 # VSCode settings
 .vscode/
+.github/
 metadata/
 
 

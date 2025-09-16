@@ -4,6 +4,10 @@
 #include "../localisation/helperText.hpp"
 #include "State.hpp"
 
+#include "../GUI/components/button.hpp"
+#include "../GUI/components/selector.hpp"
+#include "../GUI/components/slider.hpp"
+
 /// @brief  Class for the settings state
 /// @note   Inherited from the State class
 /// @retval None

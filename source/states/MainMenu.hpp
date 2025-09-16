@@ -1,12 +1,12 @@
 #ifndef MAINMENU
 #define MAINMENU
 
-#include "../GUI/GUISYS.hpp"
-
 #include "EditorState.hpp"
 #include "Process.hpp"
 #include "State.hpp"
 #include "settings.hpp"
+
+#include "../GUI/components/button.hpp"
 
 // The MainMenu class represents the game's main menu
 class MainMenu : public State {

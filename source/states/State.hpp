@@ -1,12 +1,10 @@
 #ifndef STATE
 #define STATE
 
-#include "../GUI/GUISYS.hpp"
+#include "../core/dataCollector/_man_Volume.hpp"
+#include "../core/gfx.hpp"
+#include "../core/keyboard.hpp"
 
-#include "../math/mymath.hpp"
-#include "../source/mypars/parsJSON.hpp"
-#include "gfx.hpp"
-#include <memory>
 // Forward declaration of State class
 class State;
 
@@ -16,37 +14,36 @@ class StateData {
 public:
   // Constructor initializes all pointers to nullptr
   StateData() {
-    this->sd_supportedKeys = nullptr;
-    this->sd_States = nullptr;
-    this->sd_gfxSettings = nullptr;
-
-    this->reserGUI = false;
-    this->sd_volumeManager = nullptr;
+    sd_States = nullptr;
+    sd_reserGUI = false;
   }
 
   float sd_gridSize;                         // Size of the grid
   std::weak_ptr<sf::RenderWindow> sd_Window; // Pointer to the SFML window
-  sf::Font sd_font;                          // Font used in the game
-  sf::Font sd_debugFont;                     // Font used for debugging
-  GraphicsSettings *sd_gfxSettings;          // Pointer to the graphics settings
-  // Vector for link to volume manager
-  std::shared_ptr<VolumeManager> sd_volumeManager;
+  // Font used in the game
+  sf::Font sd_GameFont_basic;
+  sf::Font sd_debugFont; // Font used for debugging
+  // Pointer to the graphics settings
+  std::weak_ptr<GraphicsSettings> sd_gfxSettings;
+  // pointer to volume manager
+  std::weak_ptr<VolumeCollector> sd_VolumeCollector;
+  std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundMap;
+  std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundBufferMap;
+  // KeyMap and KeyBinds
+  std::weak_ptr<std::map<std::string, uint32_t>> sd_KeySupports;
+  std::weak_ptr<std::map<std::string, uint32_t>> sd_KeyBinds;
+  std::weak_ptr<keyboardOSX> sd_keyboard_prt;
+  // pointer to keyboard
+  // Character size for text's
+  unsigned int sd_characterSize_debug;
+  unsigned int sd_characterSize_game_big;
+  unsigned int sd_characterSize_game_medium;
+  unsigned int sd_characterSize_game_small;
+  // Flag to reset GUI
+  bool sd_reserGUI;
 
   // Stack of states
   std::stack<State *> *sd_States;
-  // Map of supported keys
-  std::map<std::string, uint32_t> *sd_supportedKeys;
-  // Character size for debug text
-  unsigned int sd_characterSize_debug;
-  // Character size for big game text
-  unsigned int sd_characterSize_game_big;
-  // Character size for medium game text
-  unsigned int sd_characterSize_game_medium;
-  // Character size for small game text
-  unsigned int sd_characterSize_game_small;
-  std::weak_ptr<keyboardOSX> sd_keyboard; // Pointer to keyboard
-  // Flag to reset GUI
-  bool reserGUI;
 };
 
 // Abstract class for game states
@@ -57,12 +54,8 @@ protected:
   StateData *IstateData;                   // Pointer to shared state data
   std::stack<State *> *Istates;            // Stack of states
   std::weak_ptr<sf::RenderWindow> Iwindow; // Weak pointer to the SFML window
-  // Map of all supported keys
-  std::map<std::string, uint32_t> *IsupportedKeys;
-  // Map of used key in current state
-  std::map<std::string, uint32_t> Ikeybinds;
-  std::shared_ptr<VolumeManager> IvolumeManager; // Volume manager
-  std::weak_ptr<keyboardOSX> Ikeyboard;          // Pointer to keyboard
+  // Map of Binds keys
+  std::map<std::string, uint32_t> IkeyBinds;
 
   // Resources
   bool Iquit;        // Flag to quit the state
@@ -107,9 +100,11 @@ protected:
   inline void setVolume(SoundCategory _category,
                         const float _newVal) // Set volume for all categories
   {
-    this->IvolumeManager->setCategoryVolume(_category, _newVal);
+    IstateData->sd_VolumeCollector.lock()->setCategoryVolume(_category,
+                                                             _newVal);
     for (auto &it : IsoundsMap)
-      it.second.setVolume(IvolumeManager->getCategoryVolume(_category));
+      it.second.setVolume(
+          IstateData->sd_VolumeCollector.lock()->getCategoryVolume(_category));
   }
 
 public:

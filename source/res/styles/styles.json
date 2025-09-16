@@ -9,7 +9,7 @@
                         "idle":     [200, 200, 200, 255],
                         "hover":    [180, 180, 180, 255],
                         "active":   [160, 160, 180, 255],
-                        "disabled": [150, 150, 160, 255]
+                        "disabled": [255, 160, 180, 255]
                     },
                     "background":{
                         "idle":     [100, 100, 100, 255],
@@ -28,30 +28,30 @@
                 "outline_thickness" : -1,
                 "text": {
                     "font": "default",
-                    "font_size": 40
+                    "font_size": 60
                 }
             },
             "apply":{
                   "name" : "apply",
                 "colors": {
                     "text":{
-                        "idle":     [100, 100, 100, 255],
-                        "hover":    [180, 180, 180, 255],
-                        "active":   [60, 60, 80, 255],
-                        "disabled": [150, 150, 160, 255]
+                        "idle":     [0, 200, 110, 255],
+                        "hover":    [51, 71, 1, 255],
+                        "active":   [140, 200, 50, 255],
+                        "disabled": [255, 160, 180, 255]
                     },
                     "background":{
-                        "idle":     [70, 70, 70, 255],
+                        "idle":     [0, 60, 0, 255],
                         "hover":    [150, 150, 150, 255],
-                        "active":   [20, 20, 20, 255],
-                        "disabled": [50, 50, 60, 255]
+                        "active":   [0, 70, 0, 255],
+                        "disabled": [0, 35, 0, 255]
                     },
                     "outline":
                     {
-                        "idle":     [0, 255, 0, 255],
+                        "idle":     [50, 150, 50, 255],
                         "hover":    [0, 240, 0, 255],
                         "active":   [0, 200, 0, 255],
-                        "disabled": [0, 100, 0, 255]
+                        "disabled": [110, 30, 30, 255]
                     }
                 },
                 "outline_thickness" : -1,
@@ -64,23 +64,23 @@
                   "name" : "cancel",
                 "colors": {
                     "text":{
-                        "idle":     [140, 100, 100, 220],
-                        "hover":    [220, 180, 180, 250],
-                        "active":   [100, 60, 70, 200],
-                        "disabled": [150, 120, 120, 255]
+                        "idle":     [140, 100, 100, 255],
+                        "hover":    [255, 120, 0, 255],
+                        "active":   [250, 250, 250, 255],
+                        "disabled": [255, 160, 180, 255]
                     },
                     "background":{
-                        "idle":     [70, 70, 70, 255],
-                        "hover":    [150, 150, 150, 255],
+                        "idle":     [50, 0, 25, 255],
+                        "hover":    [180, 0, 0, 255],
                         "active":   [20, 20, 20, 255],
-                        "disabled": [50, 50, 60, 255]
+                        "disabled": [35, 0, 0, 255]
                     },
                     "outline":
                     {
-                        "idle":     [ 255, 0, 0, 255],
-                        "hover":    [ 240, 0, 0, 255],
-                        "active":   [ 200, 0, 0, 255],
-                        "disabled": [ 100, 0, 0, 255]
+                        "idle":     [ 120, 0, 0, 255],
+                        "hover":    [ 70, 0, 0, 255],
+                        "active":   [ 255, 50, 50, 255],
+                        "disabled": [ 35, 0, 0, 255]
                     }
                 },
                 "outline_thickness" : -1,
@@ -93,15 +93,15 @@
                 "name" : "dropdown",
                 "colors": {
                     "text":{
-                        "idle":     [255, 255, 255, 255],
-                        "hover":    [255, 255, 255, 255],
-                        "active":   [20, 20, 20, 50],
-                        "disabled": [100, 100, 100, 255]
+                        "idle":     [200, 200, 200, 255],
+                        "hover":    [220, 220, 220, 255],
+                        "active":   [255, 255, 255, 255],
+                        "disabled": [50, 50, 50, 255]
                     },
                     "background":{
-                        "idle":     [70, 70, 70, 200],
-                        "hover":    [150, 150, 150, 200],
-                        "active":   [20, 20, 20, 200],
+                        "idle":     [70, 70, 80, 200],
+                        "hover":    [150, 150, 160, 200],
+                        "active":   [100, 100, 110, 200],
                         "disabled": [50, 50, 60, 255]
                     },
                     "outline":
@@ -115,65 +115,65 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 16
+                    "font_size": 50
                 }
             },
             "delete":{
                 "name" : "delete",
                 "colors": {
                     "text":{
-                        "idle":     [255, 255, 255, 255],
-                        "hover":    [255, 255, 255, 255],
-                        "active":   [255, 255, 255, 255],
-                        "disabled": [100, 100, 100, 255]
+                        "idle":     [255, 255, 255, 0],
+                        "hover":    [255, 255, 255, 0],
+                        "active":   [255, 255, 255, 0],
+                        "disabled": [100, 100, 100, 0]
                     },
                     "background":{
-                        "idle":     [80, 40, 40, 255],
-                        "hover":    [150, 50, 50, 200],
-                        "active":   [120, 60, 60, 220],
-                        "disabled": [50, 50, 60, 255]
+                        "idle":     [170, 30, 20, 255],
+                        "hover":    [130, 30, 20, 225],
+                        "active":   [140, 60, 60, 220],
+                        "disabled": [50, 20, 10, 255]
                     },
                     "outline":
                     {
-                        "idle":     [ 50, 30, 30, 255],
-                        "hover":    [ 70, 40, 40, 255],
-                        "active":   [ 90, 50, 50, 255],
-                        "disabled": [ 0, 0, 0, 255]
+                        "idle":     [ 100, 20, 15, 255],
+                        "hover":    [ 100, 20, 15, 255],
+                        "active":   [ 100, 20, 15, 255],
+                        "disabled": [ 100, 20, 15, 255]
                     }
                 },
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 0
+                    "font_size": 50
                 }
             },
             "slot":{
                 "name" : "slot",
                 "colors": {
                     "text":{
-                        "idle":     [255, 255, 255, 255],
-                        "hover":    [255, 255, 255, 255],
-                        "active":   [255, 255, 255, 255],
-                        "disabled": [100, 100, 100, 255]
+                        "idle":     [0, 0, 0, 0],
+                        "hover":    [0, 0, 0, 0],
+                        "active":   [0, 0, 0, 0],
+                        "disabled": [0, 0, 0, 0]
                     },
                     "background":{
-                        "idle":     [20, 20, 25, 255],
-                        "hover":    [30, 30, 35, 255],
-                        "active":   [40, 40, 45, 255],
+                        "idle":     [80, 80, 90, 255],
+                        "hover":    [140, 140, 140, 255],
+                        "active":   [110, 110, 130, 255],
                         "disabled": [50, 50, 60, 255]
                     },
                     "outline":
                     {
-                        "idle":     [ 50, 50, 55, 255],
-                        "hover":    [ 80, 80, 85, 255],
-                        "active":   [ 100, 100, 105, 255],
-                        "disabled": [ 0, 0, 0, 255]
+                        "idle":     [ 40, 50, 60, 255],
+                        "hover":    [ 40, 50, 60, 255],
+                        "active":   [ 40, 50, 60, 255],
+                        "disabled": [ 40, 40, 40, 255]
                     }
                 },
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 16
+                    "font_size": 50
                 }
             },
             "tab":{
@@ -202,7 +202,7 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 16
+                    "font_size": 50
                 }
             },
             "hide_btn":{
@@ -231,7 +231,7 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 16
+                    "font_size": 50
                 }
             },
             "selector":{
@@ -260,17 +260,17 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 30
+                    "font_size": 50
                 }
             },
             "pause":{
                 "name" : "pause",
                 "colors": {
                     "text":{
-                        "idle":     [255, 255, 255, 255],
-                        "hover":    [200, 200, 200, 200],
-                        "active":   [150, 150, 150, 150],
-                        "disabled": [100, 100, 100, 255]
+                        "idle":     [180, 180, 180, 200],
+                        "hover":    [230, 230, 230, 255],
+                        "active":   [150, 150, 150, 200],
+                        "disabled": [120, 50, 50, 255]
                     },
                     "background":{
                         "idle":     [0, 0, 0, 0],
@@ -318,7 +318,7 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 30
+                    "font_size": 50
                 }
             },
             "tool":{
@@ -347,7 +347,7 @@
                 "outline_thickness" : 0,
                 "text": {
                     "font": "default",
-                    "font_size": 16
+                    "font_size":50
                 }
             }
         },

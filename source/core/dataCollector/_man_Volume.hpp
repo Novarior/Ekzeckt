@@ -1,22 +1,24 @@
 #ifndef AUDIO_MANAGER_HPP
 #define AUDIO_MANAGER_HPP
-#include "../header.h"
+
+#include "../tools/LOGGER.hpp"
+#include <map>
 
 enum class SoundCategory {
   vol_MASTER,
-  vol_SFX,     // Звуковые эффекты
-  vol_MUSIC,   // Музыка
-  vol_AMBIENT, // Фоновые звуки
-  vol_ENTITY, // Звуки, связанные с другими сущностями в игре
-  vol_UI, // Звуки пользовательского интерфейса
-  vol_DIALOGUE, // Диалоги или голосовые звуки
-  vol_FOLEY, // Звуки движения персонажей или предметов
+  vol_SFX,         // Звуковые эффекты
+  vol_MUSIC,       // Музыка
+  vol_AMBIENT,     // Фоновые звуки
+  vol_ENTITY,      // Звуки, связанные с другими сущностями в игре
+  vol_UI,          // Звуки пользовательского интерфейса
+  vol_DIALOGUE,    // Диалоги или голосовые звуки
+  vol_FOLEY,       // Звуки движения персонажей или предметов
   vol_WEAPON,      // Звуки оружия
   vol_ENVIRONMENT, // Звуки окружающей среды
   vol_COUNT
 };
 
-class VolumeManager {
+class VolumeCollector {
 private:
   // Громкости
   std::map<SoundCategory, float> categoryVolumes = {
@@ -32,10 +34,10 @@ private:
       {SoundCategory::vol_ENVIRONMENT, 50.f}};
 
 public:
-  VolumeManager() {
+  VolumeCollector() {
     // write log message what im here doing something
-    Logger::logStatic("Start initilization VolumeManager",
-                      "VolumeManager::VolumeManager()");
+    Logger::logStatic("Start initilization VolumeCollector",
+                      "VolumeCollector::VolumeCollector()");
   }
   // set value Volume by category
   void setCategoryVolume(SoundCategory category, float volume) {

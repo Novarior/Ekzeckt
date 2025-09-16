@@ -1,79 +1,82 @@
 #include "Core.h"
-#include "LOGGER.hpp"
+#include "../localisation/helperText.hpp"
+#include "../states/MainMenu.hpp"
 #include "_myConst.h"
 #include "dataCollector/_man_Texture.hpp"
-#include "keyboard.hpp"
+#include "systemFunctionUNIX.hpp"
+#include "tools/LOGGER.hpp"
+#include "tools/PARSJSON.hpp"
+#include "tools/staticFPSMetter.hpp"
 #include <IOKit/hid/IOHIDUsageTables.h>
-#include <iostream>
-#include <memory>
 
-#if __APPLE__
-void Core::initDirectories() { // check if app directory exists
-  if (ApplicationsFunctions::checkAppDirectoryExists())
+// check if app directory exists
+void Core::initDirectories() {
+  if (ApplicationsFunctions::checkAppDirectoryExists()) {
     Logger::logStatic("App directory already exists",
-                      "l:7 -> Core::initDirectories()");
+                      "l:13 -> Core::initDirectories()");
+  }
 }
-#endif
 
 // initialisations root data and build first frame app
-void Core::initVar() {
-  this->mWindow = NULL;
+void Core::initVariabless() {
+  cr_Window = NULL; // null window
+  cr_deltaTime = 0.0f;
+  cr_deltaClock.restart();
 
-  if (!this->gfxSettings.loadFromFile())
-    this->gfxSettings.saveToFile();
+  cr_GameFont_basic.openFromFile(
+      std::string(ApplicationsFunctions::get_resources_dir() +
+                  myConst::fonts::data_gameproces_font_path));
+  cr_debugFont.openFromFile(
+      std::string(ApplicationsFunctions::get_resources_dir() +
+                  myConst::fonts::data_debugfont_path));
+
+  // init keysupports and binds
+
+#if __MDEBUG__ == 1
+  // logger moment
+  Logger::logStatic("Window, dt<->dc inited by def", "Core::initVariabless()");
+#endif
+  // load graphics settings from file
+  // if not loaded, save default settings
+  if (!this->cr_gfxSettings->loadFromFile())
+    this->cr_gfxSettings->saveToFile();
 }
 
 void Core::initStateData() {
-  this->mStatedata.sd_Window = this->mWindow;
-  this->mStatedata.sd_States = &this->mState;
-  if (!this->mStatedata.sd_font.openFromFile(
-          std::string(ApplicationsFunctions::get_resources_dir() +
-                      myConst::fonts::data_gameproces_font_path_3))) {
-    Logger::logStatic(
-        "ERROR::GAMEPROCES::COULD NOT LOAD TO FILE: " +
-            std::string(ApplicationsFunctions::get_resources_dir() +
-                        myConst::fonts::data_gameproces_font_path_3),
-        "Core::initStateData()");
-  }
-  if (!this->mStatedata.sd_debugFont.openFromFile(
-          std::string(ApplicationsFunctions::get_resources_dir() +
-                      myConst::fonts::data_debugfont_path))) {
-    Logger::logStatic(
-        "ERROR::DEBUG::COULD NOT LOAD TO FILE: " +
-            std::string(ApplicationsFunctions::get_resources_dir() +
-                        myConst::fonts::data_debugfont_path),
-        "Core::initStateData()");
-  }
-  this->mStatedata.sd_supportedKeys = &this->supportedKeys;
-  this->mStatedata.sd_gfxSettings = &this->gfxSettings;
-  this->mStatedata.sd_gridSize = this->gfxSettings._struct.gridSize;
-  this->mStatedata.sd_characterSize_debug =
-      mmath::calcCharSize(this->mWindow->getSize(), 150);
-  this->mStatedata.sd_characterSize_game_big =
-      mmath::calcCharSize(this->mWindow->getSize(), 60);
-  this->mStatedata.sd_characterSize_game_medium =
-      mmath::calcCharSize(this->mWindow->getSize(), 85);
-  this->mStatedata.sd_characterSize_game_small =
-      mmath::calcCharSize(this->mWindow->getSize(), 100);
-  this->mStatedata.reserGUI = false;
-
-  this->mStatedata.sd_volumeManager =
-      std::shared_ptr<VolumeManager>(new VolumeManager());
-
-  // share acsess to keyboard
-  this->keyboard = std::make_shared<keyboardOSX>();
-  this->mStatedata.sd_keyboard = this->keyboard;
+  // send window state stack and fonts to state data
+  cr_Statedata.sd_Window = cr_Window;
+  cr_Statedata.sd_States = &cr_State;
+  cr_Statedata.sd_GameFont_basic = cr_GameFont_basic;
+  cr_Statedata.sd_debugFont = cr_debugFont;
+  // keyboard and theyr stuff
+  cr_Statedata.sd_keyboard_prt = cr_Keyboard;
+  cr_Statedata.sd_KeySupports = cr_KeySuppors;
+  cr_Statedata.sd_KeyBinds = cr_KeyBinds;
+  // graphics settings
+  cr_Statedata.sd_gfxSettings = cr_gfxSettings;
+  // character sizes and grid size
+  cr_Statedata.sd_gridSize = cr_gridSize;
+  cr_Statedata.sd_characterSize_debug =
+      mmath::calcCharSize(cr_Window->getSize(), 150);
+  cr_Statedata.sd_characterSize_game_big =
+      mmath::calcCharSize(cr_Window->getSize(), 60);
+  cr_Statedata.sd_characterSize_game_medium =
+      mmath::calcCharSize(cr_Window->getSize(), 85);
+  cr_Statedata.sd_characterSize_game_small =
+      mmath::calcCharSize(cr_Window->getSize(), 100);
+  // boolean for gui (make for extra reset)
+  cr_Statedata.sd_reserGUI = false;
 
 #if __MDEBUG__ == 1
   // logger moment
 
   // check if window is not null
-  if (!this->mStatedata.sd_Window.lock())
+  if (!cr_Statedata.sd_Window.lock())
     Logger::logStatic("ERROR::WINDOW::NOT INITED", "Core::initStateData()",
                       logType::ERROR);
 
   // check if states is not empty or null idk
-  if (!this->mStatedata.sd_States->empty())
+  if (!cr_Statedata.sd_States->empty())
     Logger::logStatic("ERROR::STATES::NOT INITED", "Core::initStateData()",
                       logType::ERROR);
 
@@ -81,71 +84,21 @@ void Core::initStateData() {
 }
 
 void Core::initKeyBinds() { // init default keys
-
-  // load key binds from file
-  // if (!ParserJson::loadKeyBinds(this->supportedKeys)) {
-  //   Logger::logStatic("Key binds not loaded", "Core::initKeyBinds()");
-  // } else { // load default key binds
-  //   Logger::logStatic("Key binds loaded", "Core::initKeyBinds()");
-  supportedKeys["Escape"] = kHIDUsage_KeyboardEscape;
-  supportedKeys["A"] = kHIDUsage_KeyboardA;
-  supportedKeys["C"] = kHIDUsage_KeyboardC;
-  supportedKeys["D"] = kHIDUsage_KeyboardD;
-  supportedKeys["E"] = kHIDUsage_KeyboardE;
-  supportedKeys["F"] = kHIDUsage_KeyboardF;
-  supportedKeys["Q"] = kHIDUsage_KeyboardQ;
-  supportedKeys["R"] = kHIDUsage_KeyboardR;
-  supportedKeys["S"] = kHIDUsage_KeyboardS;
-  supportedKeys["W"] = kHIDUsage_KeyboardW;
-  supportedKeys["X"] = kHIDUsage_KeyboardX;
-  supportedKeys["Z"] = kHIDUsage_KeyboardZ;
-  supportedKeys["1"] = kHIDUsage_Keyboard1;
-  supportedKeys["2"] = kHIDUsage_Keyboard2;
-  supportedKeys["3"] = kHIDUsage_Keyboard3;
-  supportedKeys["4"] = kHIDUsage_Keyboard4;
-  supportedKeys["5"] = kHIDUsage_Keyboard5;
-  supportedKeys["6"] = kHIDUsage_Keyboard6;
-  supportedKeys["7"] = kHIDUsage_Keyboard7;
-  supportedKeys["8"] = kHIDUsage_Keyboard8;
-  supportedKeys["9"] = kHIDUsage_Keyboard9;
-  supportedKeys["0"] = kHIDUsage_Keyboard0;
-  supportedKeys["Space"] = kHIDUsage_KeyboardSpacebar;
-  supportedKeys["Enter"] = kHIDUsage_KeyboardReturnOrEnter;
-  supportedKeys["BackSpace"] = kHIDUsage_KeyboardDeleteOrBackspace;
-  supportedKeys["Slash"] = kHIDUsage_KeyboardSlash;
-  supportedKeys["Tab"] = kHIDUsage_KeyboardTab;
-  supportedKeys["F1"] = kHIDUsage_KeyboardF1;
-  supportedKeys["F2"] = kHIDUsage_KeyboardF2;
-  supportedKeys["F3"] = kHIDUsage_KeyboardF3;
-
-#if __MDEBUG__ == 1
-  // logger moment with key binds
-  Logger::logStatic("Key binds inited by deafault", "Core::initKeyBinds()");
-
-#endif
-  // save default keys to file
-  //  ParserJson::saveKeyBinds(this->supportedKeys);
-
-#if __MDEBUG__ == 1
-  // logger moment with key binds
-  Logger::logStatic("Key binds inited", "Core::initKeyBinds()");
-
-  // log all keys
-  for (auto &i : supportedKeys)
-    Logger::logStatic("Key: " + i.first + " Value: " +
-                          std::to_string(static_cast<int>(i.second)),
-                      "Core::initKeyBinds()");
-
-#endif
+  cr_KeySuppors = std::make_shared<std::map<std::string, uint32_t>>();
+  ParserJson::loadKeyBinds(*cr_KeySuppors);
+  cr_Keyboard = std::make_shared<keyboardOSX>();
+  cr_KeyBinds = std::make_shared<std::map<std::string, uint32_t>>();
+  // VolumeCollector, sound and other
+  cr_VolumeCollector = std::make_shared<VolumeCollector>();
 }
 
 void Core::initState() {
-  this->mState.push(new MainMenu(&this->mStatedata));
+  this->cr_State.push(new MainMenu(&cr_Statedata));
 
 #if __MDEBUG__ == 1
   // logger moment with states
   Logger::logStatic("State inited", "Core::initState()");
-  Logger::logStatic("State size: " + std::to_string(this->mState.size()),
+  Logger::logStatic("State size: " + std::to_string(cr_State.size()),
                     "Core::initState()");
 #endif
 }
@@ -155,22 +108,23 @@ void Core::initLocations() {
 }
 
 void Core::initWindow() {
-  mWindow = std::make_shared<sf::RenderWindow>(
-      sf::RenderWindow(gfxSettings._struct.resolution,
-                       gfxSettings._struct.title, sf::State::Windowed));
+  cr_Window = std::make_shared<sf::RenderWindow>(
+      sf::RenderWindow(cr_gfxSettings->_struct.resolution,
+                       cr_gfxSettings->_struct.title, sf::State::Windowed));
 
-  if (gfxSettings._struct.fullscreen && mWindow->isOpen()) {
+  if (cr_gfxSettings->_struct.fullscreen && cr_Window->isOpen()) {
 
-    gfxSettings._struct._winResolutions = mWindow->getSize();
-    mWindow->create(sf::VideoMode({gfxSettings._struct._winResolutions.x,
-                                   gfxSettings._struct._winResolutions.y}),
-                    gfxSettings._struct.title, sf::State::Fullscreen,
-                    gfxSettings._struct.contextSettings);
+    cr_gfxSettings->_struct._winResolutions = cr_Window->getSize();
+    cr_Window->create(
+        sf::VideoMode({cr_gfxSettings->_struct._winResolutions.x,
+                       cr_gfxSettings->_struct._winResolutions.y}),
+        cr_gfxSettings->_struct.title, sf::State::Fullscreen,
+        cr_gfxSettings->_struct.contextSettings);
   }
 
-  mWindow->setFramerateLimit(gfxSettings._struct.frameRateLimit);
-  mWindow->setVerticalSyncEnabled(gfxSettings._struct.verticalSync);
-  mWindow->setKeyRepeatEnabled(false);
+  cr_Window->setFramerateLimit(cr_gfxSettings->_struct.frameRateLimit);
+  cr_Window->setVerticalSyncEnabled(cr_gfxSettings->_struct.verticalSync);
+  cr_Window->setKeyRepeatEnabled(false);
 }
 void Core::initTextures() {
   // null текстура
@@ -238,7 +192,8 @@ void Core::initTextures() {
       TextureID::ITEMS_HEALTH_POTION,
       ItemTextures::poison::item_img_poison_small_regeneration); // Временно
                                                                  // используем
-                                                                 // текстуру яда
+                                                                 // текстуру
+                                                                 // яда
 
   // текстуры для монет
   TextureManager::loadTexture(TextureID::COINS_GOLD_NUGGET,
@@ -249,18 +204,18 @@ void Core::initTextures() {
                               ItemTextures::coins::item_img_silver_nuggen);
   TextureManager::loadTexture(
       TextureID::ITEMS_GOLD_COIN,
-      ItemTextures::coins::item_img_gold_nugget); // Используем текстуру золотой
-                                                  // монеты
+      ItemTextures::coins::item_img_gold_nugget); // Используем текстуру
+                                                  // золотой монеты
 }
 
 Core::Core() {
   this->initDirectories();
-  this->initKeyBinds();
-  this->initVar();
-  this->initWindow();
-  this->initStateData();
+  this->initVariabless();
   this->initLocations();
+  this->initWindow();
   this->initTextures();
+  this->initKeyBinds();
+  this->initStateData();
   this->initState();
 
   FPS::reset();
@@ -271,26 +226,26 @@ Core::Core() {
 }
 
 Core::~Core() {
-  this->gfxSettings.saveToFile();
+  this->cr_gfxSettings->saveToFile();
 
-  while (!this->mState.empty()) {
-    delete this->mState.top();
-    this->mState.pop();
+  while (!cr_State.empty()) {
+    delete cr_State.top();
+    cr_State.pop();
   }
-  mWindow.get()->close();
-  mWindow.reset();
+  cr_Window.get()->close();
+  cr_Window.reset();
 
 #if __MDEBUG__ == 1
   // logger moment
   Logger::logStatic("Core Delete...", "Core::~Core()");
 
-  if (this->mState.empty())
+  if (cr_State.empty())
     Logger::logStatic("State is empty", "Core::~Core()");
   else
     Logger::logStatic("State is not empty... mem leaked", "Core::~Core()",
                       logType::ERROR);
 
-  if (this->mWindow == NULL)
+  if (cr_Window == NULL)
     Logger::logStatic("Window is null", "Core::~Core()");
   else
     Logger::logStatic("Window is null... mem leaked", "Core::~Core()",
@@ -303,7 +258,7 @@ Core::~Core() {
 void Core::run() {
   Logger::logStatic("Start main loop", "Core::run()");
 
-  while (this->mWindow->isOpen()) {
+  while (cr_Window->isOpen()) {
     this->updateDeltaTime();
     this->update();
     this->updateSound();
@@ -315,46 +270,46 @@ void Core::update() {
   // state update
   this->updateEventsWindow();
 
-  if (!this->mState.empty()) {
-    if (this->mWindow->hasFocus()) {
+  if (!cr_State.empty()) {
+    if (cr_Window->hasFocus()) {
 
-      keyboard.get()->update();
-      this->mState.top()->update(this->deltaTime);
+      cr_Keyboard.get()->update();
+      cr_State.top()->update(cr_deltaTime);
 
-      if (this->mState.top()->getQuit()) {
-        delete this->mState.top();
-        this->mState.pop();
+      if (cr_State.top()->getQuit()) {
+        delete cr_State.top();
+        cr_State.pop();
       }
     }
   }
   // Application end
   else {
-    this->mWindow->close();
+    cr_Window->close();
   }
 }
 
 void Core::updateEventsWindow() {
-  while (const std::optional event = mWindow.get()->pollEvent())
+  while (const std::optional event = cr_Window.get()->pollEvent())
     if (event->is<sf::Event::Closed>())
-      this->mWindow->close();
+      cr_Window->close();
 }
 
 void Core::render() {
-  this->mWindow->clear();
+  cr_Window->clear();
 
-  if (!this->mState.empty())
-    this->mState.top()->render(*this->mWindow.get());
+  if (!cr_State.empty())
+    cr_State.top()->render(*cr_Window.get());
 
-  this->mWindow->display();
+  cr_Window->display();
 }
 
 void Core::updateSound() {
-  if (!this->mState.empty())
-    this->mState.top()->updateSounds(deltaTime);
+  if (!cr_State.empty())
+    cr_State.top()->updateSounds(cr_deltaTime);
 }
 
 void Core::updateDeltaTime() {
-  this->deltaTime = 0;
-  this->deltaTime = this->deltaClock.restart().asSeconds();
+  cr_deltaTime = 0;
+  cr_deltaTime = cr_deltaClock.restart().asSeconds();
   FPS::update();
 }

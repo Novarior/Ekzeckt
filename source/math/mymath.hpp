@@ -36,10 +36,6 @@ const float p2pX(const float perc, const sf::VideoMode &vm);
 const float p2pX(const float perc, const unsigned int &i);
 const float p2pX(const float perc, const float &i);
 
-const float p2pY(const float perc, const sf::VideoMode &vm);
-const float p2pY(const float perc, const unsigned int &i);
-const float p2pY(const float perc, const float &i);
-
 const float normalize(float value);
 
 // fade function

@@ -1,6 +1,9 @@
 #ifndef GFX
 #define GFX
-#include "../core/header.h"
+#include "_myConst.h"
+#include "header.h"
+#include "systemFunctionUNIX.hpp"
+#include "tools/LOGGER.hpp"
 
 struct myGFXStruct {
   // Variables
@@ -12,7 +15,6 @@ struct myGFXStruct {
   unsigned frameRateLimit;
   sf::ContextSettings contextSettings;
   std::vector<sf::VideoMode> videoModes;
-  float gridSize;
 };
 
 class GraphicsSettings {
@@ -27,7 +29,6 @@ public:
     _struct.fullscreen = true;
     _struct.frameRateLimit = 120;
     _struct.contextSettings.antiAliasingLevel = 0;
-    _struct.gridSize = 16.f;
   }
 
   void setgfxsettings(const myGFXStruct gfx) { _struct = gfx; }
@@ -59,7 +60,6 @@ public:
       j["window"]["verticalSync"] = _struct.verticalSync;
       j["window"]["antialiasingLevel"] =
           _struct.contextSettings.antiAliasingLevel;
-      j["window"]["gridSize"] = _struct.gridSize;
     } catch (json::type_error &e) {
       Logger::logStatic("GFX::JSON::TYPE_ERROR: " + std::string(e.what()),
                         "GFX::saveToFile()", logType::ERROR);
@@ -85,20 +85,21 @@ public:
 
   // load from file
   const bool loadFromFile() {
-    // Создаем путь к файлу
+    // construct path to config file
     std::filesystem::path filePath =
         ApplicationsFunctions::getAppConfigFolder() + AppFiles::config_window;
 
-    // Открываем файл для чтения
+    // open us file wz ifstream
     std::ifstream ifs(filePath);
 
-    // Проверяем, открылся ли файл
+    // check if file is open
     if (!ifs.is_open()) {
       Logger::logStatic("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()",
                         logType::ERROR);
       return false;
     }
 
+    // json - some nolhman stuff
     json j;
     try {
       ifs >> j;
@@ -109,7 +110,7 @@ public:
     }
     ifs.close();
 
-    // Заполняем данные из JSON
+    // insert data from json to struct
     try {
       _struct.resolution.size.x = j["window"]["resolution"]["width"];
       _struct.resolution.size.y = j["window"]["resolution"]["height"];
@@ -118,12 +119,13 @@ public:
       _struct.verticalSync = j["window"]["verticalSync"];
       _struct.contextSettings.antiAliasingLevel =
           j["window"]["antialiasingLevel"];
-      _struct.gridSize = j["window"]["gridSize"];
-    } catch (json::type_error &e) {
+    } catch (json::type_error &e) { // catch json type errors
       Logger::logStatic("GFX::JSON::TYPE_ERROR: " + std::string(e.what()),
                         "l:113 -> GFX::loadFromFile()", logType::ERROR);
+      // some arror in loading data from json
       return false;
     }
+    // load success
     return true;
   };
 };

@@ -2,10 +2,10 @@
 #define INVENTORYGUI
 
 #include "../../Content/ItemsStuff/Inventory.hpp"
-#include "button.hpp"
-#include "checkbox.hpp"
-#include "progressBar.hpp"
-#include "textbox.hpp"
+#include "../components/button.hpp"
+#include "../components/checkbox.hpp"
+#include "../components/progressBar.hpp"
+#include "../tools/textbox.hpp"
 #include <vector>
 
 namespace GUI {

@@ -1,4 +1,6 @@
 #include "State.hpp"
+#include "../math/mymath.hpp"
+#include "../source/mypars/parsJSON.hpp"
 
 /**
  * @brief Construct a new State:: State object
@@ -6,8 +8,8 @@
  * @param state_data
  */
 State::State(StateData *state_data)
-    : IstateData(state_data),
-      Itext(IstateData->sd_debugFont, "", state_data->sd_characterSize_debug) {
+    : IstateData(state_data), Itext(IstateData->sd_debugFont, "",
+                                    IstateData->sd_characterSize_game_medium) {
   // write log message what im here doing something
   Logger::logStatic("Start initilization state", "State::State()");
 
@@ -15,17 +17,12 @@ State::State(StateData *state_data)
 
   Iwindow = state_data->sd_Window;
   Istates = state_data->sd_States;
-  Ikeyboard = state_data->sd_keyboard;
   Iquit = false;
   Ipaused = false;
   Ikeytime = 0.f;
   IkeytimeMax = 0.3f;
   IgridSize = state_data->sd_gridSize;
-  IsupportedKeys = state_data->sd_supportedKeys;
-
   // get access to volume manager from global state data like a shared pointer
-  // and init it
-  IvolumeManager = std::make_shared<VolumeManager>();
 
   IstringStream.str("");
   Idebud = __MDEBUG__;

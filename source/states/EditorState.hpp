@@ -1,11 +1,16 @@
 #ifndef CPP_STATE_NOICEVIEW_HPP
 #define CPP_STATE_NOICEVIEW_HPP
 
-#include "../Content/Map/TileMap.hpp"
-#include "../GUI/GUISYS.hpp"
 #include "../math/LSystem.hpp"
+
 #include "State.hpp"
+
 #include "editModes/NoiceViewer.hpp"
+
+#include "../Content/Map/TileMap.hpp"
+#include "../GUI/components/button.hpp"
+#include "../GUI/components/selector.hpp"
+#include "../GUI/components/staticSelector.hpp"
 
 // The EditorState class represents the state of the game editor
 class EditorState : public State {
@@ -22,8 +27,8 @@ private:
   bool showTabmenu; // Flag to show or hide the tab menu
   std::map<std::string, gui::Button *> buttons; // Map of buttons
   sf::RectangleShape tabShape;                  // Shape of the tab
-  std::map<std::string, gui::StaticSelector *>
-      staticSelector;      // Map of static selectors
+  // Map of static selectors
+  std::map<std::string, gui::StaticSelector *> staticSelector;
   gui::Selector *selector; // Current selector
 
   int current_View_Generator = 1; // Current view generator

@@ -7,12 +7,12 @@ namespace gui {
 namespace styles {
 // styles
 namespace buttons {
-const char btn_default[] = "default";
-const char btn_apply[] = "apply";
-const char btn_cancel[] = "cancel";
-const char btn_dropdown[] = "dropdown";
-const char btn_delete[] = " delete ";
-const char btn_slot[] = "slot";
+const char btn_default[] = "default";   // default style
+const char btn_apply[] = "apply";       // green outline & background
+const char btn_cancel[] = "cancel";     // red outline & background
+const char btn_dropdown[] = "dropdown"; // light-gray outline, gray back
+const char btn_delete[] = " delete ";   // red colors, wOut text
+const char btn_slot[] = "slot"; // dark-gray back, wout text, and gray back
 const char btn_tab[] = "tab";
 const char btn_hide[] = "hide_btn";
 const char btn_selector[] = "selector";

@@ -215,7 +215,7 @@ ParserJson::saveNoiceData(mmath::noiceData _dataNoice) { // save noicedata
   return true;
 }
 const bool ParserJson::saveKeyBinds(
-    std::map<std::string, int> &keyBinds) { // save keybinds
+    std::map<std::string, uint32_t> &keyBinds) { // save keybinds
   // Create a JSON object
   json j;
   for (const auto &i : keyBinds) {
@@ -242,7 +242,7 @@ const bool ParserJson::saveKeyBinds(
 }
 
 const bool ParserJson::saveSoundVolumes(
-    VolumeManager *data) { // save sound volumes from VolumeManager class
+    VolumeCollector *data) { // save sound volumes from VolumeManager class
   // Write the JSON object to the file
   try {
     json j;

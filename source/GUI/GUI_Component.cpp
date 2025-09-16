@@ -150,7 +150,7 @@ void gui::GuiComponent::update(const sf::Vector2i &mousePosWindow) {
 void gui::GuiComponent::updateAfterLoadStyle() {
   mDraw.text.setFont(mData.font);
   mDraw.text.setFillColor(mColors.textIdleColor);
-  mDraw.text.setCharacterSize(mData.characterSize);
+  mDraw.text.setCharacterSize(mmath::p2pX(mData.characterSize, mData.size.y));
   mDraw.text.setPosition(
       {mData.position.x + (mData.size.x / 2.f) -
            mDraw.text.getGlobalBounds().size.x / 2.f,

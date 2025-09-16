@@ -1,8 +1,8 @@
 #ifndef LOGGER
 #define LOGGER
 
-#include "_myFiles.h"
-#include "systemFunctionUNIX.hpp"
+#include "../_myFiles.h"
+#include "../systemFunctionUNIX.hpp"
 #include <fstream>
 
 // Типы логов
@@ -73,26 +73,31 @@ public:
     }
   }
 
-  // Метод для записи лога
+  // method for logging messages
   void log(const std::string &message, const std::string &source,
            logType level = logType::INFO) {
     if (!mOutFile.is_open()) {
       openmOutFile();
     }
-
+    // format log entry
     std::string logEntry = "[" + ApplicationsFunctions::getCurrentTime() +
                            "] " + logTypeToString(level) + "\t_src: " + source +
                            " _msg: " + message;
 
     mOutFile << logEntry << std::endl;
 
-    // Также выводим в консоль, если уровень лога - WARNING или ERROR
+    // also output to console for WARNING and ERROR
     if (level == logType::WARNING || level == logType::ERROR) {
       std::cerr << logEntry << std::endl;
     }
+#if __MDEBUG__ == 1
+    // throw into console in debug mode
+    std::cout << logEntry << std::endl;
+#endif /* LOGGER */
   }
 
-  // Статический метод для записи лога без экземпляра
+  // static method for easy logging without creating an instance
+  // also send your logs to console in debug mode)) :D
   static void logStatic(const std::string &message, const std::string &source,
                         logType _infotype = logType::INFO) {
     try {

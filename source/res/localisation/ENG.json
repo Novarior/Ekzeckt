@@ -11,11 +11,13 @@
         "LOCAL_NEW_GAME" : "New Game",
         "LOCAL_CONTINUE" : "Continue",
         "LOCAL_NOICE_EDITOR": "Noice Editor",
-        "LOCAL_DRS":"Debug ROOM"
+        "LOCAL_DRS":"Debug ROOM",
+        "LOCAL_PM_PAUSE": "Pause",
+        "LOCAL_PM_GENERATE": "Generate"
     },
 
     "AUDIO_OPTIONS": {
-        "LOCAL_MASTER": "Total Volume",
+        "LOCAL_MASTER": "Gener Volume",
         "LOCAL_SFX": "Effects Volume",
         "LOCAL_MUSIC": "Music Volume",
         "LOCAL_AMBIENT": "Ambient Volume",
@@ -28,7 +30,7 @@
     },
     
     "SETTING_OPTIONS": {
-         "LOCAL_RESOLUTION": "Resolution",
+        "LOCAL_RESOLUTION": "Resolution",
         "LOCAL_FULLSCREEN": "Fullscreen",
         "LOCAL_VSYNC": "VSync",
         "LOCAL_LANGUAGE": "English",

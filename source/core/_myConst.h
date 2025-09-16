@@ -1,7 +1,10 @@
 #ifndef myConst_h
 #define myConst_h
 
-#define __MDEBUG__ 1
+#define ENABLE 1
+#define DISABLE 0
+
+#define __MDEBUG__ ENABLE
 
 namespace myConst {
 // path constants

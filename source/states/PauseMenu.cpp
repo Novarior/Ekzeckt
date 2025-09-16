@@ -12,7 +12,7 @@ PauseMenu::PauseMenu(sf::VideoMode vm, sf::Font &font)
   // Init container
   this->container.setSize(
       sf::Vector2f(static_cast<float>(vm.size.x) / 2.5f,
-                   static_cast<float>(vm.size.y) - mmath::p2pY(9.3f, vm)));
+                   static_cast<float>(vm.size.y) - mmath::p2pX(9.3f, vm)));
 
   this->container.setFillColor(sf::Color(30, 30, 30, 180));
   this->container.setPosition(
@@ -24,7 +24,7 @@ PauseMenu::PauseMenu(sf::VideoMode vm, sf::Font &font)
   this->menuText.setPosition(
       {this->container.getPosition().x + this->container.getSize().x / 2.f -
            this->menuText.getGlobalBounds().size.x / 2.f,
-       this->container.getPosition().y + mmath::p2pY(4.f, vm)});
+       this->container.getPosition().y + mmath::p2pX(4.f, vm)});
 }
 
 PauseMenu::~PauseMenu() {
@@ -54,6 +54,11 @@ void PauseMenu::addButton(std::string key, float y, float width, float height,
   this->buttons[key] =
       new gui::Button(sf::Vector2f(x, y), sf::Vector2f(width, height), text,
                       gui::styles::buttons::btn_pause, gui::type::BUTTON);
+
+#ifdef __MDEBUG__ == 1
+  Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
+
+#endif
 }
 
 void PauseMenu::update(const sf::Vector2i &mousePosWindow) {

@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <random>
 #include <sstream>
 #include <stack>
@@ -23,6 +24,7 @@
 #include <unordered_map>
 #include <vector>
 
+
 #include <IOKit/hid/IOHIDLib.h>
 
 // include nlohmann/json libary
@@ -35,15 +37,4 @@ using namespace nlohmann;
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-
-#include "LOGGER.hpp"
-// include in program files
-#include "../math/mymath.hpp"
-#include "MemoryUsageMonitor.hpp"
-#include "_cmakever.h"
-#include "dataCollector/_man_Texture.hpp"
-#include "keyboard.hpp"
-#include "staticFPSMetter.hpp"
-
-
 #endif /* HEADER */

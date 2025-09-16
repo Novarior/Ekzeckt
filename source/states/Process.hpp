@@ -4,11 +4,17 @@
 #include "../Content/ItemsStuff/ItemEntity/entity_item.hpp"
 #include "../Content/ItemsStuff/Items/all_items.hpp"
 #include "../Content/Map/TileMap.hpp"
-#include "../GUI/GUISYS.hpp"
-#include "../GUI/components/inventoryGUI.hpp"
+
+#include "../GUI/UI/inventoryGUI.hpp"
+#include "../GUI/UI/minimap.hpp"
+#include "../GUI/components/progressBar.hpp"
+
 #include "../entitys/Enemys/slime.hpp"
 #include "../entitys/player.hpp"
+
+#include "../localisation/helperText.hpp"
 #include "../math/ProcessGenerationNoice.hpp"
+
 #include "PauseMenu.hpp"
 #include "State.hpp"
 

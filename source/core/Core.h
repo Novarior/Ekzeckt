@@ -1,41 +1,53 @@
 #ifndef CORE
 #define CORE
 
-#include "../localisation/helperText.hpp"
-#include "../states/MainMenu.hpp"
-#include "../states/gfx.hpp"
-#include "_cmakever.h"
-#include "_myConst.h"
-#include "dataCollector/_man_Texture.hpp"
+#include "../states/State.hpp"
 #include "dataCollector/_man_Volume.hpp"
-#include "keyboard.hpp"
-#include "systemFunctionUNIX.hpp"
-#include <IOKit/hid/IOHIDManager.h>
-#include <cstdint>
-#include <memory>
-#include <sys/_types/_u_int32_t.h>
+#include "gfx.hpp"
 
 class Core {
 private:
-  float deltaTime;
-  sf::Clock deltaClock;
+  // window <3
+  std::shared_ptr<sf::RenderWindow> cr_Window;
+  // Clock and timeб
+  float cr_deltaTime;
+  sf::Clock cr_deltaClock;
+  // Data (keyboard, Graph)
+  std::shared_ptr<keyboardOSX> cr_Keyboard;
+  std::shared_ptr<std::map<std::string, uint32_t>> cr_KeySuppors;
+  std::shared_ptr<std::map<std::string, uint32_t>> cr_KeyBinds;
+  // VolCollector, sound buffer and sound map
+  std::shared_ptr<VolumeCollector> cr_VolumeCollector;
+  std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundMap;
+  std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundBufferMap;
+  // fonts
+  sf::Font cr_GameFont_basic; // Font used in the game
+  sf::Font cr_debugFont;      // Font used for debugging
+  // graphics settings
+  std::shared_ptr<GraphicsSettings> cr_gfxSettings;
+  // just const float (no, actually very important item)))
+  const float cr_gridSize = 16.f;
+  // states styff
+  StateData cr_Statedata;
+  std::stack<State *> cr_State;
 
-  std::shared_ptr<sf::RenderWindow> mWindow;
-  StateData mStatedata;
-  std::stack<State *> mState;
-  GraphicsSettings gfxSettings;
-  std::map<std::string, uint32_t> supportedKeys;
-  // IOS keyboard
-  std::shared_ptr<keyboardOSX> keyboard;
   // initilization functions
+  // 1. init all directories
   void initDirectories();
-  void initKeyBinds();
-  void initVar();
-  void initStateData();
-  void initState();
-  void initWindow();
+  // 2. init all root variables
+  void initVariabless();
+  // 3. init localisations
   void initLocations();
+  // 4. init window
+  void initWindow();
+  // 5. init textures
   void initTextures();
+  // 6. init key data
+  void initKeyBinds();
+  // 7. init state data
+  void initStateData();
+  // 8. init first state
+  void initState();
 
 public:
   Core();

@@ -1,5 +1,5 @@
-#ifndef F01D25E1_1913_4228_8335_54CCC0564D08
-#define F01D25E1_1913_4228_8335_54CCC0564D08
+#ifndef HELPERTEXT
+#define HELPERTEXT
 
 // здесь все тектовые наименование (названия) для всех элементов
 // также служат для подсказок действий для какихто кнопок
@@ -46,6 +46,8 @@ struct Button {
   static std::string BUTTON_NEW_GAME;
   static std::string BUTTON_CONTINUE;
   static std::string BUTTON_NOICE_EDITOR;
+  static std::string BUTTON_PM_GENERATE;
+  static std::string BUTTON_PM_PAUSE;
   static std::string BUTTON_DEBUG_ROOM_STATE;
 
   static void initializeLocalization(Language language) {
@@ -53,6 +55,10 @@ struct Button {
     if (localization.initializeLocalization(language)) {
       BUTTON_PLAY = localization.getLocalizedString("BUTTONS", "LOCAL_PLAY",
                                                     "@Play Text");
+      BUTTON_PM_PAUSE = localization.getLocalizedString(
+          "BUTTONS", "LOCAL_PM_PAUSE", "@Pause");
+      BUTTON_PM_GENERATE = localization.getLocalizedString(
+          "BUTTONS", "LOCAL_PM_GENERATE", "@Generate");
       BUTTON_OPTIONS = localization.getLocalizedString(
           "BUTTONS", "LOCAL_OPTIONS", "@Options Text");
       BUTTON_EXIT = localization.getLocalizedString("BUTTONS", "LOCAL_EXIT",
@@ -124,6 +130,8 @@ struct VolumeTexts {
 
 // Структура с текстами для настроек
 struct SettingsTexts {
+  static std::string TEXT_ON;
+  static std::string TEXT_OFF;
   static std::string TEXT_RESOLUTION;
   static std::string TEXT_FULLSCREEN;
   static std::string TEXT_VSYNC;
@@ -145,6 +153,14 @@ struct SettingsTexts {
     if (localization.initializeLocalization(language)) {
       TEXT_RESOLUTION = localization.getLocalizedString(
           "SETTING_OPTIONS", "LOCAL_RESOLUTION", "@Resolution Text");
+      TEXT_RESOLUTION = localization.getLocalizedString(
+          "SETTING_OPTIONS", "LOCAL_VAR_OFF", "@OFF");
+      TEXT_RESOLUTION = localization.getLocalizedString("SETTING_OPTIONS",
+                                                        "LOCAL_VAR_ON", "@ON");
+      TEXT_RESOLUTION = localization.getLocalizedString(
+          "SETTING_OPTIONS", "TEXT_VSYNC_DISABLE", "@vSync");
+      TEXT_RESOLUTION = localization.getLocalizedString(
+          "SETTING_OPTIONS", "TEXT_VSYNC_ENABLE", "@Resolution Text");
       TEXT_FULLSCREEN = localization.getLocalizedString(
           "SETTING_OPTIONS", "LOCAL_FULLSCREEN", "@Fullscreen Text");
       TEXT_VSYNC = localization.getLocalizedString(
@@ -190,4 +206,4 @@ public:
 
 }; // namespace helperText
 
-#endif /* F01D25E1_1913_4228_8335_54CCC0564D08 */
+#endif /* HELPERTEXT */

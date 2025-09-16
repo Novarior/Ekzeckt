@@ -1,5 +1,5 @@
 #include "Inventory.hpp"
-#include "../../GUI/components/inventoryGUI.hpp"
+#include "../../GUI/UI/inventoryGUI.hpp"
 #include "Items/ItemRegister.hpp"
 #include "itemtextures.hpp"
 #include <memory>
