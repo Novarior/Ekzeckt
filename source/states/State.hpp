@@ -2,7 +2,7 @@
 #define STATE
 
 #include "../core/dataCollector/_man_Volume.hpp"
-#include "../core/gfx.hpp"
+#include "../core/dataCollector/_man_graphics.hpp"
 #include "../core/keyboard.hpp"
 
 // Forward declaration of State class
@@ -24,9 +24,9 @@ public:
   sf::Font sd_GameFont_basic;
   sf::Font sd_debugFont; // Font used for debugging
   // Pointer to the graphics settings
-  std::weak_ptr<GraphicsSettings> sd_gfxSettings;
+  std::weak_ptr<gfx::myGFXStruct> sd_gfxSettings;
   // pointer to volume manager
-  std::weak_ptr<VolumeCollector> sd_VolumeCollector;
+  std::weak_ptr<gfx::VolumeCollector> sd_VolumeCollector;
   std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundMap;
   std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundBufferMap;
   // KeyMap and KeyBinds
@@ -55,7 +55,9 @@ protected:
   std::stack<State *> *Istates;            // Stack of states
   std::weak_ptr<sf::RenderWindow> Iwindow; // Weak pointer to the SFML window
   // Map of Binds keys
-  std::map<std::string, uint32_t> IkeyBinds;
+  std::weak_ptr<std::map<std::string, uint32_t>> IKeySupports;
+  std::weak_ptr<std::map<std::string, uint32_t>> IKeyBinds;
+  std::weak_ptr<keyboardOSX> IKeyboard; // Pointer to keyboard
 
   // Resources
   bool Iquit;        // Flag to quit the state
@@ -78,7 +80,7 @@ protected:
   std::map<std::string, sf::Sound> IsoundsMap;
 
   // Map of sound buffers, one key one sound
-  std::unordered_map<SoundCategory, std::map<std::string, sf::SoundBuffer>>
+  std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>>
       IsoundBufferMap;
 
   void initBuffer(); // Initialize buffer
@@ -90,14 +92,14 @@ protected:
 
   // Functions for sounds key
   // for calling sf::Sound from map using category layer
-  virtual bool loadSoundtoBuffer(SoundCategory _soundcategory,
+  virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory,
                                  std::string _namepath, std::string _typename);
 
-  void playSound(SoundCategory _soundcategory,
+  void playSound(gfx::SoundCategory _soundcategory,
                  std::string _typename); // Play sound from category[_typename]
 
   // functions accses
-  inline void setVolume(SoundCategory _category,
+  inline void setVolume(gfx::SoundCategory _category,
                         const float _newVal) // Set volume for all categories
   {
     IstateData->sd_VolumeCollector.lock()->setCategoryVolume(_category,

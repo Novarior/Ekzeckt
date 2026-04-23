@@ -1,6 +1,6 @@
 #include "State.hpp"
 #include "../math/mymath.hpp"
-#include "../source/mypars/parsJSON.hpp"
+// #include "../source/mypars/parsJSON.hpp"
 
 /**
  * @brief Construct a new State:: State object
@@ -17,6 +17,8 @@ State::State(StateData *state_data)
 
   Iwindow = state_data->sd_Window;
   Istates = state_data->sd_States;
+  IKeyBinds = state_data->sd_KeyBinds;
+  IKeySupports = state_data->sd_KeySupports;
   Iquit = false;
   Ipaused = false;
   Ikeytime = 0.f;
@@ -49,12 +51,12 @@ const bool State::getKeytime() {
 void State::initBuffer() {
   this->IsoundsMap = std::map<std::string, sf::Sound>();
   this->IsoundBufferMap =
-      std::unordered_map<SoundCategory,
+      std::unordered_map<gfx::SoundCategory,
                          std::map<std::string, sf::SoundBuffer>>();
 }
 
 // load sound to buffer
-bool State::loadSoundtoBuffer(SoundCategory _soundcategory,
+bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory,
                               std::string _namepath, std::string _typename) {
   sf::SoundBuffer buffer;
   if (!buffer.loadFromFile(

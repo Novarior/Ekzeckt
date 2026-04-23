@@ -1,4 +1,6 @@
 #include "GUI_Component.hpp"
+#include "../core/systemFunctionUNIX.hpp"
+#include "../math/mymath.hpp"
 #include <filesystem>
 
 gui::GuiComponent::GuiComponent()

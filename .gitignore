@@ -1,7 +1,8 @@
 # macOS system files
 **/.DS_Store
 bin/.DS_Store
-
+**/DDFMM
+DDFMM/*
 # Build and CMake directories
 build/
 CMakeFiles/

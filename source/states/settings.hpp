@@ -1,7 +1,6 @@
 #ifndef SETTINGS
 #define SETTINGS
 
-#include "../localisation/helperText.hpp"
 #include "State.hpp"
 
 #include "../GUI/components/button.hpp"
@@ -40,7 +39,7 @@ private:
       _keybindBackground; // List of keybind backgrounds
 
   // Resources for AudioSettings
-  std::map<SoundCategory, std::unique_ptr<gui::SliderInt>>
+  std::map<gfx::SoundCategory, std::unique_ptr<gui::SliderInt>>
       _sound_SliderMap; // Map case for Master, Music, Sound, Ambient, Voice
 
   // Gui selectors

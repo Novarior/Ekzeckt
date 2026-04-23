@@ -39,5 +39,4 @@ public:
   void updateAnimation();
   void render(sf::RenderTarget *target);
 };
-
 #endif

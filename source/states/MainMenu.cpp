@@ -1,5 +1,9 @@
 #include "MainMenu.hpp"
-#include <IOKit/hid/IOHIDUsageTables.h>
+
+#include "../core/cmakever.h"
+#include "../core/tools/MemoryUsageMonitor.hpp"
+#include "../core/tools/staticFPSMetter.hpp"
+#include "../localisation/helperText.hpp"
 
 void MainMenu::initRenderDefines() {
   if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x,
@@ -23,9 +27,9 @@ void MainMenu::initRenderDefines() {
 }
 
 void MainMenu::initKeybinds() {
-  Ikeybinds["CLOSE"] = IsupportedKeys->at("Escape");
-  IkeyBinds["KEY_SLASH"] = IKeyboard.lock().->at("Slash");
-  Ikeybinds["KEY_R"] = IsupportedKeys->at("R");
+  IKeyBinds.lock()->at("CLOSE") = IKeySupports.lock()->at("Escape");
+  IKeyBinds.lock()->at("KEY_SLASH") = IKeySupports.lock()->at("Slash");
+  IKeyBinds.lock()->at("KEY_R") = IKeySupports.lock()->at("R");
 }
 
 void MainMenu::initBackground() {
@@ -126,7 +130,7 @@ void MainMenu::resetGUI() {
   initBackground();
   initButtons();
   initRenderDefines();
-  IstateData->reserGUI = false;
+  IstateData->sd_reserGUI = false;
 }
 
 void MainMenu::resetView() {
@@ -140,17 +144,16 @@ void MainMenu::resetView() {
 }
 
 void MainMenu::initSounds() {
-  // link to volume manager
-  IVolumeCollector = IstateData->sd_VolumeCollector;
 
   try {
     for (const auto &[category, soundKey, mapKey] :
-         {std::tuple{SoundCategory::vol_MUSIC, myConst::sounds::music_menu,
+         {std::tuple{gfx::SoundCategory::vol_MUSIC, myConst::sounds::music_menu,
                      "MAIN_MENU"},
-          {SoundCategory::vol_UI, myConst::sounds::selbtn_menu, "SELECT_MENU"},
-          {SoundCategory::vol_UI, myConst::sounds::press_newg,
+          {gfx::SoundCategory::vol_UI, myConst::sounds::selbtn_menu,
+           "SELECT_MENU"},
+          {gfx::SoundCategory::vol_UI, myConst::sounds::press_newg,
            "PRESS_NEW_GAME"},
-          {SoundCategory::vol_UI, myConst::sounds::press_btn,
+          {gfx::SoundCategory::vol_UI, myConst::sounds::press_btn,
            "PRESS_BUTTON"}}) {
       if (!loadSoundtoBuffer(category, soundKey, mapKey)) {
         throw soundKey;
@@ -163,10 +166,10 @@ void MainMenu::initSounds() {
 
   // Upload sounds from buffer
   for (const auto &[mapKey, category] :
-       {std::pair{"MAIN_MENU", SoundCategory::vol_MUSIC},
-        {"SELECT_MENU", SoundCategory::vol_UI},
-        {"PRESS_NEW_GAME", SoundCategory::vol_UI},
-        {"PRESS_BUTTON", SoundCategory::vol_UI}}) {
+       {std::pair{"MAIN_MENU", gfx::SoundCategory::vol_MUSIC},
+        {"SELECT_MENU", gfx::SoundCategory::vol_UI},
+        {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
+        {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
     IsoundsMap.emplace(mapKey, IsoundBufferMap[category][mapKey]);
   }
 
@@ -199,7 +202,7 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::update(const float &delta_time) {
-  if (IstateData->reserGUI)
+  if (IstateData->sd_reserGUI)
     resetGUI();
 
   updateKeytime(delta_time);
@@ -213,10 +216,12 @@ void MainMenu::update(const float &delta_time) {
 }
 
 void MainMenu::updateInput(const float &delta_time) {
-  if (Ikeyboard.lock()->isKeyPressed(Ikeybinds.at("KEY_SLASH")) && getKeytime())
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_SLASH")) &&
+      getKeytime())
     Idebud = !Idebud;
 
-  if (Ikeyboard.lock()->isKeyPressed(Ikeybinds.at("KEY_R")) && getKeytime())
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_R")) &&
+      getKeytime())
     resetGUI();
 }
 
@@ -265,55 +270,54 @@ void MainMenu::updateGUI(const float &delta_time) {
         << "\nCurrent state memory usage:\t" << getMemoryUsage() << " bytes"
         << "\nFPS delta:\t" << 1 / delta_time << "\nFPS Clock:\t"
         << FPS::getFPS() << "\nFPS limit:\t"
-        << IstateData->sd_gfxSettings.lock()->_struct.frameRateLimit
+        << IstateData->sd_gfxSettings.lock()->frameRateLimit
         << "\nDelta Time:\t" << delta_time << "\nResolution:\t"
         << IstateData->sd_Window.lock()->getSize().x << " x "
         << IstateData->sd_Window.lock()->getSize().y << "\nAntialiasing:\t"
         << IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
-        << "\nvSync:\t"
-        << IstateData->sd_gfxSettings.lock()->_struct.verticalSync
+        << "\nvSync:\t" << IstateData->sd_gfxSettings.lock()->verticalSync
         << "\nMouse Pos:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y
         << "\nVolume: "
         << "\n\tMASTER: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_MASTER))
+                       gfx::SoundCategory::vol_MASTER))
         << "\n\tSFX: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_SFX))
+                       gfx::SoundCategory::vol_SFX))
         << "\n\tMUSIC: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_MUSIC))
+                       gfx::SoundCategory::vol_MUSIC))
         << "\n\tAMBIENT: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_AMBIENT))
+                       gfx::SoundCategory::vol_AMBIENT))
         << "\n\tENTITY: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_ENTITY))
+                       gfx::SoundCategory::vol_ENTITY))
         << "\n\tUI: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_UI))
+                       gfx::SoundCategory::vol_UI))
         << "\n\tDIALOGUE: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_DIALOGUE))
+                       gfx::SoundCategory::vol_DIALOGUE))
         << "\n\tFOLEY: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_FOLEY))
+                       gfx::SoundCategory::vol_FOLEY))
         << "\n\tWEAPON: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_WEAPON))
+                       gfx::SoundCategory::vol_WEAPON))
         << "\n\tENVIRONMENT: " +
                std::to_string(
                    IstateData->sd_VolumeCollector.lock()->getCategoryVolume(
-                       SoundCategory::vol_ENVIRONMENT));
+                       gfx::SoundCategory::vol_ENVIRONMENT));
     Itext.setString(IstringStream.str());
     IstringStream.str("");
   }
@@ -326,13 +330,14 @@ void MainMenu::updateGUI(const float &delta_time) {
 void MainMenu::updateSounds(const float &delta_time) {
   // update for music menu
   for (const auto &[key, category] :
-       {std::pair{"MAIN_MENU", SoundCategory::vol_MUSIC},
-        {"SELECT_MENU", SoundCategory::vol_UI},
-        {"PRESS_NEW_GAME", SoundCategory::vol_UI},
-        {"PRESS_BUTTON", SoundCategory::vol_UI}}) {
+       {std::pair{"MAIN_MENU", gfx::SoundCategory::vol_MUSIC},
+        {"SELECT_MENU", gfx::SoundCategory::vol_UI},
+        {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
+        {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
     auto it = IsoundsMap.find(key);
     if (it != IsoundsMap.end()) {
-      it->second.setVolume(IVolumeCollector->getCategoryVolume(category));
+      it->second.setVolume(
+          IstateData->sd_VolumeCollector.lock()->getCategoryVolume(category));
     }
   }
 

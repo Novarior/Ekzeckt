@@ -4,6 +4,7 @@
 #include "../tools/LOGGER.hpp"
 #include <map>
 
+namespace gfx {
 enum class SoundCategory {
   vol_MASTER,
   vol_SFX,         // Звуковые эффекты
@@ -69,5 +70,6 @@ public:
     return static_cast<unsigned int>(SoundCategory::vol_COUNT);
   }
 };
+}; // namespace gfx
 
 #endif // !AUDIO_MANAGER_HPP

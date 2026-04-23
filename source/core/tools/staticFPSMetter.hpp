@@ -31,7 +31,6 @@ public:
   /// @return FPS count.
   static const unsigned int getFPS() { return mFps; }
 
-private:
   static unsigned int mFrame;
   static unsigned int mFps;
   static sf::Clock mClock;

@@ -1,4 +1,6 @@
 #include "selector.hpp"
+#include "../../math/mymath.hpp"
+
 namespace gui {
 
 Selector::Selector(sf::Vector2f pos, sf::Vector2f size, sf::Font &font,

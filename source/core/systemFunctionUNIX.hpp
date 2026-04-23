@@ -86,12 +86,7 @@ public:
   /// @brief checking for exists app folder
   /// @return `true`, if directories exist, else create them
   static bool checkAppDirectoryExists() {
-    if (std::filesystem::exists(getDocumentsAppFolder())) {
-      return true;
-    } else {
-      createAppDirectories(); // Создание директорий
-      return false;
-    }
+    return std::filesystem::exists(getDocumentsAppFolder()) ? true : false;
   }
 
   /// @brief Получение текущего времени в формате "YYYY-MM-DD HH:MM:SS"

@@ -1,6 +1,7 @@
 #ifndef ITEMREGISTER
 #define ITEMREGISTER
 
+#include "../../../core/tools/LOGGER.hpp"
 #include "../Item.hpp"
 #include "all_items.hpp"
 

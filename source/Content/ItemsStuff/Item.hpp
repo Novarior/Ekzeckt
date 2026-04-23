@@ -1,5 +1,6 @@
 #ifndef ITEM_HPP
 #define ITEM_HPP
+#include "../../core/dataCollector/_man_Texture.hpp"
 #include "../../core/header.h"
 #include "Coins.hpp"
 #include "itemtextures.hpp"

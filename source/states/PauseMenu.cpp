@@ -1,4 +1,6 @@
 #include "PauseMenu.hpp"
+#include "../core/tools/LOGGER.hpp"
+#include "../math/mymath.hpp"
 
 PauseMenu::PauseMenu(sf::VideoMode vm, sf::Font &font)
     : font(font), menuText(font, "PAUSED", mmath::calcCharSize(vm)) {
@@ -55,9 +57,8 @@ void PauseMenu::addButton(std::string key, float y, float width, float height,
       new gui::Button(sf::Vector2f(x, y), sf::Vector2f(width, height), text,
                       gui::styles::buttons::btn_pause, gui::type::BUTTON);
 
-#ifdef __MDEBUG__ == 1
+#ifdef __MDEBUG__
   Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
-
 #endif
 }
 

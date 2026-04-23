@@ -54,7 +54,7 @@ set_source_files_properties(${MY_APP_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "R
 
 # Генерация cmakever.h
 set(Template_ver metadata/cmakever.h.in)
-configure_file(${Template_ver} ${CMAKE_CURRENT_BINARY_DIR}/../source/cmakever.h)
+configure_file(${Template_ver} ${CMAKE_CURRENT_BINARY_DIR}/../source/core/cmakever.h)
 
 if(APPLE)
     # Конфигурация plist файла для бандла
@@ -72,7 +72,6 @@ if(APPLE)
 
     # Сборка приложения
     add_executable(Ekzeckt MACOSX_BUNDLE ${SOURCE_PROJECT_FILES} ${MY_APP_RESOURCES} ${Template_ver} ${DATA_BUNDLE_ICON_FILE})
-    
     # Настройка флагов компиляции в зависимости от режима сборки
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         target_compile_options(Ekzeckt PUBLIC -g)
@@ -114,14 +113,14 @@ install(FILES README.md DESTINATION share/doc/MyApp)
 # Настройка CPack
 set(CPACK_PACKAGE_NAME "EKZECKT")                # Имя пакета
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}") # Версия пакета
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My Application Installer")
-set(CPACK_PACKAGE_VENDOR "Novarior FLow")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Application Installer")
+set(CPACK_PACKAGE_VENDOR "Novarior Flow")
 set(CPACK_PACKAGE_CONTACT "Xle6yIIIeK1337@gmail.com")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE") # Файл лицензии
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "MyAppInstallDir")         # Директория установки
 set(CPACK_PACKAGE_EXECUTABLES "EKZECKT" "My Application")
-set(CPACK_NSIS_DISPLAY_NAME "My Application Installer")
+set(CPACK_NSIS_DISPLAY_NAME "Application Installer")
 
 # Указываем генераторы пакетов
 set(CPACK_GENERATOR "ZIP;TGZ;NSIS;DragNDrop") # Генерация пакетов в формате ZIP и TAR.GZ

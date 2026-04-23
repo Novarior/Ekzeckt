@@ -1,28 +1,121 @@
 #include "Core.h"
+
 #include "../localisation/helperText.hpp"
 #include "../states/MainMenu.hpp"
 #include "_myConst.h"
 #include "dataCollector/_man_Texture.hpp"
 #include "systemFunctionUNIX.hpp"
 #include "tools/LOGGER.hpp"
-#include "tools/PARSJSON.hpp"
 #include "tools/staticFPSMetter.hpp"
-#include <IOKit/hid/IOHIDUsageTables.h>
+#include <cstddef>
+#include <strstream>
+
+// инициализация реестра предметов
+std::map<int, std::shared_ptr<Item>> ItemRegistry::items = {};
+// Инициализация статичного счетчика сущностей
+unsigned int Entity::count_entitys = 0;
+// Инициализация статичного счетчика для смены текстуры
+unsigned BrickBlock::currentFrame = 0;
+// Инициализация статичного счетчика кадра
+unsigned int FPS::mFrame = 0;
+// Инициализация статичного счетчика кадров
+unsigned int FPS::mFps = 0;
+// инициализаия часов для подсчета фпс
+sf::Clock FPS::mClock = sf::Clock();
+// Инициализация статического контейнера
+std::unordered_map<std::string, sf::Texture> TextureManager::m_textures;
+// Инициализация словаря для маппинга TextureID к строкам
+std::unordered_map<TextureID, std::string> TextureIDMapping::idToStringMap;
 
 // check if app directory exists
 void Core::initDirectories() {
   if (ApplicationsFunctions::checkAppDirectoryExists()) {
     Logger::logStatic("App directory already exists",
-                      "l:13 -> Core::initDirectories()");
+                      "Core::initDirectories()");
+  } else {
+    ApplicationsFunctions::createAppDirectories();
   }
 }
 
-// initialisations root data and build first frame app
+// initialisations root data, window, fonts and etc
 void Core::initVariabless() {
-  cr_Window = NULL; // null window
+  // make path to config file, and create json object with fstream object
+
+  // fstream obj
+  std::ifstream ifs(ApplicationsFunctions::getAppConfigFolder() +
+                    AppFiles::config_window);
+  if (!ifs.is_open()) {
+    Logger::logStatic("CANNOT OPEN FILE", "Core::initVariables()",
+                      logType::ERROR);
+  } else {
+    try {
+      ifs >> cr_databuffer;
+      is_data_loaded = true;
+      Logger::logStatic("Config file loaded successfully",
+                        "Core::initVariables()");
+    } catch (json::parse_error &e) {
+      Logger::logStatic("JSON::PARSE_ERROR: " + std::string(e.what()),
+                        "Core::initVariables()", logType::ERROR);
+      is_data_corrupted = true;
+    }
+    ifs.close();
+  }
+
+  // init basics shared structs
+  cr_Keyboard = std::make_shared<keyboardOSX>();
+  cr_gfxSettings = std::make_shared<gfx::myGFXStruct>();
+  cr_VolumeCollector = std::make_shared<gfx::VolumeCollector>();
+  cr_KeyBinds = std::make_shared<std::map<std::string, uint32_t>>();
+  cr_KeySuppors = std::make_shared<std::map<std::string, uint32_t>>();
+
+  // set supported keys
+  // emplace supporded key into map
+  cr_KeySuppors->emplace("A", kHIDUsage_KeyboardA);
+  cr_KeySuppors->emplace("C", kHIDUsage_KeyboardC);
+  cr_KeySuppors->emplace("D", kHIDUsage_KeyboardD);
+  cr_KeySuppors->emplace("E", kHIDUsage_KeyboardE);
+  cr_KeySuppors->emplace("F", kHIDUsage_KeyboardF);
+  cr_KeySuppors->emplace("Q", kHIDUsage_KeyboardQ);
+  cr_KeySuppors->emplace("R", kHIDUsage_KeyboardR);
+  cr_KeySuppors->emplace("S", kHIDUsage_KeyboardS);
+  cr_KeySuppors->emplace("W", kHIDUsage_KeyboardW);
+  cr_KeySuppors->emplace("X", kHIDUsage_KeyboardX);
+  cr_KeySuppors->emplace("Z", kHIDUsage_KeyboardZ);
+  cr_KeySuppors->emplace("1", kHIDUsage_Keyboard1);
+  cr_KeySuppors->emplace("2", kHIDUsage_Keyboard2);
+  cr_KeySuppors->emplace("3", kHIDUsage_Keyboard3);
+  cr_KeySuppors->emplace("4", kHIDUsage_Keyboard4);
+  cr_KeySuppors->emplace("5", kHIDUsage_Keyboard5);
+  cr_KeySuppors->emplace("6", kHIDUsage_Keyboard6);
+  cr_KeySuppors->emplace("7", kHIDUsage_Keyboard7);
+  cr_KeySuppors->emplace("8", kHIDUsage_Keyboard8);
+  cr_KeySuppors->emplace("9", kHIDUsage_Keyboard9);
+  cr_KeySuppors->emplace("0", kHIDUsage_Keyboard0);
+  cr_KeySuppors->emplace("Escape", kHIDUsage_KeyboardEscape);
+  cr_KeySuppors->emplace("Space", kHIDUsage_KeyboardSpacebar);
+  cr_KeySuppors->emplace("Enter", kHIDUsage_KeyboardReturnOrEnter);
+  cr_KeySuppors->emplace("BackSpace", kHIDUsage_KeyboardDeleteOrBackspace);
+  cr_KeySuppors->emplace("Slash", kHIDUsage_KeyboardSlash);
+  cr_KeySuppors->emplace("Tab", kHIDUsage_KeyboardTab);
+  cr_KeySuppors->emplace("F1", kHIDUsage_KeyboardF1);
+  cr_KeySuppors->emplace("F2", kHIDUsage_KeyboardF2);
+  cr_KeySuppors->emplace("F3", kHIDUsage_KeyboardF3);
+
+  // before load data from json file
+  //   cr_LoadData2(cr_databuffer, *cr_gfxSettings, *cr_KeyBinds,
+  //                *cr_VolumeCollector);
+  auto result = cr_LoadData(cr_databuffer, *cr_gfxSettings, *cr_KeyBinds,
+                            *cr_VolumeCollector);
+  if (!result) {
+    Logger::logStatic("Failed to load keybinds!", "Core::initVariables()",
+                      logType::ERROR);
+  }
+
+  // set zero in dt and restart clock
   cr_deltaTime = 0.0f;
   cr_deltaClock.restart();
 
+  // init fonts
   cr_GameFont_basic.openFromFile(
       std::string(ApplicationsFunctions::get_resources_dir() +
                   myConst::fonts::data_gameproces_font_path));
@@ -30,76 +123,22 @@ void Core::initVariabless() {
       std::string(ApplicationsFunctions::get_resources_dir() +
                   myConst::fonts::data_debugfont_path));
 
-  // init keysupports and binds
+#if __MDEBUG__ == ENABLE
+  // print to console/Loggger all data for next debug
+  std::stringstream ss;
+  ss << "DEBUG LOG\ncurrent resouses used:\n"
+     << "KeyboardOSX:" << (cr_Keyboard.get() ? "\t allive" : "\t is null")
+     << "GFX_DATA:\t" << (cr_gfxSettings.get() ? "\t allive" : "\t is null")
+     << "Volume_Data:\t"
+     << (cr_VolumeCollector.get() ? "\t allive" : "\t is null")
+     << "KeyBinds_Data:\t" << (cr_KeyBinds.get() ? "\t allive" : "\t is null")
+     << "KeyboadSupports_data:\t"
+     << (cr_KeySuppors.get() ? "\t allive" : "\t is null");
+  for (const auto [key, value] : *cr_KeySuppors.get())
+    ss << "Key: " << key << ", Value: " << value << std::endl;
+  for (const auto [key, value] : *cr_KeySuppors.get())
+    ss << "Key: " << key << ", Value: " << value << std::endl;
 
-#if __MDEBUG__ == 1
-  // logger moment
-  Logger::logStatic("Window, dt<->dc inited by def", "Core::initVariabless()");
-#endif
-  // load graphics settings from file
-  // if not loaded, save default settings
-  if (!this->cr_gfxSettings->loadFromFile())
-    this->cr_gfxSettings->saveToFile();
-}
-
-void Core::initStateData() {
-  // send window state stack and fonts to state data
-  cr_Statedata.sd_Window = cr_Window;
-  cr_Statedata.sd_States = &cr_State;
-  cr_Statedata.sd_GameFont_basic = cr_GameFont_basic;
-  cr_Statedata.sd_debugFont = cr_debugFont;
-  // keyboard and theyr stuff
-  cr_Statedata.sd_keyboard_prt = cr_Keyboard;
-  cr_Statedata.sd_KeySupports = cr_KeySuppors;
-  cr_Statedata.sd_KeyBinds = cr_KeyBinds;
-  // graphics settings
-  cr_Statedata.sd_gfxSettings = cr_gfxSettings;
-  // character sizes and grid size
-  cr_Statedata.sd_gridSize = cr_gridSize;
-  cr_Statedata.sd_characterSize_debug =
-      mmath::calcCharSize(cr_Window->getSize(), 150);
-  cr_Statedata.sd_characterSize_game_big =
-      mmath::calcCharSize(cr_Window->getSize(), 60);
-  cr_Statedata.sd_characterSize_game_medium =
-      mmath::calcCharSize(cr_Window->getSize(), 85);
-  cr_Statedata.sd_characterSize_game_small =
-      mmath::calcCharSize(cr_Window->getSize(), 100);
-  // boolean for gui (make for extra reset)
-  cr_Statedata.sd_reserGUI = false;
-
-#if __MDEBUG__ == 1
-  // logger moment
-
-  // check if window is not null
-  if (!cr_Statedata.sd_Window.lock())
-    Logger::logStatic("ERROR::WINDOW::NOT INITED", "Core::initStateData()",
-                      logType::ERROR);
-
-  // check if states is not empty or null idk
-  if (!cr_Statedata.sd_States->empty())
-    Logger::logStatic("ERROR::STATES::NOT INITED", "Core::initStateData()",
-                      logType::ERROR);
-
-#endif
-}
-
-void Core::initKeyBinds() { // init default keys
-  cr_KeySuppors = std::make_shared<std::map<std::string, uint32_t>>();
-  ParserJson::loadKeyBinds(*cr_KeySuppors);
-  cr_Keyboard = std::make_shared<keyboardOSX>();
-  cr_KeyBinds = std::make_shared<std::map<std::string, uint32_t>>();
-  // VolumeCollector, sound and other
-  cr_VolumeCollector = std::make_shared<VolumeCollector>();
-}
-
-void Core::initState() {
-  this->cr_State.push(new MainMenu(&cr_Statedata));
-
-#if __MDEBUG__ == 1
-  // logger moment with states
-  Logger::logStatic("State inited", "Core::initState()");
-  Logger::logStatic("State size: " + std::to_string(cr_State.size()),
-                    "Core::initState()");
 #endif
 }
 
@@ -108,24 +147,24 @@ void Core::initLocations() {
 }
 
 void Core::initWindow() {
-  cr_Window = std::make_shared<sf::RenderWindow>(
-      sf::RenderWindow(cr_gfxSettings->_struct.resolution,
-                       cr_gfxSettings->_struct.title, sf::State::Windowed));
+  cr_Window = std::make_shared<sf::RenderWindow>(sf::RenderWindow(
+      cr_gfxSettings->resolution, cr_gfxSettings->title, sf::State::Windowed));
 
-  if (cr_gfxSettings->_struct.fullscreen && cr_Window->isOpen()) {
+  if (cr_gfxSettings->fullscreen && cr_Window->isOpen()) {
 
-    cr_gfxSettings->_struct._winResolutions = cr_Window->getSize();
-    cr_Window->create(
-        sf::VideoMode({cr_gfxSettings->_struct._winResolutions.x,
-                       cr_gfxSettings->_struct._winResolutions.y}),
-        cr_gfxSettings->_struct.title, sf::State::Fullscreen,
-        cr_gfxSettings->_struct.contextSettings);
+    cr_gfxSettings->_winResolutions = cr_Window->getSize();
+    cr_Window->create(sf::VideoMode({cr_gfxSettings->_winResolutions.x,
+                                     cr_gfxSettings->_winResolutions.y}),
+                      cr_gfxSettings->title, sf::State::Fullscreen,
+                      cr_gfxSettings->contextSettings);
   }
 
-  cr_Window->setFramerateLimit(cr_gfxSettings->_struct.frameRateLimit);
-  cr_Window->setVerticalSyncEnabled(cr_gfxSettings->_struct.verticalSync);
+  cr_Window->setFramerateLimit(cr_gfxSettings->frameRateLimit);
+  cr_Window->setVerticalSyncEnabled(cr_gfxSettings->verticalSync);
   cr_Window->setKeyRepeatEnabled(false);
 }
+
+// load all textures
 void Core::initTextures() {
   // null текстура
   TextureManager::loadTexture(TextureID::TEXTURE_NULL,
@@ -208,13 +247,65 @@ void Core::initTextures() {
                                                   // золотой монеты
 }
 
+void Core::initStateData() {
+  // send window state stack and fonts to state data
+  cr_Statedata.sd_Window = cr_Window;
+  cr_Statedata.sd_States = &cr_State;
+  cr_Statedata.sd_GameFont_basic = cr_GameFont_basic;
+  cr_Statedata.sd_debugFont = cr_debugFont;
+  // keyboard and theyr stuff
+  cr_Statedata.sd_keyboard_prt = cr_Keyboard;
+  cr_Statedata.sd_KeySupports = cr_KeySuppors;
+  cr_Statedata.sd_KeyBinds = cr_KeyBinds;
+  // graphics settings
+  cr_Statedata.sd_gfxSettings = cr_gfxSettings;
+  // volume collector
+  cr_Statedata.sd_VolumeCollector = cr_VolumeCollector;
+  // character sizes and grid size
+  cr_Statedata.sd_gridSize = cr_gridSize;
+  cr_Statedata.sd_characterSize_debug =
+      mmath::calcCharSize(cr_Window->getSize(), 150);
+  cr_Statedata.sd_characterSize_game_big =
+      mmath::calcCharSize(cr_Window->getSize(), 60);
+  cr_Statedata.sd_characterSize_game_medium =
+      mmath::calcCharSize(cr_Window->getSize(), 85);
+  cr_Statedata.sd_characterSize_game_small =
+      mmath::calcCharSize(cr_Window->getSize(), 100);
+  // boolean for gui (make for extra reset)
+  cr_Statedata.sd_reserGUI = false;
+
+#if __MDEBUG__ == 1
+  // logger moment
+
+  // check if window is not null
+  if (!cr_Statedata.sd_Window.lock())
+    Logger::logStatic("ERROR::WINDOW::NOT INITED", "Core::initStateData()",
+                      logType::ERROR);
+
+  // check if states is not empty or null idk
+  if (!cr_Statedata.sd_States->empty())
+    Logger::logStatic("ERROR::STATES::NOT INITED", "Core::initStateData()",
+                      logType::ERROR);
+#endif
+}
+
+void Core::initState() {
+  this->cr_State.push(new MainMenu(&cr_Statedata));
+
+#if __MDEBUG__ == 1
+  // logger moment with states
+  Logger::logStatic("State inited", "Core::initState()");
+  Logger::logStatic("State size: " + std::to_string(cr_State.size()),
+                    "Core::initState()");
+#endif
+}
+
 Core::Core() {
   this->initDirectories();
   this->initVariabless();
   this->initLocations();
   this->initWindow();
   this->initTextures();
-  this->initKeyBinds();
   this->initStateData();
   this->initState();
 
@@ -226,7 +317,7 @@ Core::Core() {
 }
 
 Core::~Core() {
-  this->cr_gfxSettings->saveToFile();
+  cr_SaveData(*cr_gfxSettings, *cr_KeyBinds, *cr_VolumeCollector);
 
   while (!cr_State.empty()) {
     delete cr_State.top();

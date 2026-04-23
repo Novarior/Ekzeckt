@@ -14,6 +14,7 @@ public:
   ~keyboardOSX();
 
   bool isKeyPressed(uint32_t key);
+  bool isKeyReleased(uint32_t key);
   uint32_t getPressedKey();
   void update();
 };

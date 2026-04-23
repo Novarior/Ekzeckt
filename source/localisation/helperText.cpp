@@ -1,4 +1,6 @@
 #include "helperText.hpp"
+#include "../core/systemFunctionUNIX.hpp"
+#include "../core/tools/LOGGER.hpp"
 #include <string>
 
 // Определение статических переменных

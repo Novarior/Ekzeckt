@@ -29,10 +29,11 @@ keyboardOSX::~keyboardOSX() {
 }
 
 bool keyboardOSX::isKeyPressed(uint32_t key) { return keyStates[key]; }
+bool keyboardOSX::isKeyReleased(uint32_t key) { return !keyStates[key]; }
 
 uint32_t keyboardOSX::getPressedKey() {
   for (uint32_t key = 0; key < 256;
-       ++key) { // проходим по всем возможным клавишам
+       ++key) {           // проходим по всем возможным клавишам
     if (keyStates[key]) { // если клавиша нажата
       return key;         // возвращаем её код
     }

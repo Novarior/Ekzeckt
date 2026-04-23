@@ -1,13 +1,17 @@
 #include "EditorState.hpp"
+#include "../core/tools/MemoryUsageMonitor.hpp"
+#include "../core/tools/staticFPSMetter.hpp"
+#include "../localisation/helperText.hpp"
+#include "../math/mymath.hpp"
 
 void EditorState::initKeybinds() {
-  this->Ikeybinds["CLOSE"] = this->IsupportedKeys->at("Escape");
-  this->Ikeybinds["TAB_MENU"] = this->IsupportedKeys->at("Tab");
-  this->Ikeybinds["KEY_Q"] = this->IsupportedKeys->at("Q");
-  this->Ikeybinds["KEY_W"] = this->IsupportedKeys->at("W");
-  this->Ikeybinds["KEY_E"] = this->IsupportedKeys->at("E");
-  this->Ikeybinds["KEY_R"] = this->IsupportedKeys->at("R");
-  this->Ikeybinds["KEY_SLASH"] = this->IsupportedKeys->at("Slash");
+  IKeyBinds.lock()->at("CLOSE") = this->IKeySupports.lock()->at("Escape");
+  IKeyBinds.lock()->at("TAB_MENU") = this->IKeySupports.lock()->at("Tab");
+  IKeyBinds.lock()->at("KEY_Q") = this->IKeySupports.lock()->at("Q");
+  IKeyBinds.lock()->at("KEY_W") = this->IKeySupports.lock()->at("W");
+  IKeyBinds.lock()->at("KEY_E") = this->IKeySupports.lock()->at("E");
+  IKeyBinds.lock()->at("KEY_R") = this->IKeySupports.lock()->at("R");
+  IKeyBinds.lock()->at("KEY_SLASH") = IKeySupports.lock()->at("Slash");
 }
 
 void EditorState::initTabMenu() { // tab menu
@@ -71,8 +75,9 @@ void EditorState::initSelectors() { // init static selector in tab menu
       sf::Vector2f(
           this->tabShape.getSize().x,
           mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      this->IstateData->sd_font, this->IstateData->sd_characterSize_game_big, 0,
-      10, 1.f, true, "Octaves: ");
+      this->IstateData->sd_GameFont_basic,
+      this->IstateData->sd_characterSize_game_big, 0, 10, 1.f, true,
+      "Octaves: ");
 
   this->staticSelector["FREQUENCY"] = new gui::StaticSelector(
       sf::Vector2f(
@@ -82,8 +87,9 @@ void EditorState::initSelectors() { // init static selector in tab menu
       sf::Vector2f(
           this->tabShape.getSize().x,
           mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      this->IstateData->sd_font, this->IstateData->sd_characterSize_game_big, 0,
-      10, 0.1f, true, "Frequency: ");
+      this->IstateData->sd_GameFont_basic,
+      this->IstateData->sd_characterSize_game_big, 0, 10, 0.1f, true,
+      "Frequency: ");
 
   this->staticSelector["PERSISTENCE"] = new gui::StaticSelector(
       sf::Vector2f(
@@ -93,8 +99,9 @@ void EditorState::initSelectors() { // init static selector in tab menu
       sf::Vector2f(
           this->tabShape.getSize().x,
           mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      this->IstateData->sd_font, this->IstateData->sd_characterSize_game_big, 0,
-      5, 0.1f, true, "Persistence: ");
+      this->IstateData->sd_GameFont_basic,
+      this->IstateData->sd_characterSize_game_big, 0, 5, 0.1f, true,
+      "Persistence: ");
 
   this->staticSelector["AMPLIFIRE"] = new gui::StaticSelector(
       sf::Vector2f(
@@ -104,8 +111,9 @@ void EditorState::initSelectors() { // init static selector in tab menu
       sf::Vector2f(
           this->tabShape.getSize().x,
           mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      this->IstateData->sd_font, this->IstateData->sd_characterSize_game_big, 0,
-      10, 0.1f, true, "Amplifire: ");
+      this->IstateData->sd_GameFont_basic,
+      this->IstateData->sd_characterSize_game_big, 0, 10, 0.1f, true,
+      "Amplifire: ");
 
   std::vector<std::string> list = {"Linear",  "Cosine",    "Cubic",  "Quintic",
                                    "Quartic", "Quadratic", "Hermite"};
@@ -118,8 +126,8 @@ void EditorState::initSelectors() { // init static selector in tab menu
       sf::Vector2f(
           this->tabShape.getSize().x,
           mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      this->IstateData->sd_font, this->IstateData->sd_characterSize_game_big,
-      list.data(), list.size(), 0);
+      this->IstateData->sd_GameFont_basic,
+      this->IstateData->sd_characterSize_game_big, list.data(), list.size(), 0);
 
   // set default value for static selector
   this->staticSelector["OCTAVES"]->setCurrentValue(
@@ -133,24 +141,22 @@ void EditorState::initSelectors() { // init static selector in tab menu
 }
 
 void EditorState::initNoice() {
+  this->m_noiceData.octaves = 8;
+  std::srand(std::time(nullptr));
+  this->m_noiceData.seed = std::rand();
+  this->m_noiceData.frequency = 8;
+  this->m_noiceData.amplifire = 1;
+  this->m_noiceData.persistence = 0.6f;
 
-  if (ParserJson::loadNoiceData(this->m_noiceData)) { // init noise data
-    this->m_noiceData.octaves = 8;
-    std::srand(std::time(nullptr));
-    this->m_noiceData.seed = std::rand();
-    this->m_noiceData.frequency = 8;
-    this->m_noiceData.amplifire = 1;
-    this->m_noiceData.persistence = 0.6f;
-  }
   this->m_noiceData.gridSize = this->IstateData->sd_gridSize;
   this->m_noiceData.RenderWindowX =
-      this->IstateData->sd_gfxSettings->_struct.resolution.size.x;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
   this->m_noiceData.RenderWindowY =
-      this->IstateData->sd_gfxSettings->_struct.resolution.size.y;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
   this->m_noiceData.mapSizeX =
-      this->IstateData->sd_gfxSettings->_struct.resolution.size.x;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
   this->m_noiceData.mapSizeY =
-      this->IstateData->sd_gfxSettings->_struct.resolution.size.y;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
   this->m_noiceData.smoothMode = 0;
 
   // init data for noice viewer
@@ -196,7 +202,8 @@ EditorState::~EditorState() {
   Logger::logStatic("Start destruction EditorState",
                     "EditorState::~EditorState()");
 
-  ParserJson::saveNoiceData(this->m_NoiceViewer->getNoiceData());
+  // FIXME: add save noice data to file
+  // ParserJson::saveNoiceData(this->m_NoiceViewer->getNoiceData());
 
   for (auto &it : this->buttons)
     delete it.second;
@@ -282,35 +289,35 @@ void EditorState::saveTreeAsImage(sf::RenderWindow &window) {
 void EditorState::updateInput(const float &delta_time) {
   // if pressed key ESC then end state
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("CLOSE"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("CLOSE"))) &&
       this->getKeytime())
     this->endState();
 
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("KEY_SLASH"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("KEY_SLASH"))) &&
       this->getKeytime())
     this->Idebud = !this->Idebud;
 
   // switch tab menu
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("TAB_MENU"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("TAB_MENU"))) &&
       this->getKeytime())
     this->showTabmenu = !this->showTabmenu;
 
   // update currentViewGenerator in a range from 0 to 2
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("KEY_Q"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("KEY_Q"))) &&
       this->getKeytime())
     this->m_NoiceViewer->swithNoiceModel();
 
   // switch noice model
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("KEY_W"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("KEY_W"))) &&
       this->getKeytime())
     this->m_NoiceViewer->swithColorMode();
 
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("KEY_E"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("KEY_E"))) &&
       this->getKeytime()) {
     if (this->current_View_Generator < 2)
       this->current_View_Generator++;
@@ -319,7 +326,7 @@ void EditorState::updateInput(const float &delta_time) {
   }
   // switch noice smooth mode (fast mode)
   if (sf::Keyboard::isKeyPressed(
-          sf::Keyboard::Scancode(this->Ikeybinds.at("KEY_R"))) &&
+          sf::Keyboard::Scancode(IKeyBinds.lock()->at("KEY_R"))) &&
       this->getKeytime())
     this->m_noiceData.fastMode = !this->m_noiceData.fastMode;
 }
@@ -401,10 +408,10 @@ void EditorState::updateButtons(const float &delta_time) {
       this->m_NoiceViewer->generateNoice();
     }
     if (this->buttons["SAVE_GENDATA"]->isPressed()) {
-      ParserJson::saveNoiceData(this->m_noiceData);
+      // fixme: add save noice data to file
     }
     if (this->buttons["LOAD_GENDATA"]->isPressed()) {
-      ParserJson::loadNoiceData(this->m_noiceData);
+      // fixme: add load noice data from file
       this->staticSelector["OCTAVES"]->setCurrentValue(
           this->m_noiceData.octaves);
       this->staticSelector["FREQUENCY"]->setCurrentValue(

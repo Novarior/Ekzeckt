@@ -59,5 +59,4 @@ void MiniMap::render(sf::RenderTarget& target)
     target.draw(this->m_player);
     target.draw(this->m_entity);
 }
-
 } // namespace gui

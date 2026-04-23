@@ -1,4 +1,6 @@
 #include "staticSelector.hpp"
+#include "../../math/mymath.hpp"
+
 namespace gui {
 // private functions
 void StaticSelector::updateKeyTime(const float &delta_time) {

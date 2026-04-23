@@ -1,5 +1,5 @@
-#ifndef CPP_MAP_TILEMAP_HPP
-#define CPP_MAP_TILEMAP_HPP
+#ifndef TILEMAP
+#define TILEMAP
 #include "block.hpp"
 
 #include "../../entitys/entity.hpp"
@@ -100,4 +100,4 @@ public:
 
   void render(sf::RenderTarget *target);
 };
-#endif
+#endif /* TILEMAP */

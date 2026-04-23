@@ -1,59 +1,70 @@
 #include "Process.hpp"
 
+#include "../Content/ItemsStuff/ItemEntity/entity_item.hpp"
+#include "../Content/ItemsStuff/Items/all_items.hpp"
+#include "../core/tools/MemoryUsageMonitor.hpp"
+#include "../entitys/Enemys/slime.hpp"
+#include "../localisation/helperText.hpp"
+
+
 const bool Process::loadGameData() {
   // load noice config
-  if (ParserJson::loadNoiceData(this->noicedata))
-    printf("ERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
-           AppFiles::config_noicedata);
-  else {
-    this->noicedata.mapSizeX = 1000;
-    this->noicedata.mapSizeY = 1000;
-    this->noicedata.RenderWindowX =
-        this->IstateData->sd_gfxSettings.lock()->_struct.resolution.size.x;
-    this->noicedata.RenderWindowY =
-        this->IstateData->sd_gfxSettings.lock()->_struct.resolution.size.y;
-    this->noicedata.gridSize = this->IstateData->sd_gridSize;
-  }
+  // if (ParserJson::loadNoiceData(this->noicedata))
+  //   printf("ERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
+  //          AppFiles::config_noicedata);
+  // else {
+  //   this->noicedata.mapSizeX = 1000;
+  //   this->noicedata.mapSizeY = 1000;
+  //   this->noicedata.RenderWindowX =
+  //       this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
+  //   this->noicedata.RenderWindowY =
+  //       this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
+  //   this->noicedata.gridSize = this->IstateData->sd_gridSize;
+  // }
   return true;
 }
 
 const bool Process::saveGameData() {
   // save player to JSON file
-  if (ParserJson::savePlayer(this->player.get()))
-    Logger::logStatic("Parser::savePlayer()::ERROR::",
-                      "Process::saveGameData()", logType::ERROR);
-  // save inventory to JSON file
-  // if (ParserJson::saveInventory(t_inventory))
-  //   Logger::logStatic("Parser::saveInventory()::ERROR::",
+  // if (ParserJson::savePlayer(this->player.get()))
+  //   Logger::logStatic("Parser::savePlayer()::ERROR::",
   //                     "Process::saveGameData()", logType::ERROR);
-  // save entitys pos and other data
-  if (ParserJson::saveEntitys(this->entitys))
-    Logger::logStatic("Parser::saveEntitys()::ERROR::",
-                      "Process::saveGameData()", logType::ERROR);
+  // // save inventory to JSON file
+  // // if (ParserJson::saveInventory(t_inventory))
+  // //   Logger::logStatic("Parser::saveInventory()::ERROR::",
+  // //                     "Process::saveGameData()", logType::ERROR);
+  // // save entitys pos and other data
+  // if (ParserJson::saveEntitys(this->entitys))
+  //   Logger::logStatic("Parser::saveEntitys()::ERROR::",
+  //                     "Process::saveGameData()", logType::ERROR);
 
   return true;
 }
 
 void Process::initKeybinds() { // init data who dont use loaded dates
-  IkeyBinds["KEY_CLOSE"] = IstateData->sd_KeySupports.lock()->at("Escape");
-  IkeyBinds["KEY_TAB"] = IstateData->sd_KeySupports.lock()->at("Tab");
-  IkeyBinds["KEY_SLASH"] = IstateData->sd_KeySupports.lock()->at("Slash");
-  IkeyBinds["KEY_A"] = IstateData->sd_KeySupports.lock()->at("A");
-  IkeyBinds["KEY_D"] = IstateData->sd_KeySupports.lock()->at("D");
-  IkeyBinds["KEY_S"] = IstateData->sd_KeySupports.lock()->at("S");
-  IkeyBinds["KEY_W"] = IstateData->sd_KeySupports.lock()->at("W");
-  IkeyBinds["KEY_E"] = IstateData->sd_KeySupports.lock()->at("E");
-  IkeyBinds["KEY_Q"] = IstateData->sd_KeySupports.lock()->at("Q");
-  IkeyBinds["KEY_SPACE"] = IstateData->sd_KeySupports.lock()->at("Space");
+  IKeyBinds.lock()->at("KEY_CLOSE") =
+      IstateData->sd_KeySupports.lock()->at("Escape");
+  IKeyBinds.lock()->at("KEY_TAB") =
+      IstateData->sd_KeySupports.lock()->at("Tab");
+  IKeyBinds.lock()->at("KEY_SLASH") =
+      IstateData->sd_KeySupports.lock()->at("Slash");
+  IKeyBinds.lock()->at("KEY_A") = IstateData->sd_KeySupports.lock()->at("A");
+  IKeyBinds.lock()->at("KEY_D") = IstateData->sd_KeySupports.lock()->at("D");
+  IKeyBinds.lock()->at("KEY_S") = IstateData->sd_KeySupports.lock()->at("S");
+  IKeyBinds.lock()->at("KEY_W") = IstateData->sd_KeySupports.lock()->at("W");
+  IKeyBinds.lock()->at("KEY_E") = IstateData->sd_KeySupports.lock()->at("E");
+  IKeyBinds.lock()->at("KEY_Q") = IstateData->sd_KeySupports.lock()->at("Q");
+  IKeyBinds.lock()->at("KEY_SPACE") =
+      IstateData->sd_KeySupports.lock()->at("Space");
+
   // debug moment
-  // std::cout<<"sizeof keybinds: "<<IkeyBinds.size()<<'\n';
+  // std::cout<<"sizeof keybinds: "<<IKeyBinds.size()<<'\n';
 }
 
 void Process::initPauseMenu() {
-  const sf::VideoMode &vm =
-      this->IstateData->sd_gfxSettings.lock()->_struct.resolution;
+  const sf::VideoMode &vm = this->IstateData->sd_gfxSettings.lock()->resolution;
   this->pausemenu =
-      new PauseMenu(this->IstateData->sd_gfxSettings.lock()->_struct.resolution,
+      new PauseMenu(this->IstateData->sd_gfxSettings.lock()->resolution,
                     this->IstateData->sd_GameFont_basic);
   this->pausemenu->addButton("EXIT_BUTTON", mmath::p2pX(74.f, vm),
                              mmath::p2pX(13.f, vm), mmath::p2pX(6.f, vm),
@@ -163,9 +174,9 @@ void Process::initTileMapData() { // Defauld Init Data
   this->noicedata.fastMode = 1;
   this->noicedata.smoothMode = 1;
   this->noicedata.RenderWindowX =
-      this->IstateData->sd_gfxSettings.lock()->_struct.resolution.size.x;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
   this->noicedata.RenderWindowY =
-      this->IstateData->sd_gfxSettings.lock()->_struct.resolution.size.y;
+      this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
   this->noicedata.mapSizeX = 620;
   this->noicedata.mapSizeY = 430;
 }
@@ -274,28 +285,28 @@ Process::~Process() {
 ////////////////////////////////////////////////////////////////////////////////////
 // sub update functions
 void Process::updateInput(const float &delta_time) {
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_TAB")) &&
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_TAB")) &&
       this->getKeytime())
     this->player->e_getInventory()->toggleInventory();
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_CLOSE")) &&
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_CLOSE")) &&
       this->getKeytime())
     this->Ipaused = !this->Ipaused;
-  if (IkeyBinds.lock()->isKeyPressed(IkeyBinds.at("KEY_SLASH")) &&
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_SLASH")) &&
       this->getKeytime())
     this->Idebud = !this->Idebud;
 }
 
 void Process::updatePlayerInputs(const float &delta_time) {
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_A")))
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_A")))
     this->player->e_move(-1.f, 0.f, delta_time);
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_D")))
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_D")))
     this->player->e_move(1.f, 0.f, delta_time);
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_S")))
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_S")))
     this->player->e_move(0.f, 1.f, delta_time);
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_W")))
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_W")))
     this->player->e_move(0.f, -1.f, delta_time);
 
-  if (Ikeyboard.lock()->isKeyPressed(IkeyBinds.at("KEY_SPACE")) &&
+  if (IKeyboard.lock()->isKeyPressed(IKeyBinds.lock()->at("KEY_SPACE")) &&
       this->getKeytime()) {
     for (auto &it : this->entitys)
       this->player->e_attack(it, delta_time);
