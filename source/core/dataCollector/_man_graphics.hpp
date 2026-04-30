@@ -23,6 +23,7 @@ struct myGFXStruct {
     fullscreen = true;
     frameRateLimit = 120;
     contextSettings.antiAliasingLevel = 8;
+    
   }
 };
 }; // namespace gfx

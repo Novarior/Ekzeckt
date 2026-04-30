@@ -19,7 +19,9 @@ bin/*
 .github/
 metadata/
 
+# Lua folder
 
+**source/res/scripts
 
 # Cache and log files
 .cache

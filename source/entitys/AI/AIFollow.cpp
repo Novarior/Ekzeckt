@@ -1,6 +1,6 @@
 #include "AIFollow.hpp"
 
-AIFollow::AIFollow(Entity& self, Entity& target, int stopDistance)
+AIFollow::AIFollow(Entity &self, Entity &target, int stopDistance)
     : AIOption(self, target)
 {
 }
@@ -9,7 +9,7 @@ AIFollow::~AIFollow()
 {
 }
 
-void AIFollow::update(const float& delta_time)
+void AIFollow::update(const float &delta_time)
 {
     sf::Vector2f moveVec;
     moveVec.x = _ai_target.e_getPosition().x - _ai_self.e_getPosition().x;
@@ -26,7 +26,6 @@ void AIFollow::update(const float& delta_time)
 
 bool AIFollow::isCloseEnough()
 {
-    float distanceSquared = pow(_ai_target.e_getPosition().x - _ai_self.e_getPosition().x, 2)
-        + pow(_ai_target.e_getPosition().y - _ai_self.e_getPosition().y, 2);
+    float distanceSquared = pow(_ai_target.e_getPosition().x - _ai_self.e_getPosition().x, 2) + pow(_ai_target.e_getPosition().y - _ai_self.e_getPosition().y, 2);
     return distanceSquared <= pow(_ai_stopDistance, 2);
 }

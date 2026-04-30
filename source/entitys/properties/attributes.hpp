@@ -3,7 +3,8 @@
 
 #include "../../core/header.h"
 
-struct Atri {
+struct Atri
+{
     float health = 10;
     float max_health = 10;
     float regeneration_health = 0;
@@ -18,12 +19,13 @@ struct Atri {
     float damage = 1;
 };
 
-class Attributes {
+class Attributes
+{
 private:
     Atri m_attributes;
 
 public:
-    Attributes(Atri* attributes = nullptr);
+    Attributes(Atri *attributes = nullptr);
     virtual ~Attributes();
 
     // functions for save and load attributes
@@ -47,10 +49,10 @@ public:
     inline const int getExperience() { return this->m_attributes.experience; }
     inline void setExperience(const int experience) { this->m_attributes.experience = experience; }
 
-    inline const Atri& getAttributes() { return this->m_attributes; }
+    inline const Atri &getAttributes() { return this->m_attributes; }
 
     void setAttributes(const Atri attributes) { this->m_attributes = attributes; }
 
-    void update(const float& delta_time);
+    void update(const float &delta_time);
 };
 #endif // ATTRIBUTES_HPP

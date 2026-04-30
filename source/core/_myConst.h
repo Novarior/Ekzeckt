@@ -64,7 +64,9 @@ const char selbtn_menu[] = "/sounds/sfx/selbtn_01.wav";
 const char press_newg[] = "/sounds/sfx/press_ng_01.wav";
 const char press_btn[] = "/sounds/sfx/press_btn_01.wav";
 }; // namespace sounds
-
+namespace scripts{
+const char lua_test[] = "/scripts/test.lua";
+}
 }; // namespace myConst
 
 #endif // myConst_h

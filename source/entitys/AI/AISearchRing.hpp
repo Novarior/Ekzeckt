@@ -4,7 +4,8 @@
 #include "AIOption.hpp"
 
 // class SearchRing used to search the target on radius
-class SearchRing {
+class SearchRing
+{
 private:
     bool _ai_targenInRange = false;
     bool _ai_enambleSearch = false;
@@ -16,7 +17,7 @@ public:
     ~SearchRing();
 
     // enable search target on radius
-    void searchTarget(AIOption* option);
+    void searchTarget(AIOption *option);
 
     // set the radius of the search ring
     void setRadius(float radius);

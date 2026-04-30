@@ -1,9 +1,8 @@
 #include "AIWander.hpp"
 #include "AIOption.hpp"
 
-AIWander::AIWander(Entity& self, float radius)
-    : AIOption(self, self)
-    , _radius(radius)
+AIWander::AIWander(Entity &self, float radius)
+    : AIOption(self, self), _radius(radius)
 {
     // Инициализация центра блуждания с корректным использованием случайных значений
     _center = _ai_self.e_getPosition() - sf::Vector2f((std::rand() % 20) - 10, (std::rand() % 20) - 10);
@@ -19,14 +18,15 @@ AIWander::AIWander(Entity& self, float radius)
     _distance = static_cast<float>(std::rand() % static_cast<int>(_radius)); // Случайная дистанция в пределах радиуса
 }
 
-AIWander::~AIWander() { }
+AIWander::~AIWander() {}
 
-void AIWander::update(const float& delta_time)
+void AIWander::update(const float &delta_time)
 {
     this->updateCooldown(delta_time);
 
     // Если сущность достигла цели или прошёл таймер, выбираем новое направление
-    if (isCooldownOver() || _distance <= 0.f) {
+    if (isCooldownOver() || _distance <= 0.f)
+    {
         sf::Vector2f toCenter = _center - _ai_self.e_getPosition();
         float angleToCenter = std::atan2(toCenter.y, toCenter.x);
 
@@ -72,7 +72,8 @@ void AIWander::update(const float& delta_time)
 
     // Если объект выходит за пределы радиуса, возвращаем его в область
     sf::Vector2f toCenter = _center - _ai_self.e_getPosition();
-    if (std::sqrt(toCenter.x * toCenter.x + toCenter.y * toCenter.y) > _radius) {
+    if (std::sqrt(toCenter.x * toCenter.x + toCenter.y * toCenter.y) > _radius)
+    {
         float angleToCenter = std::atan2(toCenter.y, toCenter.x);
         _direction = sf::Vector2f(std::cos(angleToCenter), std::sin(angleToCenter));
         _ai_self.e_move(toCenter.x * delta_time, toCenter.y * delta_time, delta_time);
@@ -85,7 +86,8 @@ void AIWander::update(const float& delta_time)
 
     // Если объект выходит за пределы радиуса, возвращаем его в область
 
-    if (std::sqrt(toCenter.x * toCenter.x + toCenter.y * toCenter.y) > _radius) {
+    if (std::sqrt(toCenter.x * toCenter.x + toCenter.y * toCenter.y) > _radius)
+    {
         float angleToCenter = std::atan2(toCenter.y, toCenter.x);
         _direction = sf::Vector2f(std::cos(angleToCenter), std::sin(angleToCenter));
         _ai_self.e_move(toCenter.x * delta_time, toCenter.y * delta_time, delta_time);

@@ -3,15 +3,16 @@
 
 #include "AIOption.hpp"
 
-class AIFollow : public AIOption {
+class AIFollow : public AIOption
+{
 private:
     int _ai_stopDistance;
 
 public:
-    AIFollow(Entity& self, Entity& entity, int stopDistance = 500);
+    AIFollow(Entity &self, Entity &entity, int stopDistance = 500);
     ~AIFollow();
 
-    void update(const float& delta_time);
+    void update(const float &delta_time);
     bool isCloseEnough();
 };
 #endif

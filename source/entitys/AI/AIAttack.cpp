@@ -1,13 +1,13 @@
 #include "AIAttack.hpp"
 
-AIAttack::AIAttack(Entity& self, Entity& target)
+AIAttack::AIAttack(Entity &self, Entity &target)
     : AIOption(self, target)
 {
 }
 
-AIAttack::~AIAttack() { }
+AIAttack::~AIAttack() {}
 
-void AIAttack::update(const float& delta_time)
+void AIAttack::update(const float &delta_time)
 {
     updateCooldown(delta_time);
 

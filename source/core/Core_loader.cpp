@@ -15,12 +15,11 @@ bool Core::cr_LoadData(nlohmann::json &_json_object,
   // mega load stuff here
   // read the object with data and paste it to structs
   try {
-    Logger::logStatic("Loading config data...", "Core::cr_LoadData()");
-    Logger::logStatic("JSON Object dump: " + _json_object.dump(4),
-                      "Core::cr_LoadData()");
+    Logger::logInfo("Loading config data...", "Core::cr_LoadData()");
+    Logger::logInfo("JSON Object dump: " + _json_object.dump(4),
+                    "Core::cr_LoadData()");
     if (!_json_object.contains("cr_window")) {
-      Logger::logStatic("Missing cr_window section", "Core::cr_LoadData()",
-                        logType::ERROR);
+      Logger::logError("Missing cr_window section", "Core::cr_LoadData()");
       return false;
     }
 
@@ -29,8 +28,8 @@ bool Core::cr_LoadData(nlohmann::json &_json_object,
     if (!window.contains("title") || !window.contains("resolution") ||
         !window["resolution"].contains("width") ||
         !window["resolution"].contains("height")) {
-      Logger::logStatic("Missing required window parameters",
-                        "Core::cr_LoadData()", logType::ERROR);
+      Logger::logError("Missing required window parameters",
+                       "Core::cr_LoadData()");
       return false;
     }
     // Загрузка графических настроек с проверками
@@ -75,15 +74,15 @@ bool Core::cr_LoadData(nlohmann::json &_json_object,
       for (const auto &[key, value] : _json_object["cr_keybinds"].items()) {
         if (!value.is_null()) {
           _keys_object[key] = value.get<uint32_t>();
-          Logger::logStatic("Loaded keybind: " + key + " = " +
-                                std::to_string(value.get<uint32_t>()),
-                            "Core::cr_LoadData()");
+          Logger::logInfo("Loaded keybind: " + key + " = " +
+                              std::to_string(value.get<uint32_t>()),
+                          "Core::cr_LoadData()");
         }
       }
     }
   } catch (json::type_error &e) { // catch json type errors
-    Logger::logStatic("JSON::TYPE_ERROR: " + std::string(e.what()),
-                      "Core::cr_LoadData()", logType::ERROR);
+    Logger::logError("JSON::TYPE_ERROR: " + std::string(e.what()),
+                     "Core::cr_LoadData()");
     // some arror in loading data from json
     return false;
   }
@@ -103,8 +102,7 @@ bool Core::cr_SaveData(gfx::myGFXStruct &_gfx_object,
   std::ifstream ifs(filePath);
   // check if file is open
   if (!ifs.is_open()) {
-    Logger::logStatic("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()",
-                      logType::ERROR);
+    Logger::logError("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()");
     return false;
   }
   // create json object
@@ -121,13 +119,12 @@ bool Core::cr_SaveData(gfx::myGFXStruct &_gfx_object,
       ofs << js.dump(4); // write data to file
       ofs.close();
     } else {
-      Logger::logStatic("CANNOT OPEN FILE", "l:113 -> GFX::loadFromFile()",
-                        logType::ERROR);
+      Logger::logError("CANNOT OPEN FILE", "l:113 -> GFX::loadFromFile()");
       return false;
     }
   } catch (json::type_error &e) { // catch json type errors
-    Logger::logStatic("GFX::JSON::TYPE_ERROR: " + std::string(e.what()),
-                      "l:113 -> GFX::loadFromFile()", logType::ERROR);
+    Logger::logError("GFX::JSON::TYPE_ERROR: " + std::string(e.what()),
+                     "l:113 -> GFX::loadFromFile()");
     // some arror in loading data from json
     return false;
   }

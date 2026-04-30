@@ -3,9 +3,10 @@
 
 #include "mymath.hpp"
 
-class ProcessGenerationNoice {
+class ProcessGenerationNoice
+{
 private:
-    mmath::noiceData& m_data;
+    mmath::noiceData &m_data;
 
 public:
     double InterpolatedNoise(int i, double x, double y);
@@ -14,15 +15,17 @@ public:
     double FastSmoothedNoise(int i, int x, int y);
     double Noise(int i, int x, int y);
 
-    ProcessGenerationNoice(mmath::noiceData& data);
+    ProcessGenerationNoice(mmath::noiceData &data);
     virtual ~ProcessGenerationNoice();
 
-    void setNoiceData(mmath::noiceData& data) { this->m_data = data; 
-    if (this->m_data.fastMode) this->m_data.smoothMode = 1;
+    void setNoiceData(mmath::noiceData &data)
+    {
+        this->m_data = data;
+        if (this->m_data.fastMode) this->m_data.smoothMode = 1;
     }
 
     void setSeed(double seed);
-    mmath::noiceData& getNoiceData() { return this->m_data; }
+    mmath::noiceData &getNoiceData() { return this->m_data; }
     double getSeed();
     double getNoice(double x, double y);
 };

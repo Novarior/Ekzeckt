@@ -3,12 +3,14 @@
 
 int main() {
 
-  Logger::logStatic(
+  Logger::logInfo(
       "\n=====================\n=====================\n=====================",
       "main.cpp");
   Core mc;
 
   mc.run();
+
+  Logger::destroy();  // Flush all remaining logs and cleanup
 
   return 0;
 }

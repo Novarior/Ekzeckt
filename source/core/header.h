@@ -24,10 +24,9 @@
 #include <unordered_map>
 #include <vector>
 
-
 #include <IOKit/hid/IOHIDLib.h>
 
-// include nlohmann/json libary
+// include nlohmann-json libary
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 using namespace nlohmann;
@@ -37,4 +36,11 @@ using namespace nlohmann;
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+
+// include LUA libary
+extern "C" {
+#include <lua/lauxlib.h>
+#include <lua/lua.h>
+#include <lua/lualib.h>
+}
 #endif /* HEADER */

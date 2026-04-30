@@ -3,7 +3,8 @@
 
 #include "AIOption.hpp"
 
-class AIWander : public AIOption {
+class AIWander : public AIOption
+{
 private:
     sf::Vector2f _direction;
     sf::Vector2f _center;
@@ -15,15 +16,11 @@ private:
     sf::VertexArray _line;
 
 public:
-    AIWander(Entity& self, float radius);
+    AIWander(Entity &self, float radius);
     ~AIWander();
 
-    void update(const float& delta_time);
+    void update(const float &delta_time);
 
-    void render(sf::RenderTarget& target)
-    {
-        target.draw(_line);
-    }
+    void render(sf::RenderTarget &target) { target.draw(_line); }
 };
-
 #endif

@@ -2,31 +2,26 @@
 
 SimplexNoise::SimplexNoise()
 {
-    // Инициализация шума
-    for (int i = 0; i < 256; ++i) {
+    for (int i = 0; i < 256; ++i)
         perm[i] = static_cast<uint8_t>(i);
-    }
 
-    // Перемешиваем элементы массива
-    for (int i = 255; i > 0; --i) {
+    for (int i = 255; i > 0; --i)
+    {
         int j = rand() % (i + 1);
         std::swap(perm[i], perm[j]);
     }
-
-    // Дублируем значения для устранения бесконечности
-    for (int i = 0; i < 256; ++i) {
+    for (int i = 0; i < 256; ++i)
         perm[i + 256] = perm[i];
-    }
 }
 
-SimplexNoise::~SimplexNoise() { }
+SimplexNoise::~SimplexNoise() {}
 
 int SimplexNoise::fastfloor(float x)
 {
     return static_cast<int>(std::floor(x));
 }
 
-float SimplexNoise::dot(int* g, float x, float y)
+float SimplexNoise::dot(int *g, float x, float y)
 {
     return g[0] * x + g[1] * y;
 }
@@ -34,32 +29,13 @@ float SimplexNoise::dot(int* g, float x, float y)
 float SimplexNoise::computeNoise(float x, float y, int gi, int grad3[][3])
 {
     float t = 0.5 - x * x - y * y;
-    if (t < 0) {
+    if (t < 0)
         return 0.0;
-    }
+
     t *= t;
     return t * t * dot(grad3[gi], x, y);
 }
 
-/**
- * @brief Generates 2D Simplex noise for the given coordinates.
- *
- * This function computes the 2D Simplex noise value for the input coordinates (xin, yin).
- * Simplex noise is a method for constructing an n-dimensional noise function comparable to Perlin noise ("classic" noise) but with fewer artifacts and a lower computational overhead.
- *
- * @param xin The x-coordinate for which to generate noise.
- * @param yin The y-coordinate for which to generate noise.
- * @return A float value representing the noise at the given coordinates, normalized between -1 and 1.
- *
- * @param xin Координата X.
- * @param yin Координата Y.
- * @return Значение шума в диапазоне от -1 до 1.
- *
- * Функция использует алгоритм Simplex Noise для генерации шума на основе
- * входных координат. Она включает в себя вычисление смещений в сетке Simplex,
- * определение точек сетки и вычисление вклада каждой вершины сетки в итоговое
- * значение шума. Результат нормализуется в диапазоне от -1 до 1.
- */
 float SimplexNoise::noise(float xin, float yin)
 {
     // Константы для настройки Simplex шума
@@ -78,10 +54,13 @@ float SimplexNoise::noise(float xin, float yin)
 
     // Определение точек сетки
     int i1, j1;
-    if (x0 > y0) {
+    if (x0 > y0)
+    {
         i1 = 1;
         j1 = 0;
-    } else {
+    }
+    else
+    {
         i1 = 0;
         j1 = 1;
     }
