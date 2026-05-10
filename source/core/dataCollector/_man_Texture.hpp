@@ -5,7 +5,8 @@
 
 // Создаем перечисление для текстур, чтобы можно было использовать вместо
 // строковых литералов
-enum class TextureID {
+enum class TextureID
+{
   TEXTURE_NULL,
   TEXTURE_DEEP_OCEAN,
   TEXTURE_OCEAN,
@@ -21,7 +22,6 @@ enum class TextureID {
   TEXTURE_BACKGROUND_LAY_2,
   TEXTURE_BACKGROUND_LAY_3,
   // Текстуры предметов
-  ITEMS_NULL,
   ITEMS_STONE,
   ITEMS_WOOD,
   ITEMS_IRON_SWORD,
@@ -35,14 +35,14 @@ enum class TextureID {
   // Монеты
   COINS_GOLD_NUGGET,
   COINS_COPPER_NUGGET,
-  COINS_SILVER_NUGGET
+  COINS_SILVER_NUGGET,
 };
 
 // Вспомогательная структура для хранения пар TextureID -> строка
 struct TextureIDMapping {
   static std::unordered_map<TextureID, std::string> idToStringMap;
 
-  static void initialize() {
+  static bool initTextureIDMapping() {
     idToStringMap = {
         {TextureID::TEXTURE_NULL, "texture_null"},
         {TextureID::TEXTURE_DEEP_OCEAN, "texture_deep_ocean"},
@@ -57,7 +57,6 @@ struct TextureIDMapping {
         {TextureID::TEXTURE_BACKGROUND_LAY_1, "texture_background_lay_1"},
         {TextureID::TEXTURE_BACKGROUND_LAY_2, "texture_background_lay_2"},
         {TextureID::TEXTURE_BACKGROUND_LAY_3, "texture_background_lay_3"},
-        {TextureID::ITEMS_NULL, "items_NULL"},
         {TextureID::ITEMS_STONE, "items_stone"},
         {TextureID::ITEMS_WOOD, "items_wood"},
         {TextureID::ITEMS_IRON_SWORD, "items_iron_sword"},
@@ -65,12 +64,13 @@ struct TextureIDMapping {
         {TextureID::ITEMS_LEATHER_ARMOR, "items_leather_armor"},
         {TextureID::ITEMS_HEALTH_POTION, "items_health_potion"},
         {TextureID::ITEMS_GOLD_COIN, "items_gold_coin"},
-        {TextureID::ITEMS_POISON_SMALL_REGENERATION,
-         "items_potion_small_regeneration"},
+        {TextureID::ITEMS_POISON_SMALL_REGENERATION, "items_potion_small_regeneration"},
         {TextureID::INVENTORY_CELL_TEXTURE, "inventory_cell_texture"},
         {TextureID::COINS_GOLD_NUGGET, "coins_gold_nugget"},
         {TextureID::COINS_COPPER_NUGGET, "coins_copper_nugget"},
         {TextureID::COINS_SILVER_NUGGET, "coins_silver_nugget"}};
+
+    return true;
   }
 
   static std::string toString(TextureID id) {
@@ -78,44 +78,41 @@ struct TextureIDMapping {
     if (it != idToStringMap.end()) {
       return it->second;
     } else {
-      Logger::logStatic("Unknown TextureID encountered",
-                        "TextureIDMapping::toString()", logType::ERROR);
-      return "texture_null"; // Возвращаем дефолтное значение
+      return "texture_null";
     }
   }
 };
 
 class TextureManager {
 public:
+  static bool initialize() { return TextureIDMapping::initTextureIDMapping(); }
+
   // Метод для загрузки текстуры по паре ключ-значение (перечисление-путь)
   static bool loadTexture(TextureID textureID, const std::string &filePath) {
     std::string textureName = TextureIDMapping::toString(textureID);
+    if (textureName == "texture_null") {
+      Logger::logStatic("ThrowBack TEXTURE_NAME: " + filePath, "TextureManager::loadTexture()", logType::ERROR);
+      return false;
+    }
     return loadTexture(textureName, filePath);
   }
 
   // Метод для загрузки текстуры (оригинальный)
-  static bool loadTexture(const std::string &textureName,
-                          const std::string &filePath) {
+  static bool loadTexture(const std::string &textureName, const std::string &filePath) {
     if (m_textures.find(textureName) != m_textures.end()) {
       // Если текстура уже загружена, возвращаем true
-      Logger::logStatic(textureName + " texture alrady loaded",
-                        "TextureManager::loadTexture()", logType::INFO);
+      Logger::logStatic("texture " + textureName + " already loaded", "TextureManager::loadTexture()", logType::INFO);
       return true;
     }
 
     sf::Texture texture;
-    if (texture.loadFromFile(ApplicationsFunctions::get_resources_dir() +
-                             filePath)) {
+    if (texture.loadFromFile(ApplicationsFunctions::get_resources_dir() + filePath)) {
       // сохраняем текстуру в контейнер
       m_textures.emplace(textureName, std::move(texture));
-      Logger::logStatic(textureName + " success load",
-                        "TextureManager::loadTexture()",
-                        logType::INFO); // Логируем успешную загрузку
+      Logger::logStatic("success load: " + textureName, "TextureManager::loadTexture()", logType::INFO); // Логируем успешную загрузку
       return true;
     } else {
-      Logger::logStatic(textureName + " failed to load",
-                        "TextureManager::loadTexture()",
-                        logType::ERROR); // Логируем ошибку
+      Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::ERROR); // Логируем ошибку
       return false;
     }
   }
@@ -131,17 +128,14 @@ public:
     if (m_textures.find(textureName) != m_textures.end()) {
       return m_textures[textureName];
     } else { // В случае отсутствия текстуры, логируем ошибку
-      Logger::logStatic("Texture not found: " + textureName +
-                            ", returning TEXTURE_NULL",
-                        "TextureManager::getTexture()", logType::WARNING);
+      Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::WARNING);
 
       // Проверяем, есть ли текстура NULL
       if (m_textures.find("texture_null") != m_textures.end()) {
         return m_textures["texture_null"];
       } else {
         // Если NULL текстуры нет, бросаем исключение
-        Logger::logStatic("TEXTURE_NULL is also missing!",
-                          "TextureManager::getTexture()", logType::ERROR);
+        Logger::logStatic("TEXTURE_NULL is also missing!", "TextureManager::getTexture()", logType::ERROR);
         throw std::runtime_error("Critical error: Both requested texture and "
                                  "TEXTURE_NULL are missing.");
       }

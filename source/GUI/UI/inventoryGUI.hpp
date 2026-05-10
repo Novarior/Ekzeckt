@@ -68,7 +68,7 @@ namespace GUI
 
         // Выбранный предмет и его описание
         int m_selectedSlot;
-        gui::TextBox *m_itemDescription;
+        // gui::TextBox *m_itemDescription;
 
         // Шрифт для текста
         sf::Font &m_font;
