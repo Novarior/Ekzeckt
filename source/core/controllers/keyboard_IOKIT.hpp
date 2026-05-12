@@ -1,5 +1,5 @@
-#ifndef KEYBOARD
-#define KEYBOARD
+#ifndef KEYBOARD_IOKIT
+#define KEYBOARD_IOKIT
 
 #include <IOKit/hid/IOHIDLib.h>
 #include <cstdint>
@@ -19,4 +19,4 @@ public:
   void update();
 };
 
-#endif /* KEYBOARD */
+#endif /* KEYBOARD_IOKIT */

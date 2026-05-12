@@ -253,28 +253,28 @@ void EditorState::saveTreeAsImage(sf::RenderWindow &window) {
 
 void EditorState::updateInput(const float &delta_time) {
   // if pressed key ESC then end state
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
     this->endState();
 
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
     this->Idebud = !this->Idebud;
 
   // switch tab menu
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) &&
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) &&
       this->getKeytime())
     this->showTabmenu = !this->showTabmenu;
 
   // update currentViewGenerator in a range from 0 to 2
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_Q)) &&
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_Q)) &&
       this->getKeytime())
     this->m_NoiceViewer->swithNoiceModel();
 
   // switch noice model
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_W)) &&
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_W)) &&
       this->getKeytime())
     this->m_NoiceViewer->swithColorMode();
 
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_E)) &&
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_E)) &&
       this->getKeytime()) {
     if (this->current_View_Generator < 2)
       this->current_View_Generator++;
@@ -282,7 +282,7 @@ void EditorState::updateInput(const float &delta_time) {
       this->current_View_Generator = 0;
   }
   // switch noice smooth mode (fast mode)
-  if (IKeyboard.lock()->isKeyPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_R)) &&
+  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_R)) &&
       this->getKeytime())
     this->m_noiceData.fastMode = !this->m_noiceData.fastMode;
 }

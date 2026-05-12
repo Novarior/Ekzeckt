@@ -428,18 +428,18 @@ SettingsState::~SettingsState() {
 // Functions
 void SettingsState::updateInput(const float &delta_time) {
   // if escape is pressed, end state
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
     this->endState();
   // if slash is pressed, swith debug mode
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
     this->Idebud = !this->Idebud;
 
   // if key Q is pressed, swith page to left (back)
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_Q)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_Q)) && this->getKeytime())
     this->page = static_cast<settingPage>((static_cast<int>(this->page) - 1 + static_cast<int>(settingPage::PAGE_COUNT)) % static_cast<int>(settingPage::PAGE_COUNT));
 
   // if key E is pressed, swith page to right (forward)
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_E)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_E)) && this->getKeytime())
     this->page = static_cast<settingPage>((static_cast<int>(this->page) + 1) % static_cast<int>(settingPage::PAGE_COUNT));
 }
 

@@ -34,8 +34,8 @@ private:
   sf::Clock cr_deltaClock;
 
   // Data (keyboard, Graph)
-  std::shared_ptr<keyboardOSX> cr_Keyboard;
-  std::shared_ptr<std::map<std::string, uint32_t>> cr_KeySuppors;
+  // std::shared_ptr<keyboardOSX> cr_Keyboard;
+  std::shared_ptr<std::map<std::string, uint16_t>> cr_KeySuppors;
 
   // VolCollector, sound buffer and sound map
   std::shared_ptr<gfx::VolumeCollector> cr_VolumeCollector;

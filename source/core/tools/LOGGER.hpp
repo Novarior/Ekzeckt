@@ -29,7 +29,6 @@ private:
   std::string timestamp;      // timestamp for log file name
 
   std::filesystem::path m_File_Path_Name; // path
-  std::filesystem::path m_Backup_Path;    // path for backup log file
   int m_BufferCount = 0;                  // counter for entries in buffer
   static const int BUFFER_LIMIT = 10;     // flush buffer after N entries
 
@@ -51,15 +50,6 @@ private:
     }
   }
 
-  void createLogBackupFile() {
-    try {
-      if (std::filesystem::exists(m_File_Path_Name))
-        std::filesystem::copy(m_File_Path_Name, m_Backup_Path, std::filesystem::copy_options::overwrite_existing);
-    } catch (const std::exception &e) {
-      std::cerr << "Logger: Failed to create a backup of the log file: " << e.what() << std::endl;
-    }
-  }
-
   void createLogFileWithTimestamp() {
     try {
       m_OutFile.open(m_File_Path_Name, std::ios::out);
@@ -75,7 +65,6 @@ private:
   Logger() {
     timestamp = ApplicationsFunctions::getCurrentTime();
     m_File_Path_Name = ApplicationsFunctions::getDocumentsAppFolder() + AppFiles::f_logger;
-    m_Backup_Path = ApplicationsFunctions::getDocumentsAppFolder() + AppFiles::f_backup;
     m_File_Path_Name = "logs_" + timestamp + ".log";
     createLogFileWithTimestamp();
   }
@@ -128,7 +117,6 @@ public:
       s_Instance->flushBufferToFile();
       if (s_Instance->m_OutFile.is_open()) {
         s_Instance->m_OutFile.close();
-        s_Instance->createLogBackupFile();
       }
       delete s_Instance;
       s_Instance = nullptr;

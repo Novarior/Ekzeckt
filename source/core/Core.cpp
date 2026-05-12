@@ -6,6 +6,7 @@
 #include "../localisation/helperText.hpp"
 #include "../states/MainMenu.hpp"
 #include "_myConst.h"
+#include "controllers/keyboard_Cocoa.h"
 #include "dataCollector/_man_Texture.hpp"
 #include "systemFunctionUNIX.hpp"
 #include "tools/LOGGER.hpp"
@@ -32,10 +33,10 @@ void Core::coreInitDirectories() {
 // coreInitialisations root data, window, fonts and etc
 void Core::coreInitVariabless() {
   // coreInit basics shared structs
-  cr_Keyboard = std::make_shared<keyboardOSX>();
+  // cr_Keyboard = std::make_shared<keyboardOSX>();
   cr_gfxSettings = std::make_shared<gfx::myGFXStruct>();
   cr_VolumeCollector = std::make_shared<gfx::VolumeCollector>();
-  cr_KeySuppors = std::make_shared<std::map<std::string, uint32_t>>();
+  cr_KeySuppors = std::make_shared<std::map<std::string, uint16_t>>();
 
   if (!cr_LoadData()) {
     Logger::logStatic("Failed to load data!", "Core::coreInitVariables()");
@@ -66,7 +67,7 @@ void Core::coreInitVariabless() {
   // print to console/Loggger all data for next debug
   std::stringstream ss;
   ss << "DEBUG LOG\ncurrent resouses used:\n"
-     << "KeyboardOSX:" << (cr_Keyboard.get() ? "\t allive" : "\t is null")
+     //<< "KeyboardOSX:" << (cr_Keyboard.get() ? "\t allive" : "\t is null")
      << "GFX_DATA:\t" << (cr_gfxSettings.get() ? "\t allive" : "\t is null")
      << "Volume_Data:\t"
      << (cr_VolumeCollector.get() ? "\t allive" : "\t is null")
@@ -94,6 +95,8 @@ void Core::coreInitWindow() {
   cr_Window->setFramerateLimit(cr_gfxSettings->frameRateLimit);
   cr_Window->setVerticalSyncEnabled(cr_gfxSettings->verticalSync);
   cr_Window->setKeyRepeatEnabled(false);
+
+  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
 }
 
 // load all textures
@@ -103,7 +106,6 @@ void Core::coreInitTextures() {
     Logger::logStatic("Failed to load texture", "Core::coreInitTextures()");
 
   TextureManager::initialize();
-  TextureManager::loadTexture(TextureID::TEXTURE_NULL, ItemTextures::item_NULL);
   TextureManager::loadTexture(TextureID::TEXTURE_DEEP_OCEAN, myConst::textures::texture_DEEP_OCEAN);
   TextureManager::loadTexture(TextureID::TEXTURE_OCEAN, myConst::textures::texture_OCEAN);
   TextureManager::loadTexture(TextureID::TEXTURE_SAND, myConst::textures::texture_SAND);
@@ -136,7 +138,7 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
   cr_Statedata.sd_GameFont_basic = cr_GameFont_basic;
   cr_Statedata.sd_debugFont = cr_debugFont;
   // keyboard and theyr stuff
-  cr_Statedata.sd_keyboard_prt = cr_Keyboard;
+  // cr_Statedata.sd_keyboard_prt = cr_Keyboard;
   cr_Statedata.sd_KeySupports = cr_KeySuppors;
   // graphics settings
   cr_Statedata.sd_gfxSettings = cr_gfxSettings;
@@ -182,46 +184,46 @@ void Core::coreInitLua() {
 
 void Core::coreInitKeyBind() {
   // pull all keys
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_A, kHIDUsage_KeyboardA);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_C, kHIDUsage_KeyboardC);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_D, kHIDUsage_KeyboardD);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_E, kHIDUsage_KeyboardE);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F, kHIDUsage_KeyboardF);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_Q, kHIDUsage_KeyboardQ);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_R, kHIDUsage_KeyboardR);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_S, kHIDUsage_KeyboardS);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_W, kHIDUsage_KeyboardW);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_A, kVK_ANSI_A);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_C, kVK_ANSI_C);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_D, kVK_ANSI_D);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_E, kVK_ANSI_E);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F, kVK_ANSI_F);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_Q, kVK_ANSI_Q);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_R, kVK_ANSI_R);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_S, kVK_ANSI_S);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_W, kVK_ANSI_W);
   // cr_KeySuppors->emplace("X", kHIDUsage_KeyboardX);
   // cr_KeySuppors->emplace("Z", kHIDUsage_KeyboardZ);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_1, kHIDUsage_Keyboard1);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_2, kHIDUsage_Keyboard2);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_3, kHIDUsage_Keyboard3);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_4, kHIDUsage_Keyboard4);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_5, kHIDUsage_Keyboard5);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_6, kHIDUsage_Keyboard6);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_7, kHIDUsage_Keyboard7);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_8, kHIDUsage_Keyboard8);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_9, kHIDUsage_Keyboard9);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_0, kHIDUsage_Keyboard0);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_SPACE, kHIDUsage_KeyboardSpacebar);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_APPLY, kHIDUsage_KeyboardReturnOrEnter);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_CLOSE, kHIDUsage_KeyboardEscape);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_REMOVE, kHIDUsage_KeyboardDeleteOrBackspace);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_DEBUG_SWITCH, kHIDUsage_KeyboardSlash);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_TAB_MENU, kHIDUsage_KeyboardTab);
-  cr_KeySuppors->emplace(ActionKeyBind::ACTION_INVENTORY, kHIDUsage_KeyboardTab);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F1, kHIDUsage_KeyboardF1);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F2, kHIDUsage_KeyboardF2);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F3, kHIDUsage_KeyboardF3);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F4, kHIDUsage_KeyboardF4);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F5, kHIDUsage_KeyboardF5);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F6, kHIDUsage_KeyboardF6);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F7, kHIDUsage_KeyboardF7);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F8, kHIDUsage_KeyboardF8);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F9, kHIDUsage_KeyboardF9);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F10, kHIDUsage_KeyboardF10);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F11, kHIDUsage_KeyboardF11);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_F12, kHIDUsage_KeyboardF12);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_1, kVK_ANSI_1);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_2, kVK_ANSI_2);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_3, kVK_ANSI_3);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_4, kVK_ANSI_4);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_5, kVK_ANSI_5);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_6, kVK_ANSI_6);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_7, kVK_ANSI_7);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_8, kVK_ANSI_8);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_9, kVK_ANSI_9);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_0, kVK_ANSI_0);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_SPACE, kVK_Space);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_APPLY, kVK_Return);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_CLOSE, kVK_Escape);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_REMOVE, kVK_Delete);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_DEBUG_SWITCH, kVK_ANSI_Slash);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_TAB_MENU, kVK_Tab);
+  cr_KeySuppors->emplace(ActionKeyBind::ACTION_INVENTORY, kVK_Tab);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F1, kVK_F1);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F2, kVK_F2);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F3, kVK_F3);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F4, kVK_F4);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F5, kVK_F5);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F6, kVK_F6);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F7, kVK_F7);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F8, kVK_F8);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F9, kVK_F9);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F10, kVK_F10);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F11, kVK_F11);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_F12, kVK_F12);
 }
 
 void Core::coreInitKeyboard() {
@@ -307,8 +309,13 @@ void Core::update() {
 }
 
 void Core::updateEventsWindow() {
-  while (const std::optional event = cr_Window.get()->pollEvent())
-    if (event->is<sf::Event::Closed>()) cr_Window->close();
+  while (const std::optional event = cr_Window.get()->pollEvent()) {
+    if (event->is<sf::Event::Closed>()) {
+      cr_Window->close();
+    } else if (event->is<sf::Event::FocusLost>()) {
+      keyboardCocoa::clearKeyStates();
+    }
+  }
 }
 
 void Core::render() {

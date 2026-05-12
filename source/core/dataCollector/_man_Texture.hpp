@@ -42,7 +42,7 @@ enum class TextureID
 struct TextureIDMapping {
   static std::unordered_map<TextureID, std::string> idToStringMap;
 
-  static bool initTextureIDMapping() {
+  static void initTextureIDMapping() {
     idToStringMap = {
         {TextureID::TEXTURE_NULL, "texture_null"},
         {TextureID::TEXTURE_DEEP_OCEAN, "texture_deep_ocean"},
@@ -69,8 +69,6 @@ struct TextureIDMapping {
         {TextureID::COINS_GOLD_NUGGET, "coins_gold_nugget"},
         {TextureID::COINS_COPPER_NUGGET, "coins_copper_nugget"},
         {TextureID::COINS_SILVER_NUGGET, "coins_silver_nugget"}};
-
-    return true;
   }
 
   static std::string toString(TextureID id) {
@@ -84,8 +82,30 @@ struct TextureIDMapping {
 };
 
 class TextureManager {
+private:
+  static sf::Image getDefaultNullTexture() {
+    sf::Vector2u size(128, 128);
+    sf::Image image(size, sf::Color::Black);
+    unsigned int blockSize = 16;
+
+    for (unsigned int x = 0; x < size.x; x++) {
+      for (unsigned int y = 0; y < size.y; y++) {
+        unsigned int blockX = x / blockSize;
+        unsigned int blockY = y / blockSize;
+
+        sf::Color color = ((blockX + blockY) % 2 == 0) ? sf::Color::Black : sf::Color(255, 0, 255);
+        image.setPixel({x, y}, color);
+      }
+    }
+
+    return image;
+  }
+
 public:
-  static bool initialize() { return TextureIDMapping::initTextureIDMapping(); }
+  static void initialize() {
+    TextureIDMapping::initTextureIDMapping();
+    initNULLTEXTURE();
+  }
 
   // Метод для загрузки текстуры по паре ключ-значение (перечисление-путь)
   static bool loadTexture(TextureID textureID, const std::string &filePath) {
@@ -95,6 +115,13 @@ public:
       return false;
     }
     return loadTexture(textureName, filePath);
+  }
+
+  static void initNULLTEXTURE() {
+    sf::Texture tx;
+    if (!tx.loadFromImage(getDefaultNullTexture()))
+      throw std::runtime_error("Failed to create default null texture");
+    m_textures.emplace(TextureIDMapping::toString(TextureID::TEXTURE_NULL), std::move(tx));
   }
 
   // Метод для загрузки текстуры (оригинальный)

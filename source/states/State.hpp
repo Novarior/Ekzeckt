@@ -1,10 +1,10 @@
 #ifndef STATE
 #define STATE
 
+#include "../core/controllers/keyboard_Cocoa.h"
 #include "../core/dataCollector/_keybind_enum.h"
 #include "../core/dataCollector/_man_Volume.hpp"
 #include "../core/dataCollector/_man_graphics.hpp"
-#include "../core/keyboard.hpp"
 
 // Forward declaration of State class
 class State;
@@ -31,9 +31,9 @@ public:
   std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundMap;
   std::weak_ptr<std::map<std::string, sf::Sound>> sd_SoundBufferMap;
   // KeyMap and KeyBinds
-  std::weak_ptr<std::map<std::string, uint32_t>> sd_KeySupports;
+  std::weak_ptr<std::map<std::string, uint16_t>> sd_KeySupports;
   // pointer to keyboard
-  std::weak_ptr<keyboardOSX> sd_keyboard_prt;
+  // std::weak_ptr<keyboardOSX> sd_keyboard_prt;
   // Character size for text's
   unsigned int sd_characterSize_debug;
   unsigned int sd_characterSize_game_big;
@@ -55,8 +55,8 @@ protected:
   std::stack<State *> *Istates;            // Stack of states
   std::weak_ptr<sf::RenderWindow> Iwindow; // Weak pointer to the SFML window
   // Map of Binds keys
-  std::weak_ptr<std::map<std::string, uint32_t>> IKeySupports;
-  std::weak_ptr<keyboardOSX> IKeyboard; // Pointer to keyboard
+  std::weak_ptr<std::map<std::string, uint16_t>> IKeySupports;
+  //   std::weak_ptr<keyboardOSX> IKeyboard; // Pointer to keyboard
 
   // Resources
   bool Iquit;        // Flag to quit the state

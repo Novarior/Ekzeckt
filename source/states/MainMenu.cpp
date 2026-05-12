@@ -192,10 +192,10 @@ void MainMenu::update(const float &delta_time) {
 }
 
 void MainMenu::updateInput(const float &delta_time) {
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && getKeytime())
     Idebud = !Idebud;
 
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_R)) && getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_R)) && getKeytime())
     resetGUI();
 }
 

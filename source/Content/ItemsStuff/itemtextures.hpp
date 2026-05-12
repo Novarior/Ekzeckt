@@ -3,7 +3,7 @@
 
 namespace ItemTextures {
 // DEFAULT TEXTURE IS NULL TEXTURA =)
-const char item_NULL[] = "/textures/items/nulltexture.png";
+const char item_NULL[] = "/textures/gui/nulltexture.png";
 
 namespace items { // items
   const char item_stone[] = "/textures/items/item/stone_01.png";

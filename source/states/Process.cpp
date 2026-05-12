@@ -224,26 +224,26 @@ Process::~Process() {
 ////////////////////////////////////////////////////////////////////////////////////
 // sub update functions
 void Process::updateInput(const float &delta_time) {
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) && this->getKeytime())
     this->player->e_getInventory()->toggleInventory();
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
     this->Ipaused = !this->Ipaused;
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
     this->Idebud = !this->Idebud;
 }
 
 void Process::updatePlayerInputs(const float &delta_time) {
 
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_A)))
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_A)))
     this->player->e_move(-1.f, 0.f, delta_time);
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_D)))
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_D)))
     this->player->e_move(1.f, 0.f, delta_time);
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_S)))
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_S)))
     this->player->e_move(0.f, 1.f, delta_time);
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_W)))
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_W)))
     this->player->e_move(0.f, -1.f, delta_time);
 
-  if (IKeyboard.lock()->isKeyPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_SPACE)) && this->getKeytime()) {
+  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_SPACE)) && this->getKeytime()) {
     for (auto &it : this->entitys)
       this->player->e_attack(it, delta_time);
   }

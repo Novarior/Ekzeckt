@@ -1,4 +1,4 @@
-#include "keyboard.hpp"
+#include "keyboard_IOKIT.hpp"
 #include <cstdint>
 
 static void HandleInputCallback(void *context, IOReturn result, void *sender,
@@ -18,8 +18,7 @@ keyboardOSX::keyboardOSX() {
   hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDManagerOptionNone);
   IOHIDManagerSetDeviceMatching(hidManager, nullptr);
   IOHIDManagerRegisterInputValueCallback(hidManager, HandleInputCallback, this);
-  IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(),
-                                  kCFRunLoopDefaultMode);
+  IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
   IOHIDManagerOpen(hidManager, kIOHIDManagerOptionNone);
 }
 

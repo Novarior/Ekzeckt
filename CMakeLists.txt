@@ -14,7 +14,7 @@ else()
 endif()
 
 # Включение всех файлов проекта
-file(GLOB_RECURSE SOURCE_PROJECT_FILES source/*.cpp)
+file(GLOB_RECURSE SOURCE_PROJECT_FILES source/*.cpp source/*.mm)
 
 # Поиск библиотеки SFML
 find_package(SFML 3.0.0 REQUIRED COMPONENTS Graphics Audio Network System)
@@ -57,6 +57,9 @@ set(Template_ver metadata/cmakever.h.in)
 configure_file(${Template_ver} ${CMAKE_CURRENT_BINARY_DIR}/../source/core/cmakever.h)
 
 if(APPLE)
+    # Включение Objective-C++ для .mm файлов
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ObjC++")
+    
     # Конфигурация plist файла для бандла
     set(DATA_BUNDLE_BUNDLE_NAME "Ekzeckt")
     set(DATA_BUNDLE_GUI_IDENTIFIER "com.ekzeckt")
@@ -86,44 +89,38 @@ if(APPLE)
         SFML::Network
         SFML::System
         nlohmann_json::nlohmann_json
-        "-framework CoreFoundation"
-        "-framework CoreServices"
-         "-framework IOKit"
+        "-framework Carbon"
+        "-framework Cocoa"
+
     )
 
-    # Установка rpath
+    # Info.plist и RPATH для бандла
     set_target_properties(Ekzeckt PROPERTIES
         INSTALL_RPATH "@executable_path/../Frameworks"
         BUILD_WITH_INSTALL_RPATH TRUE
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Info.plist
     )
-
+   
     # Копирование библиотек SFML в бандл
     foreach(library IN LISTS SFML_LIBRARY_DIRS)
         copy_to_bundle(${library})
     endforeach()
+
+    # Подпись приложения через codesign
+    set(CODESIGN_IDENTITY "-" CACHE STRING "Identity for codesign (default ad-hoc)")
+    set(CODESIGN_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/metadata/entitlements.plist")
+
+    if(EXISTS "${CODESIGN_ENTITLEMENTS}")
+        add_custom_command(TARGET Ekzeckt POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "Signing Ekzeckt.app with identity ${CODESIGN_IDENTITY}"
+            COMMAND codesign --deep --force --verbose --sign "${CODESIGN_IDENTITY}" --entitlements "${CODESIGN_ENTITLEMENTS}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Ekzeckt.app"
+            COMMENT "Code signing Ekzeckt.app"
+        )
+    else()
+        add_custom_command(TARGET Ekzeckt POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "Signing Ekzeckt.app with identity ${CODESIGN_IDENTITY} (no entitlements file found)"
+            COMMAND codesign --deep --force --verbose --sign "${CODESIGN_IDENTITY}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Ekzeckt.app"
+            COMMENT "Code signing Ekzeckt.app"
+        )
+    endif()
 endif()
-
-# Указываем путь к файлам, которые будут установлены
-install(TARGETS Ekzeckt DESTINATION bin)
-
-# Указываем дополнительные файлы (например, документацию)
-install(FILES README.md DESTINATION share/doc/MyApp)
-
-# Настройка CPack
-set(CPACK_PACKAGE_NAME "EKZECKT")                # Имя пакета
-set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}") # Версия пакета
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Application Installer")
-set(CPACK_PACKAGE_VENDOR "Novarior Flow")
-set(CPACK_PACKAGE_CONTACT "Xle6yIIIeK1337@gmail.com")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE") # Файл лицензии
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "MyAppInstallDir")         # Директория установки
-set(CPACK_PACKAGE_EXECUTABLES "EKZECKT" "My Application")
-set(CPACK_NSIS_DISPLAY_NAME "Application Installer")
-
-# Указываем генераторы пакетов
-set(CPACK_GENERATOR "ZIP;TGZ;NSIS;DragNDrop") # Генерация пакетов в формате ZIP и TAR.GZ
-
-# Подключаем CPack
-include(CPack)

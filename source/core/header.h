@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <IOKit/hid/IOHIDLib.h>
+#include <Carbon/Carbon.h>
 
 // include nlohmann-json libary
 #include <nlohmann/json.hpp>

@@ -17,7 +17,7 @@ State::State(StateData *state_data)
   Iwindow = state_data->sd_Window;
   Istates = state_data->sd_States;
   IKeySupports = state_data->sd_KeySupports;
-  IKeyboard = state_data->sd_keyboard_prt;
+  // IKeyboard = state_data->sd_keyboard_prt;
   Iquit = false;
   Ipaused = false;
   Ikeytime = 0.f;
