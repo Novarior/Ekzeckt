@@ -2,11 +2,20 @@
 #define CORE
 
 #include "header.h"
+#include "_myConst.h"
 
-#include "../states/State.hpp"
 #include "dataCollector/_keybind_enum.h"
 #include "dataCollector/_man_Volume.hpp"
 #include "dataCollector/_man_graphics.hpp"
+#include "dataCollector/_man_Texture.hpp"
+#include "../localisation/helperText.hpp"
+
+#include "../states/State.hpp"
+#include "../states/MainMenu.hpp"
+
+#include "systemFunctionUNIX.hpp"
+#include "tools/LOGGER.hpp"
+#include "tools/staticFPSMetter.hpp"
 
 // class LuaVM{
 //     public:

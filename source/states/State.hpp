@@ -1,9 +1,12 @@
 #ifndef STATE
 #define STATE
 
+#include "../core/header.h"
+
 #include "../core/dataCollector/_keybind_enum.h"
 #include "../core/dataCollector/_man_Volume.hpp"
 #include "../core/dataCollector/_man_graphics.hpp"
+#include "../core/math/mymath.hpp"
 
 // Forward declaration of State class
 class State;
@@ -87,7 +90,7 @@ protected:
   // for calling sf::Sound from map using category layer
   virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::string _namepath, std::string _typename);
 
-  void playSound(gfx::SoundCategory _soundcategory, std::string _typename); // Play sound from category[_typename]
+ // void playSound(gfx::SoundCategory _soundcategory, std::string _typename); // Play sound from category[_typename]
 
   // functions accses
   inline void setVolume(gfx::SoundCategory _category, const float _newVal) // Set volume for all categories

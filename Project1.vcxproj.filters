@@ -27,16 +27,28 @@
     <ClCompile Include="source\core\main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\LSystem.cpp">
+    <ClCompile Include="source\core\math\models noice\Noice_Simplex.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\mymath.cpp">
+    <ClCompile Include="source\core\math\models noice\Noice_Perlin.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\ProcessGenerationNoice.cpp">
+    <ClCompile Include="source\core\math\mymath.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\math\simplex.cpp">
+    <ClCompile Include="source\states\State.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\states\MainMenu.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\math\models fractal\LSystem.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\math\models noice\Noice_PGN.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\localisation\helperText.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,25 +92,31 @@
     <ClInclude Include="source\core\pch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\stdafx.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="source\core\header.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\LSystem.hpp">
+    <ClInclude Include="source\core\math\models noice\Noice_PGN.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\mymath.hpp">
+    <ClInclude Include="source\core\math\models noice\Noice_Simplex.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\pNoice.hpp">
+    <ClInclude Include="source\core\math\models noice\Noice_Perlin.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\ProcessGenerationNoice.hpp">
+    <ClInclude Include="source\core\math\mymath.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\simplex.hpp">
+    <ClInclude Include="source\states\State.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\states\MainMenu.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\math\models fractal\LSystem.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\localisation\helperText.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

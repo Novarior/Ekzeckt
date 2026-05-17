@@ -1,8 +1,4 @@
 #include "helperText.hpp"
-#include "../core/systemFunctionUNIX.hpp"
-#include "../core/tools/LOGGER.hpp"
-#include <string>
-
 // Определение статических переменных
 helperText::Language helperText::ApplicationLangue::currentLanguage = helperText::Language::ENG;
 nlohmann::json helperText::Localization::loadedJson;

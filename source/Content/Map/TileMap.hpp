@@ -9,23 +9,7 @@
 #include "../../math/ProcessGenerationNoice.hpp"
 
 class Entity;
-struct noiceData {
-	unsigned int mapSizeX = 0;
-	unsigned int mapSizeY = 0;
-	unsigned int mapSizeZ = 0;
-	float gridSize = 0;
-	uint32_t seed = 0;
-	int offsetSeed = 0xffffffff;
-	float chanceToSpawnTree = 0.0f;
-	unsigned octaves = 0;
-	double frequency = 0;
-	float amplifire = 0;
-	float persistence = 0;
-	unsigned int RenderWindowX = 0;
-	unsigned int RenderWindowY = 0;
-	unsigned int smoothMode = 0;
-	bool fastMode = false;
-};
+
 struct rectangleWithOffset {
   int fromX;
   int fromY;

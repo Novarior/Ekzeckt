@@ -2,16 +2,16 @@
 
 #include "header.h"
 
-//#include "Core.h"
+#include "Core.h"
 
 int main() {
 
-  //Logger::logStatic("\n=====================\n=====================\n=====================", "main.cpp");
-  //Core mc;
+  Logger::logStatic("\n=====================\n=====================\n=====================", "main.cpp");
+  Core mc;
 
-  //mc.run();
+  mc.run();
 
-  //Logger::destroy(); // Flush all remaining logs and cleanup
+  Logger::destroy(); // Flush all remaining logs and cleanup
 
   return 0;
 }

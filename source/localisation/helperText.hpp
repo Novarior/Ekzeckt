@@ -10,6 +10,10 @@
 
 #include "../core/header.h"
 #include <string>
+#include "../core/systemFunctionUNIX.hpp"
+#include "../core/tools/LOGGER.hpp"
+
+
 
 namespace helperText
 {
