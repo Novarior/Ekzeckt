@@ -147,7 +147,7 @@ void GUI::InventoryGUI::initSlots(unsigned int rows, unsigned int cols,
 }
 
 // Инициализация информации о вместимости
-void GUI::InventoryGUI::initCapacityInfo()
+void GUI::InventoryGUI::initCapacityLINFO()
 {
     // Позиция информации о вместимости - внизу инвентаря
     float baseY = m_background.getPosition().y + m_background.getSize().y - 70.f;
@@ -169,7 +169,7 @@ void GUI::InventoryGUI::initCapacityInfo()
 }
 
 // Инициализация информации о валюте
-void GUI::InventoryGUI::initCurrencyInfo()
+void GUI::InventoryGUI::initCurrencyLINFO()
 {
     // Позиция информации о валюте - внизу инвентаря
     float baseY = m_background.getPosition().y + m_background.getSize().y - 40.f;
@@ -295,8 +295,8 @@ GUI::InventoryGUI::InventoryGUI(std::weak_ptr<Inventory> inventory,
     initHeader();
     initTabs();
     initSlots(8, 8, slotSize); // 8x8 сетка ячеек
-    initCapacityInfo();
-    initCurrencyInfo();
+    initCapacityLINFO();
+    initCurrencyLINFO();
 
     // По умолчанию активна первая вкладка
     setActiveTab(TAB_INVENTORY);

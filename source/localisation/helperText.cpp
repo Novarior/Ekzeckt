@@ -17,8 +17,8 @@ bool helperText::Localization::loadLocalizationFile(
     std::ifstream ifs(filename);
     if (!ifs.is_open())
     {
-        std::cerr << "ERROR: Could not load file: " << filename << std::endl;
-        Logger::logStatic("ERROR::COULD NOT LOAD FILE: " + filename, "Localization::loadLocalizationFile()");
+        std::cerr << "LERROR: Could not load file: " << filename << std::endl;
+        Logger::logStatic("LERROR::COULD NOT LOAD FILE: " + filename, "Localization::loadLocalizationFile()");
         return false;
     }
 
@@ -28,7 +28,7 @@ bool helperText::Localization::loadLocalizationFile(
     }
     catch (const std::exception &e)
     {
-        std::cerr << "ERROR: Failed to parse JSON: " << e.what() << std::endl;
+        std::cerr << "LERROR: Failed to parse JSON: " << e.what() << std::endl;
         return false;
     }
 
@@ -54,7 +54,7 @@ bool helperText::Localization::initializeLocalization(Language language)
         filename = ApplicationsFunctions::get_resources_dir() +
                    myConst::localisation::localisation_EN;
 
-        std::cerr << "ERROR: Unsupported language!" << std::endl;
+        std::cerr << "LERROR: Unsupported language!" << std::endl;
         return false;
     }
 
@@ -71,7 +71,7 @@ helperText::Localization::getLocalizedString(const std::string &category,
 
     else
     {
-        std::cerr << "ERROR: Category '" << category << "' not found in localization JSON." << std::endl;
+        std::cerr << "LERROR: Category '" << category << "' not found in localization JSON." << std::endl;
         return defaultValue;
     }
 }

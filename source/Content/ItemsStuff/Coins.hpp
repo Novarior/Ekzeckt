@@ -66,8 +66,7 @@ public:
 };
 
 inline Coins operator+(const Coins &left, const Coins &right) {
-  Coins result(left.m_gold + right.m_gold, left.m_silver + right.m_silver,
-               left.m_copper + right.m_copper);
+  Coins result(left.m_gold + right.m_gold, left.m_silver + right.m_silver,left.m_copper + right.m_copper);
   result.updateCoins(); // Нормализация монет
   return result;
 }
@@ -83,8 +82,7 @@ inline Coins &operator+=(Coins &left, const Coins &right) {
 
 // Minus operator for Coins
 inline Coins operator-(const Coins &left, const Coins &right) {
-  Coins result(left.m_gold - right.m_gold, left.m_silver - right.m_silver,
-               left.m_copper - right.m_copper);
+  Coins result(left.m_gold - right.m_gold, left.m_silver - right.m_silver,left.m_copper - right.m_copper);
   result.updateCoins(); // Нормализация монет
   return result;
 }
@@ -100,8 +98,7 @@ inline Coins &operator-=(Coins &left, const Coins &right) {
 
 // Equal operator for Coins
 inline bool operator==(const Coins &left, const Coins &right) {
-  return (left.m_gold == right.m_gold && left.m_silver == right.m_silver &&
-          left.m_copper == right.m_copper);
+  return (left.m_gold == right.m_gold && left.m_silver == right.m_silver &&left.m_copper == right.m_copper);
 }
 
 // Not equal operator for Coins

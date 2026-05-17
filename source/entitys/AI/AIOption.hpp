@@ -2,6 +2,7 @@
 #define AI_OPTIONS_HPP
 
 #include "../entity.hpp"
+#include "../../math/mymath.hpp"
 
 enum class FollowTargetEnum
 {

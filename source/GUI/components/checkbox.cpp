@@ -110,7 +110,6 @@ void gui::CheckBox::update(const sf::Vector2i &mousePosWindow)
         this->text.setFillColor(this->textActiveColor);
 
         // Переключение состояния при отпускании кнопки мыши
-        static bool was_pressed = false;
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             was_pressed = true;
@@ -125,6 +124,7 @@ void gui::CheckBox::update(const sf::Vector2i &mousePosWindow)
         this->boxShape.setFillColor(sf::Color::Red);
         this->boxShape.setOutlineColor(sf::Color::Green);
         this->text.setFillColor(sf::Color::Blue);
+        was_pressed = false;
         break;
     }
 }

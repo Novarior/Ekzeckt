@@ -24,7 +24,7 @@ public:
         if (this->m_data.fastMode) this->m_data.smoothMode = 1;
     }
 
-    void setSeed(double seed);
+    void setSeed(uint32_t seed);
     mmath::noiceData &getNoiceData() { return this->m_data; }
     double getSeed();
     double getNoice(double x, double y);

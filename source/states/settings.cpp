@@ -409,11 +409,11 @@ SettingsState::SettingsState(StateData *state_data)
   initFonts();
   initGui();
 
-  Logger::logStatic("End initilization settings state", "SettingsState::SettingsState()", logType::INFO);
+  Logger::logStatic("End initilization settings state", "SettingsState::SettingsState()", logType::LINFO);
 }
 
 SettingsState::~SettingsState() {
-  Logger::logStatic("SettingsState destructor", "SettingsState::~SettingsState()", logType::INFO);
+  Logger::logStatic("SettingsState destructor", "SettingsState::~SettingsState()", logType::LINFO);
 
   _selectors.clear();
   _pageButtons.clear();
@@ -428,19 +428,19 @@ SettingsState::~SettingsState() {
 // Functions
 void SettingsState::updateInput(const float &delta_time) {
   // if escape is pressed, end state
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
-    this->endState();
-  // if slash is pressed, swith debug mode
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
-    this->Idebud = !this->Idebud;
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  //  this->endState();
+  //// if slash is pressed, swith debug mode
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  //  this->Idebud = !this->Idebud;
 
-  // if key Q is pressed, swith page to left (back)
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_Q)) && this->getKeytime())
-    this->page = static_cast<settingPage>((static_cast<int>(this->page) - 1 + static_cast<int>(settingPage::PAGE_COUNT)) % static_cast<int>(settingPage::PAGE_COUNT));
+  //// if key Q is pressed, swith page to left (back)
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_Q)) && this->getKeytime())
+  //  this->page = static_cast<settingPage>((static_cast<int>(this->page) - 1 + static_cast<int>(settingPage::PAGE_COUNT)) % static_cast<int>(settingPage::PAGE_COUNT));
 
-  // if key E is pressed, swith page to right (forward)
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_E)) && this->getKeytime())
-    this->page = static_cast<settingPage>((static_cast<int>(this->page) + 1) % static_cast<int>(settingPage::PAGE_COUNT));
+  //// if key E is pressed, swith page to right (forward)
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_E)) && this->getKeytime())
+  //  this->page = static_cast<settingPage>((static_cast<int>(this->page) + 1) % static_cast<int>(settingPage::PAGE_COUNT));
 }
 
 void SettingsState::updateAudioPage(
@@ -559,7 +559,7 @@ void SettingsState::updateGui(const float &delta_time) {
         << "\nSize of state: " << sizeof(*this) << " bytes"
         << "\nkeytime: " << this->Ikeytime
         << "\nMouse pos: " << this->ImousePosWindow.x << " "
-        << this->ImousePosWindow.y << "\narrays info:"
+        << this->ImousePosWindow.y << "\narrays LINFO:"
         << "\n\tvideo_modes: " << _video_modes.size()
         << "\n\tgfxResource: " << _gfxResource.size()
         << "\n\tkeybindText: " << _keybindText.size()

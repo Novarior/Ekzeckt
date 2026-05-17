@@ -78,8 +78,8 @@ namespace GUI
         void initHeader();
         void initTabs();
         void initSlots(unsigned int rows, unsigned int cols, float slotSize);
-        void initCapacityInfo();
-        void initCurrencyInfo();
+        void initCapacityLINFO();
+        void initCurrencyLINFO();
 
     public:
         InventoryGUI(std::weak_ptr<Inventory> inventory, sf::Vector2f screenSize, sf::Font &font, float slotSize = 50.f, unsigned int characterSize = 16);

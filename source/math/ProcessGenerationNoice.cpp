@@ -116,5 +116,5 @@ ProcessGenerationNoice::ProcessGenerationNoice(mmath::noiceData &data)
 
 ProcessGenerationNoice::~ProcessGenerationNoice() {}
 
-void ProcessGenerationNoice::setSeed(double seed) { this->m_data.seed = seed; }
+void ProcessGenerationNoice::setSeed(uint32_t seed) { this->m_data.seed = seed; }
 double ProcessGenerationNoice::getSeed() { return this->m_data.seed; }

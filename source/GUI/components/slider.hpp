@@ -70,8 +70,8 @@ namespace gui
             {
                 // Обновляем слайдер если мышь находится гдето внутри рабочей области слайдера
                 float new_x = mouse_pos_view.x - _sliderCircle.getRadius();
-                new_x = std::max(new_x, _sliderBox.getPosition().x);
-                new_x = std::min(new_x, _sliderBox.getPosition().x + _sliderBox.getSize().x - 2 * _sliderCircle.getRadius());
+                new_x = std::fmax(new_x, _sliderBox.getPosition().x);
+                new_x = std::fmin(new_x, _sliderBox.getPosition().x + _sliderBox.getSize().x - 2 * _sliderCircle.getRadius());
                 _sliderCircle.setPosition({new_x, _sliderCircle.getPosition().y});
 
                 // Обновляем значение слайдера

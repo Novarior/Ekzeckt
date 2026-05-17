@@ -1,11 +1,12 @@
 #ifndef CORE
 #define CORE
 
+#include "header.h"
+
 #include "../states/State.hpp"
 #include "dataCollector/_keybind_enum.h"
 #include "dataCollector/_man_Volume.hpp"
 #include "dataCollector/_man_graphics.hpp"
-#include "header.h"
 
 // class LuaVM{
 //     public:

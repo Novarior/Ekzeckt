@@ -1,3 +1,5 @@
+#include "../core/header.h"
+
 #include "MainMenu.hpp"
 
 #include "../core/cmakever.h"
@@ -7,7 +9,7 @@
 
 void MainMenu::initRenderDefines() {
   if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x, IstateData->sd_Window.lock()->getSize().y}))
-    Logger::logStatic("renderTexture cannot be resize", "MainMenu::initRenderDefines()", logType::ERROR);
+    Logger::logStatic("renderTexture cannot be resize", "MainMenu::initRenderDefines()", logType::LERROR);
 
   renderTexture.setSmooth(true);
 
@@ -57,11 +59,11 @@ void MainMenu::initBackground() {
 }
 
 void MainMenu::initButtons() {
-  struct ButtonInfo {
+  struct ButtonLINFO {
     std::string key;
     std::string text;
 
-    ButtonInfo(const char *k, std::string t) : key(k), text(t) {}
+    ButtonLINFO(const char *k, std::string t) : key(k), text(t) {}
   };
 
   float offsetX = mmath::p2pX(5, Iwindow.lock()->getSize().x);
@@ -79,7 +81,7 @@ void MainMenu::initButtons() {
   };
 
   // Данные о кнопках
-  std::vector<ButtonInfo> buttonData = {
+  std::vector<ButtonLINFO> buttonData = {
       {"NOICE_BTN", helperText::Button::BUTTON_NOICE_EDITOR},
       {"CONT_BTN", helperText::Button::BUTTON_CONTINUE},
       {"START_BTN", helperText::Button::BUTTON_PLAY},
@@ -140,7 +142,7 @@ void MainMenu::initSounds() {
       if (!loadSoundtoBuffer(category, soundKey, mapKey))
         throw soundKey;
   } catch (std::exception &e) {
-    Logger::logStatic("can't load: " + std::string(e.what()), "MainMenu::initSounds()", logType::ERROR);
+    Logger::logStatic("can't load: " + std::string(e.what()), "MainMenu::initSounds()", logType::LERROR);
   }
 
   // Upload sounds from buffer
@@ -192,11 +194,11 @@ void MainMenu::update(const float &delta_time) {
 }
 
 void MainMenu::updateInput(const float &delta_time) {
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && getKeytime())
-    Idebud = !Idebud;
-
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_R)) && getKeytime())
-    resetGUI();
+//  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && getKeytime())
+//    Idebud = !Idebud;
+//
+//  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_R)) && getKeytime())
+//    resetGUI();
 }
 
 void MainMenu::updateButtons() {

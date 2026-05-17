@@ -13,6 +13,12 @@
 #include <pwd.h>
 #include <unistd.h>
 #endif //__APPLE__
+#ifdef _WIN32
+#include <Windows.h>
+#include <shlobj.h>
+#endif
+
+
 
 class ApplicationsFunctions {
 private:
@@ -22,9 +28,20 @@ private:
 #ifdef __APPLE__
     struct passwd *pw = getpwuid(getuid());
     return pw ? pw->pw_dir : nullptr;
-#else
-    // Для других платформ можно использовать getenv("HOME")
-    return std::getenv("HOME");
+#else _WIN32
+    PWSTR path = NULL;
+    HRESULT hr = SHGetKnownFolderPath(FOLDERID_UserProfiles, 0, NULL, &path);
+
+    if (SUCCEEDED(hr)) {
+        char bf[256]; 
+        std::wcstombs(bf, path, 256);
+        CoTaskMemFree(path);
+        return bf;
+    }
+    else
+        std::cerr << "Failed to get user folder." << std::endl;
+    return "";
+    
 #endif /* SYSTEMFUNCTIONUNIX */
   }
 
@@ -35,9 +52,7 @@ public:
   /// @brief Создание директорий приложения в папке "Документы"
   static void createAppDirectories() {
     // collect path to application directory as string
-    std::string appDirectory =
-        std::string(getHomeDirectory()) + "/Documents/" + myConst::app_name;
-
+    std::string appDirectory = std::string(getHomeDirectory()) + "/Documents/" + myConst::app_name;
     // create dir
     std::filesystem::create_directories(appDirectory);
     std::filesystem::create_directories(appDirectory + "/config");
@@ -47,17 +62,14 @@ public:
   /// @return Путь к папке ресурсов
   static std::string get_resources_dir() {
 #ifdef __APPLE__
-    CFURLRef resourceURL =
-        CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
     if (!resourceURL) {
       std::cerr << "Не удалось получить путь к ресурсам." << std::endl;
       return "";
     }
 
     char resourcePath[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(
-            resourceURL, true, reinterpret_cast<UInt8 *>(resourcePath),
-            PATH_MAX)) {
+    if (!CFURLGetFileSystemRepresentation( resourceURL, true, reinterpret_cast<UInt8 *>(resourcePath), PATH_MAX)) { 
       CFRelease(resourceURL);
       std::cerr << "Не удалось преобразовать путь к ресурсам." << std::endl;
       return "";

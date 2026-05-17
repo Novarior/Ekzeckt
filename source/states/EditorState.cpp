@@ -248,43 +248,43 @@ void EditorState::saveTreeAsImage(sf::RenderWindow &window) {
   // save image
   if (!simg.saveToFile(ss.str()))
     Logger::logStatic("Image" + ss.str() + " has be corrupt and dosent saved!",
-                      "EditorState::saveTreeAsImage()", logType::ERROR);
+                      "EditorState::saveTreeAsImage()", logType::LERROR);
 }
 
 void EditorState::updateInput(const float &delta_time) {
   // if pressed key ESC then end state
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
-    this->endState();
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  //  this->endState();
 
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
-    this->Idebud = !this->Idebud;
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  //  this->Idebud = !this->Idebud;
 
-  // switch tab menu
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) &&
-      this->getKeytime())
-    this->showTabmenu = !this->showTabmenu;
+  //// switch tab menu
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) &&
+  //    this->getKeytime())
+  //  this->showTabmenu = !this->showTabmenu;
 
-  // update currentViewGenerator in a range from 0 to 2
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_Q)) &&
-      this->getKeytime())
-    this->m_NoiceViewer->swithNoiceModel();
+  //// update currentViewGenerator in a range from 0 to 2
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_Q)) &&
+  //    this->getKeytime())
+  //  this->m_NoiceViewer->swithNoiceModel();
 
-  // switch noice model
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_W)) &&
-      this->getKeytime())
-    this->m_NoiceViewer->swithColorMode();
+  //// switch noice model
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_W)) &&
+  //    this->getKeytime())
+  //  this->m_NoiceViewer->swithColorMode();
 
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_E)) &&
-      this->getKeytime()) {
-    if (this->current_View_Generator < 2)
-      this->current_View_Generator++;
-    else
-      this->current_View_Generator = 0;
-  }
-  // switch noice smooth mode (fast mode)
-  if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_R)) &&
-      this->getKeytime())
-    this->m_noiceData.fastMode = !this->m_noiceData.fastMode;
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_E)) &&
+  //    this->getKeytime()) {
+  //  if (this->current_View_Generator < 2)
+  //    this->current_View_Generator++;
+  //  else
+  //    this->current_View_Generator = 0;
+  //}
+  //// switch noice smooth mode (fast mode)
+  //if (keyboardCocoa::keyIsPressed(IstateData->sd_KeySupports.lock()->at(ActionKeyBind::KEY_R)) &&
+  //    this->getKeytime())
+  //  this->m_noiceData.fastMode = !this->m_noiceData.fastMode;
 }
 
 void EditorState::updateDebugText(const float &delta_time) {
@@ -292,7 +292,7 @@ void EditorState::updateDebugText(const float &delta_time) {
   double fps = 1.0f / delta_time;
   this->IstringStream << "FPS:\t" << fps << "\nCurrent memory usage:\t"
                       << MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-                      << "Navigation:\n\t\t['/'] Togle info menu"
+                      << "Navigation:\n\t\t['/'] Togle LINFO menu"
                       << "\n\t\t['Q'] Switch Noice generator"
                       << "\n\t\t['W'] Switch color mode"
                       << "\n\t\t['E'] Change current viewport of generators"

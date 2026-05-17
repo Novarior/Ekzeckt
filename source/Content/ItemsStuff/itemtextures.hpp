@@ -23,8 +23,7 @@ namespace coins {
 }; // namespace coins
 
 namespace poison {
-  const char item_img_poison_small_regeneration[] =
-      "/textures/items/poison/Potion_1_Original.png";
+	const char item_img_poison_small_regeneration[] =  "/textures/items/poison/Potion_1_Original.png";
 } // namespace poison
 
 } // namespace ItemTextures

@@ -13,11 +13,14 @@ cmake_install.cmake
 # Compiled binary files
 bin/
 bin/*
+x64/*
 
 # VSCode settings
 .vscode/
 .github/
 metadata/
+.vs/
+Ekzeckt/**
 
 # Lua folder
 

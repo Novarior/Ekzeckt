@@ -1,6 +1,8 @@
 #ifndef ENTITY_ITEM_HPP
 #define ENTITY_ITEM_HPP
 
+#include "../../../core/header.h"
+
 #include "../../../entitys/entity.hpp"
 #include "../Item.hpp"
 

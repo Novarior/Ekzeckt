@@ -2,6 +2,7 @@
 #define CPP_CONTENT_ROTATIONCIRCLE_HPP
 
 #include "../core/header.h"
+#include "../math/mymath.hpp"
 
 struct BlocksGenData {
     sf::Vector2u windowSize;

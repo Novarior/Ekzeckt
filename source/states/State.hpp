@@ -1,7 +1,6 @@
 #ifndef STATE
 #define STATE
 
-#include "../core/controllers/keyboard_Cocoa.h"
 #include "../core/dataCollector/_keybind_enum.h"
 #include "../core/dataCollector/_man_Volume.hpp"
 #include "../core/dataCollector/_man_graphics.hpp"

@@ -9,7 +9,7 @@
 const bool Process::loadGameData() {
   // load noice config
   // if (ParserJson::loadNoiceData(this->noicedata))
-  //   printf("ERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
+  //   printf("LERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
   //          AppFiles::config_noicedata);
   // else {
   //   this->noicedata.mapSizeX = 1000;
@@ -26,16 +26,16 @@ const bool Process::loadGameData() {
 const bool Process::saveGameData() {
   // save player to JSON file
   // if (ParserJson::savePlayer(this->player.get()))
-  //   Logger::logStatic("Parser::savePlayer()::ERROR::",
-  //                     "Process::saveGameData()", logType::ERROR);
+  //   Logger::logStatic("Parser::savePlayer()::LERROR::",
+  //                     "Process::saveGameData()", logType::LERROR);
   // // save inventory to JSON file
   // // if (ParserJson::saveInventory(t_inventory))
-  // //   Logger::logStatic("Parser::saveInventory()::ERROR::",
-  // //                     "Process::saveGameData()", logType::ERROR);
+  // //   Logger::logStatic("Parser::saveInventory()::LERROR::",
+  // //                     "Process::saveGameData()", logType::LERROR);
   // // save entitys pos and other data
   // if (ParserJson::saveEntitys(this->entitys))
-  //   Logger::logStatic("Parser::saveEntitys()::ERROR::",
-  //                     "Process::saveGameData()", logType::ERROR);
+  //   Logger::logStatic("Parser::saveEntitys()::LERROR::",
+  //                     "Process::saveGameData()", logType::LERROR);
 
   return true;
 }
@@ -202,7 +202,7 @@ Process::~Process() {
   if (this->saveGameData())
     Logger::logStatic("Game Data has be saved", "Process::~Process()::saveGameData()");
   else
-    Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::ERROR);
+    Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::LERROR);
 
   delete this->myGN;
   this->mapTiles.reset();
@@ -224,29 +224,29 @@ Process::~Process() {
 ////////////////////////////////////////////////////////////////////////////////////
 // sub update functions
 void Process::updateInput(const float &delta_time) {
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) && this->getKeytime())
-    this->player->e_getInventory()->toggleInventory();
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
-    this->Ipaused = !this->Ipaused;
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
-    this->Idebud = !this->Idebud;
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) && this->getKeytime())
+  //  this->player->e_getInventory()->toggleInventory();
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
+  //  this->Ipaused = !this->Ipaused;
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
+  //  this->Idebud = !this->Idebud;
 }
 
 void Process::updatePlayerInputs(const float &delta_time) {
 
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_A)))
-    this->player->e_move(-1.f, 0.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_D)))
-    this->player->e_move(1.f, 0.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_S)))
-    this->player->e_move(0.f, 1.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_W)))
-    this->player->e_move(0.f, -1.f, delta_time);
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_A)))
+  //  this->player->e_move(-1.f, 0.f, delta_time);
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_D)))
+  //  this->player->e_move(1.f, 0.f, delta_time);
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_S)))
+  //  this->player->e_move(0.f, 1.f, delta_time);
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_W)))
+  //  this->player->e_move(0.f, -1.f, delta_time);
 
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_SPACE)) && this->getKeytime()) {
-    for (auto &it : this->entitys)
-      this->player->e_attack(it, delta_time);
-  }
+  //if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_SPACE)) && this->getKeytime()) {
+  //  for (auto &it : this->entitys)
+  //    this->player->e_attack(it, delta_time);
+  //}
 }
 
 void Process::updateTileMap(const float &delta_time) { // update tilemap
@@ -284,8 +284,8 @@ void Process::updateGUI(const float &delta_time) {
                           this->entitys[0]->e_getPosition());
 
   // Обновляем полоски здоровья и маны
-  this->playerBar["HP_BAR"]->update(this->player->getAttributes()->getAttributes().health, this->player->getAttributes()->getAttributes().max_health);
-  this->playerBar["MP_BAR"]->update(this->player->getAttributes()->getAttributes().mana, this->player->getAttributes()->getAttributes().max_mana);
+  playerBar["HP_BAR"]->update(this->player->getAttributes()->getAttributes().health, this->player->getAttributes()->getAttributes().max_health);
+  playerBar["MP_BAR"]->update(this->player->getAttributes()->getAttributes().mana, this->player->getAttributes()->getAttributes().max_mana);
 }
 
 // main update function

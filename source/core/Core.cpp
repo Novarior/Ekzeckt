@@ -1,12 +1,10 @@
-#include "Core.h"
+#include "header.h"
 
-#include <cstddef>
-#include <strstream>
+#include "Core.h"
 
 #include "../localisation/helperText.hpp"
 #include "../states/MainMenu.hpp"
 #include "_myConst.h"
-#include "controllers/keyboard_Cocoa.h"
 #include "dataCollector/_man_Texture.hpp"
 #include "systemFunctionUNIX.hpp"
 #include "tools/LOGGER.hpp"
@@ -96,7 +94,7 @@ void Core::coreInitWindow() {
   cr_Window->setVerticalSyncEnabled(cr_gfxSettings->verticalSync);
   cr_Window->setKeyRepeatEnabled(false);
 
-  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
+///  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
 }
 
 // load all textures
@@ -158,11 +156,11 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 
   // check if window is not null
   if (!cr_Statedata.sd_Window.lock())
-    Logger::logStatic("ERROR::WINDOW::NOT INITED", "Core::coreInitStateData()");
+    Logger::logStatic("LERROR::WINDOW::NOT INITED", "Core::coreInitStateData()");
 
   // check if states is not empty or null idk
   if (!cr_Statedata.sd_States->empty())
-    Logger::logStatic("ERROR::STATES::NOT INITED", "Core::coreInitStateData()");
+    Logger::logStatic("LERROR::STATES::NOT INITED", "Core::coreInitStateData()");
 #endif
 }
 
@@ -183,6 +181,7 @@ void Core::coreInitLua() {
 }
 
 void Core::coreInitKeyBind() {
+#ifdef __APPLE__
   // pull all keys
   cr_KeySuppors->emplace(ActionKeyBind::KEY_A, kVK_ANSI_A);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_C, kVK_ANSI_C);
@@ -202,7 +201,7 @@ void Core::coreInitKeyBind() {
   cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_5, kVK_ANSI_5);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_6, kVK_ANSI_6);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_7, kVK_ANSI_7);
-  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_8, kVK_ANSI_8);
+  cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_8, kVK_ANSI_8); 
   cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_9, kVK_ANSI_9);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_NUM_0, kVK_ANSI_0);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_SPACE, kVK_Space);
@@ -224,6 +223,7 @@ void Core::coreInitKeyBind() {
   cr_KeySuppors->emplace(ActionKeyBind::KEY_F10, kVK_F10);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_F11, kVK_F11);
   cr_KeySuppors->emplace(ActionKeyBind::KEY_F12, kVK_F12);
+#endif
 }
 
 void Core::coreInitKeyboard() {
@@ -312,8 +312,6 @@ void Core::updateEventsWindow() {
   while (const std::optional event = cr_Window.get()->pollEvent()) {
     if (event->is<sf::Event::Closed>()) {
       cr_Window->close();
-    } else if (event->is<sf::Event::FocusLost>()) {
-      keyboardCocoa::clearKeyStates();
     }
   }
 }

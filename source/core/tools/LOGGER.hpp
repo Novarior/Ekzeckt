@@ -6,16 +6,17 @@
 #include <iostream>
 #include <mutex>
 #include <sstream>
+#include <array>
 
 #include "../_myFiles.h"
 #include "../systemFunctionUNIX.hpp"
 
 // Типы логов
-enum class logType
+enum  logType
 {
-  INFO = 0,
-  WARNING = 1,
-  ERROR = 2
+  LINFO = 0,
+  LWARNING = 1,
+  LERROR = 2
 };
 
 class Logger {
@@ -33,8 +34,8 @@ private:
   static const int BUFFER_LIMIT = 10;     // flush buffer after N entries
 
   static const std::string &logTypeToString(logType level) {
-    static const std::array<std::string, 3> logTypes = {"INFO", "WARNING", "ERROR"};
-    return logTypes[static_cast<int>(level)];
+    static const std::array<std::string,3> logTypes = {"LINFO", "LWARNING", "LERROR"};
+    return logTypes[level];
   }
 
   void flushBufferToFile() {
@@ -85,7 +86,7 @@ private:
   // Destroy singleton instance (cleanup)
 
   // method for logging messages
-  void log(const std::string &message, const std::string &source, logType level = logType::INFO) {
+  void log(const std::string &message, const std::string &source, logType level = logType::LINFO) {
     std::lock_guard<std::mutex> lock(s_Mutex);
     std::string logEntry = "[" + ApplicationsFunctions::getCurrentTime() + "] " + logTypeToString(level) + "\t_src: " + source + " _msg: " + message + "\n";
 
@@ -93,7 +94,7 @@ private:
     m_Buffer << logEntry;
     m_BufferCount++;
 
-    if (level == logType::WARNING || level == logType::ERROR)
+    if (level == logType::LWARNING || level == logType::LERROR)
       std::cerr << logEntry;
 
 #if __MDEBUG__ == 1
@@ -107,7 +108,7 @@ private:
   static void flush() { getInstance().flushBufferToFile(); }
 
 public:
-  static void logStatic(const std::string &message, const std::string &source, logType level = logType::INFO) {
+  static void logStatic(const std::string &message, const std::string &source, logType level = logType::LINFO) {
     getInstance().log(message, source, level);
   }
 

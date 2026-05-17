@@ -1,8 +1,9 @@
+#include "../../core/header.h"
+
+
 #include "Inventory.hpp"
 #include "../../GUI/UI/inventoryGUI.hpp"
-#include "Items/ItemRegister.hpp"
 #include "itemtextures.hpp"
-#include <memory>
 
 // Очистка инвентаря
 void Inventory::clearInventory() {
@@ -17,10 +18,8 @@ void Inventory::clearInventory() {
 }
 
 // Конструктор инвентаря
-Inventory::Inventory(unsigned int rows, unsigned int cols)
-    : isOpened(false), m_Coins(0, 0, 0), m_gui() {
-  InventoryArray.resize(rows,
-                        std::vector<std::shared_ptr<Item>>(cols, nullptr));
+Inventory::Inventory(unsigned int rows, unsigned int cols): isOpened(false), m_Coins(0, 0, 0), m_gui() {
+  InventoryArray.resize(rows,                 std::vector<std::shared_ptr<Item>>(cols, nullptr));
 }
 
 /// Получаем ID текущей ячейки по позиции мыши
@@ -130,8 +129,8 @@ std::shared_ptr<Item> Inventory::getItem(unsigned int ID) const {
 std::shared_ptr<Item> Inventory::getItemFromSlot(unsigned int slot) const {
   // Проверяем, что инвентарь не пуст
   if (InventoryArray.empty() || InventoryArray[0].empty()) {
-    Logger::logStatic("ERROR::INVENTORY::GET_ITEM_FROM_SLOT::EMPTY_INVENTORY",
-                      "Inventory", logType::ERROR);
+    Logger::logStatic("LERROR::INVENTORY::GET_ITEM_FROM_SLOT::EMPTY_INVENTORY",
+                      "Inventory", logType::LERROR);
     return ItemRegistry::getItem(0); // Возвращаем предмет-затычку
   }
 
@@ -140,10 +139,7 @@ std::shared_ptr<Item> Inventory::getItemFromSlot(unsigned int slot) const {
 
   // Проверяем, что слот находится в пределах инвентаря
   if (slot >= rows * cols) {
-    Logger::logStatic(
-        "ERROR::INVENTORY::GET_ITEM_FROM_SLOT::OUT_OF_BOUNDS_SLOT: " +
-            std::to_string(slot),
-        "Inventory", logType::WARNING);
+    Logger::logStatic(        "LERROR::INVENTORY::GET_ITEM_FROM_SLOT::OUT_OF_BOUNDS_SLOT: " +   std::to_string(slot),     "Inventory", logType::LWARNING);
     return ItemRegistry::getItem(0); // Возвращаем предмет-затычку
   }
 

@@ -1,3 +1,5 @@
+#include "../../core/header.h"
+
 #include "block.hpp"
 
 BrickBlock::BrickBlock(sf::Vector2i size, sf::Vector2i position,

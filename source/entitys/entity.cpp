@@ -1,6 +1,6 @@
 #include "entity.hpp"
-#include "entityEnum.hpp"
-#include <memory>
+
+
 
 void Entity::createHitboxComponent(sf::Sprite &sprite, float offset_x, float offset_y, float width, float height)
 {
@@ -49,9 +49,9 @@ Entity::~Entity()
         this->e_inventory->clearInventory();
     this->e_inventory.reset();
     // call logger and print message with "Bit size"
-    Logger::logStatic("Entity has been destroyed, ID: " + std::to_string(this->ID_entity), "~Entity", logType::INFO);
-    // send info about inventory
-    Logger::logStatic("included inventory memory size: " + std::to_string(sizeof(*this->e_inventory)) + " bytes", "~Entity", logType::INFO);
+    Logger::logStatic("Entity has been destroyed, ID: " + std::to_string(this->ID_entity), "~Entity", logType::LINFO);
+    // send LINFO about inventory
+    Logger::logStatic("included inventory memory size: " + std::to_string(sizeof(*this->e_inventory)) + " bytes", "~Entity", logType::LINFO);
 
 #endif
     this->count_entitys--;

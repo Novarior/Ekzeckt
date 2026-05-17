@@ -1,7 +1,4 @@
-#include <fstream>
-#include <ios>
-#include <istream>
-#include <sstream>
+#include "header.h"
 
 #include "Core.h"
 #include "dataCollector/_man_Volume.hpp"
@@ -50,7 +47,7 @@ bool Core::cr_LoadData() {
     a_vol->setCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT, sounds["environment"].get<float>());
 
   } catch (json::type_error &e) { // catch json type errors
-    Logger::logStatic("JSON::TYPE_ERROR: " + std::string(e.what()), "Core::cr_LoadData()");
+    Logger::logStatic("JSON::TYPE_LERROR: " + std::string(e.what()), "Core::cr_LoadData()");
     return false;
   }
   return true; // parse and past success
@@ -82,7 +79,7 @@ bool Core::cr_SaveData() {
     }
 
   } catch (json::type_error &e) { // catch json type errors
-    Logger::logStatic("GFX::JSON::TYPE_ERROR: " + std::string(e.what()), "l:113 -> GFX::loadFromFile()");
+    Logger::logStatic("GFX::JSON::TYPE_LERROR: " + std::string(e.what()), "l:113 -> GFX::loadFromFile()");
     return false; // some arror in loading data from json
   }
   return true; // load success

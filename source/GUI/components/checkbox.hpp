@@ -11,6 +11,7 @@ namespace gui
     private:
         short unsigned checkboxState;
         bool checked;
+        bool was_pressed = false;
 
         sf::RectangleShape boxShape;
         sf::RectangleShape checkShape;

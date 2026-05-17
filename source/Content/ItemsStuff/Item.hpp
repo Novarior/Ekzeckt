@@ -12,8 +12,8 @@ public:
        int amount = 0, unsigned maxAmount = 0, int durability = 0,
        int maxDurability = 0, const Coins &price = {0, 0, 0},
        const sf::Texture &texture = TextureManager::getTexture("items_NULL")) {
-    iInfo.m_name = name;
-    iInfo.item_ID = id;
+    iINFO.m_name = name;
+    iINFO.item_ID = id;
     iData.m_pickable = pickable;
     iData.m_stackable = stackable;
     iData.m_usable = usable;
@@ -26,11 +26,10 @@ public:
 
   // Modifiers
   void addAmount(int _amount) noexcept {
-    iData.m_amount = std::min(static_cast<int>(iData.m_maxAmount),
-                              iData.m_amount + iData.m_amount);
+    iData.m_amount = std::fmin(static_cast<int>(iData.m_maxAmount),      iData.m_amount + iData.m_amount);
   }
   void removeAmount(int _amount) noexcept {
-    iData.m_amount = std::max(0, iData.m_amount - iData.m_amount);
+    iData.m_amount = std::fmax (0, iData.m_amount - iData.m_amount);
     if (iData.m_amount == 0)
       iData.flagForDeleteFromInventory = true;
   }
@@ -38,11 +37,11 @@ public:
   // Getters
   /// @brief get ID of item
   /// @return unsigned int
-  unsigned int getID() const noexcept { return iInfo.item_ID; }
+  unsigned int getID() const noexcept { return iINFO.item_ID; }
 
   /// @brief get name of item
   /// @return std::string
-  const std::string &getName() const noexcept { return iInfo.m_name; }
+  const std::string &getName() const noexcept { return iINFO.m_name; }
 
   /// @brief get amount of item
   /// @return int
@@ -72,30 +71,24 @@ public:
   }
 
   // Setters
-  void setID(unsigned int ID) noexcept { iInfo.item_ID = ID; }
-  void setName(const std::string &name) noexcept { iInfo.m_name = name; }
+  void setID(unsigned int ID) noexcept { iINFO.item_ID = ID; }
+  void setName(const std::string &name) noexcept { iINFO.m_name = name; }
   void setAmount(int amount) noexcept { iData.m_amount = amount; }
   void setPickable(bool pickable) noexcept { iData.m_pickable = pickable; }
   void setStackable(bool stackable) noexcept { iData.m_stackable = stackable; }
 
   virtual void useItem() {}
   virtual void update(float delta_time, sf::Vector2i mouse_pos) {}
-  virtual void render(sf::RenderTarget &target) noexcept {
-    target.draw(m_item_shape);
-  }
+  virtual void render(sf::RenderTarget &target) noexcept {    target.draw(m_item_shape); }
 
-  inline void setPosition(sf::Vector2f position) noexcept {
-    m_item_shape.setPosition(position);
-  }
-  inline void setSize(sf::Vector2f size) noexcept {
-    m_item_shape.setSize(size);
-  }
+  inline void setPosition(sf::Vector2f position) noexcept {   m_item_shape.setPosition(position);  }
+  inline void setSize(sf::Vector2f size) noexcept {   m_item_shape.setSize(size);  }
 
 protected:
-  struct ItemInfo {
+  struct ItemLINFO {
     std::string m_name;
     unsigned int item_ID;
-  } iInfo;
+  } iINFO;
   struct ItemData {
     bool m_pickable;
     bool m_stackable;

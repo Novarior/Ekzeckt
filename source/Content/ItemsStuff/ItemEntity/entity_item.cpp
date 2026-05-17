@@ -1,3 +1,5 @@
+#include "../../../core/header.h"
+
 #include "entity_item.hpp"
 
 EntityItem::EntityItem(std::shared_ptr<Item> _item)
