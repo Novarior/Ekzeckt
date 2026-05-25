@@ -45,9 +45,6 @@
     <ClCompile Include="source\core\math\models fractal\LSystem.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\math\models noice\Noice_PGN.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="source\localisation\helperText.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -86,16 +83,13 @@
     <ClInclude Include="source\core\Core.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\systemFunctionUNIX.hpp">
+    <ClInclude Include="source\core\tools\path.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="source\core\pch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="source\core\header.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\math\models noice\Noice_PGN.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="source\core\math\models noice\Noice_Simplex.hpp">
@@ -128,6 +122,12 @@
     <None Include="metadata\cmakever.h.in" />
     <None Include="metadata\Info.plist" />
     <None Include="metadata\Info.plist.in" />
+    <None Include="resouces\localisation\ENG.json" />
+    <None Include="resouces\localisation\RUS.json" />
+    <None Include="resouces\shaders\fragment.glsl" />
+    <None Include="resouces\shaders\shdr_glitch.glsl" />
+    <None Include="resouces\styles\styles.json" />
+    <None Include="resouces\textures\items\stone.webp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico.png">
@@ -136,5 +136,101 @@
     <Image Include="metadata\ico.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="resouces\sprites\Slime_01.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\bag.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\inv_cell_back.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\item__rare.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\item_common_rare.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\Lay_1.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\Lay_2.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\Lay_3.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\gui\nulltexture.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\coins\copper_nugget.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\coins\gold_nugget.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\coins\iron_nugget.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\item\crystal_01.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\item\stone_01.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\item\stone_02.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\items\nulltexture.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\deep_ocean.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\dirt.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\grass.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\ocean.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\sand.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\snow.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\tiles\stone.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\1.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="resouces\textures\NULL_TEXTURE.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resouces\fonts\712_serif.ttf" />
+    <Font Include="resouces\fonts\Muli-Regular.ttf" />
+    <Font Include="resouces\fonts\endor.ttf" />
+    <Font Include="resouces\fonts\Blackwood Castle.ttf" />
+    <Font Include="resouces\fonts\Alamak.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="resouces\sounds\music\music_01.wav">
+      <Filter>Файлы ресурсов</Filter>
+    </Media>
+    <Media Include="resouces\sounds\sfx\press_btn_01.wav">
+      <Filter>Файлы ресурсов</Filter>
+    </Media>
+    <Media Include="resouces\sounds\sfx\press_ng_01.wav">
+      <Filter>Файлы ресурсов</Filter>
+    </Media>
+    <Media Include="resouces\sounds\sfx\selbtn_01.wav">
+      <Filter>Файлы ресурсов</Filter>
+    </Media>
   </ItemGroup>
 </Project>

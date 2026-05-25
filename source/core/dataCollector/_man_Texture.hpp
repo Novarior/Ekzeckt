@@ -132,7 +132,7 @@ public:
 		}
 
 		sf::Texture texture;
-		if (texture.loadFromFile(ApplicationsFunctions::get_resources_dir() + filePath)) {
+		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
 		  // сохраняем текстуру в контейнер
 			m_textures.emplace(textureName, std::move(texture));
 			Logger::logStatic("success load: " + textureName, "TextureManager::loadTexture()", logType::LINFO); // Логируем успешную загрузку

@@ -2,74 +2,61 @@
 // Определение статических переменных
 helperText::Language helperText::ApplicationLangue::currentLanguage = helperText::Language::ENG;
 nlohmann::json helperText::Localization::loadedJson;
-std::string helperText::Localization::currentFilePath;
+std::filesystem::path helperText::Localization::currentFilePath;
 
-bool helperText::Localization::loadLocalizationFile(
-    const std::string &filename)
-{
-    if (currentFilePath == filename)
-        return true; // Файл уже загружен
+bool helperText::Localization::loadLocalizationFile(const std::filesystem::path& _filename) {
+	if (currentFilePath == _filename)
+		return true; // Файл уже загружен
 
-    std::ifstream ifs(filename);
-    if (!ifs.is_open())
-    {
-        std::cerr << "LERROR: Could not load file: " << filename << std::endl;
-        Logger::logStatic("LERROR::COULD NOT LOAD FILE: " + filename, "Localization::loadLocalizationFile()");
-        return false;
-    }
+	std::ifstream ifs(_filename);
+	if (!ifs.is_open()) {
+		std::cerr << "LERROR: Could not load file: " << _filename << std::endl;
+		Logger::logStatic("LERROR::COULD NOT LOAD FILE: " + _filename.string(), "Localization::loadLocalizationFile()");
+		return false;
+	}
 
-    try
-    {
-        ifs >> loadedJson;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "LERROR: Failed to parse JSON: " << e.what() << std::endl;
-        return false;
-    }
+	try {
+		ifs >> loadedJson;
+	} catch (const std::exception& e) {
+		std::cerr << "LERROR: Failed to parse JSON: " << e.what() << std::endl;
+		return false;
+	}
 
-    ifs.close();
-    currentFilePath = filename;
-    return true;
+	ifs.close();
+	currentFilePath = _filename;
+	return true;
 }
 
-bool helperText::Localization::initializeLocalization(Language language)
-{
-    std::string filename;
-    switch (language)
-    {
-    case Language::ENG:
-        filename = ApplicationsFunctions::get_resources_dir() +
-                   myConst::localisation::localisation_EN;
-        break;
-    case Language::RUS:
-        filename = ApplicationsFunctions::get_resources_dir() +
-                   myConst::localisation::localisation_RU;
-        break;
-    default:
-        filename = ApplicationsFunctions::get_resources_dir() +
-                   myConst::localisation::localisation_EN;
+bool helperText::Localization::initializeLocalization(Language language) {
+	std::filesystem::path p;
+	switch (language) {
+	case Language::ENG:
+		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_EN;
+		break;
+	case Language::UKR:
+		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_UA;
+		break;
+	default:
+		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_EN;
 
-        std::cerr << "LERROR: Unsupported language!" << std::endl;
-        return false;
-    }
+		std::cerr << "LERROR: Unsupported language!" << std::endl;
+		return false;
+	}
 
-    return loadLocalizationFile(filename);
+	return loadLocalizationFile(p);
 }
 
 std::string
-helperText::Localization::getLocalizedString(const std::string &category,
-                                             const std::string &key,
-                                             const std::string &defaultValue)
-{
-    if (loadedJson.contains(category))
-        return loadedJson[category].value(key, defaultValue);
+helperText::Localization::getLocalizedString(const std::string& category,
+											 const std::string& key,
+											 const std::string& defaultValue) {
+	if (loadedJson.contains(category))
+		return loadedJson[category].value(key, defaultValue);
 
-    else
-    {
-        std::cerr << "LERROR: Category '" << category << "' not found in localization JSON." << std::endl;
-        return defaultValue;
-    }
+	else {
+		std::cerr << "LERROR: Category '" << category << "' not found in localization JSON." << std::endl;
+		return defaultValue;
+	}
 }
 
 // struct SettingsTexts

@@ -1,130 +1,120 @@
 #include "checkbox.hpp"
 
-gui::CheckBox::CheckBox(sf::Vector2f position, sf::Vector2f size,
-                        sf::Font &font, std::string text,
-                        unsigned character_size, bool initial_state)
-    : text(font, text, character_size)
-{
+gui::CheckBox::CheckBox(sf::Vector2f _pos, sf::Vector2f _size, sf::Font& _font, std::string _text, unsigned _charsize, bool _init)
+	: text(_font, _text, _charsize) {
 
-    enum checkbox_states
-    {
-        CBX_IDLE = 0,
-        CBX_HOVER,
-        CBX_ACTIVE
-    };
-    this->checkboxState = CBX_IDLE;
-    this->checked = initial_state;
+	enum checkbox_states {
+		CBX_IDLE = 0,
+		CBX_HOVER,
+		CBX_ACTIVE
+	};
+	checkboxState = CBX_IDLE;
+	bChecked = _init;
 
-    // Основной квадрат чекбокса
-    this->boxShape.setPosition(position);
-    this->boxShape.setSize(size);
-    this->boxShape.setFillColor(sf::Color(70, 70, 70, 200));
-    this->boxShape.setOutlineThickness(1.f);
-    this->boxShape.setOutlineColor(sf::Color(150, 150, 150, 200));
+   // Основной квадрат чекбокса
+	boxShape.setPosition(_pos);
+	boxShape.setSize(_size);
+	boxShape.setFillColor(sf::Color(70, 70, 70, 200));
+	boxShape.setOutlineThickness(1.f);
+	boxShape.setOutlineColor(sf::Color(150, 150, 150, 200));
 
-    // Внутренний квадрат-галочка
-    float offset = size.x * 0.15f;
-    this->checkShape.setPosition({position.x + offset, position.y + offset});
-    this->checkShape.setSize({size.x - 2.f * offset, size.y - 2.f * offset});
-    this->checkShape.setFillColor(sf::Color(100, 250, 100, 200));
+   // Внутренний квадрат-галочка
+	float offset = _size.x * 0.15f;
+	checkShape.setPosition({_pos.x + offset, _pos.y + offset});
+	checkShape.setSize({_size.x - 2.f * offset, _size.y - 2.f * offset});
+	checkShape.setFillColor(sf::Color(100, 250, 100, 200));
 
-    // Текст рядом с чекбоксом
-    this->text.setFillColor(sf::Color(255, 255, 255, 200));
-    this->text.setPosition({position.x + size.x + 10.f, position.y + size.y / 2.f - this->text.getGlobalBounds().size.y / 2.f});
+   // Текст рядом с чекбоксом
+	text.setFillColor(sf::Color(255, 255, 255, 200));
+	text.setPosition({_pos.x + _size.x + 10.f, _pos.y + _size.y / 2.f - text.getGlobalBounds().size.y / 2.f});
 
-    // Цвета для различных состояний
-    this->textIdleColor = sf::Color(255, 255, 255, 200);
-    this->textHoverColor = sf::Color(255, 255, 255, 255);
-    this->textActiveColor = sf::Color(255, 255, 255, 200);
+   // Цвета для различных состояний
+	textIdleColor = sf::Color(255, 255, 255, 200);
+	textHoverColor = sf::Color(255, 255, 255, 255);
+	textActiveColor = sf::Color(255, 255, 255, 200);
 
-    this->uncheckedIdleColor = sf::Color(70, 70, 70, 200);
-    this->uncheckedHoverColor = sf::Color(90, 90, 90, 200);
-    this->uncheckedActiveColor = sf::Color(100, 100, 100, 200);
+	uncheckedIdleColor = sf::Color(70, 70, 70, 200);
+	uncheckedHoverColor = sf::Color(90, 90, 90, 200);
+	uncheckedActiveColor = sf::Color(100, 100, 100, 200);
 
-    this->checkedIdleColor = sf::Color(70, 70, 70, 200);
-    this->checkedHoverColor = sf::Color(90, 90, 90, 200);
-    this->checkedActiveColor = sf::Color(100, 100, 100, 200);
+	checkedIdleColor = sf::Color(70, 70, 70, 200);
+	checkedHoverColor = sf::Color(90, 90, 90, 200);
+	checkedActiveColor = sf::Color(100, 100, 100, 200);
 
-    this->outlineIdleColor = sf::Color(150, 150, 150, 200);
-    this->outlineHoverColor = sf::Color(200, 200, 200, 255);
-    this->outlineActiveColor = sf::Color(100, 100, 100, 200);
+	outlineIdleColor = sf::Color(150, 150, 150, 200);
+	outlineHoverColor = sf::Color(200, 200, 200, 255);
+	outlineActiveColor = sf::Color(100, 100, 100, 200);
 }
 
-gui::CheckBox::~CheckBox()
-{
-    // Деструктор
+gui::CheckBox::~CheckBox() {
+	// Деструктор
 }
 
 // Аксессоры
-const bool gui::CheckBox::isChecked() const { return this->checked; }
+const bool gui::CheckBox::isChecked() const { return  bChecked; }
 
-const bool gui::CheckBox::isPressed() const { return this->checkboxState == 2; }
+const bool gui::CheckBox::isPressed() const { return  checkboxState == 2; }
 
-const bool gui::CheckBox::isHover() const { return this->checkboxState == 1; }
+const bool gui::CheckBox::isHover() const { return  checkboxState == 1; }
 
 // Модификаторы
-void gui::CheckBox::setText(const std::string text) { this->text.setString(text); }
+void gui::CheckBox::setText(const std::string _text) { text.setString(_text); }
 
-void gui::CheckBox::setChecked(const bool checked) { this->checked = checked; }
+void gui::CheckBox::setChecked(const bool checked) { bChecked = checked; }
 
-void gui::CheckBox::toggle() { this->checked = !this->checked; }
+void gui::CheckBox::toggle() { bChecked = !bChecked; }
 
 // Функции
-void gui::CheckBox::update(const sf::Vector2i &mousePosWindow)
-{
-    enum checkbox_states
-    {
-        CBX_IDLE = 0,
-        CBX_HOVER,
-        CBX_ACTIVE
-    };
+void gui::CheckBox::update(const sf::Vector2i& mousePosWindow) {
+	enum checkbox_states {
+		CBX_IDLE = 0,
+		CBX_HOVER,
+		CBX_ACTIVE
+	};
 
-    // Сброс состояния
-    this->checkboxState = CBX_IDLE;
+	// Сброс состояния
+	checkboxState = CBX_IDLE;
 
-    // Проверка наведения
-    if (this->boxShape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow)))
-    {
-        this->checkboxState = CBX_HOVER;
-        // Проверка нажатия
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-            this->checkboxState = CBX_ACTIVE;
-    }
+   // Проверка наведения
+	if (boxShape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow))) {
+		checkboxState = CBX_HOVER;
+	   // Проверка нажатия
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			checkboxState = CBX_ACTIVE;
+	}
 
-    // Обновление визуального состояния
-    switch (this->checkboxState)
-    {
-    case CBX_IDLE:
-        this->boxShape.setFillColor(this->checked ? this->checkedIdleColor : this->uncheckedIdleColor);
-        this->boxShape.setOutlineColor(this->outlineIdleColor);
-        this->text.setFillColor(this->textIdleColor);
-        break;
-    case CBX_HOVER:
-        this->boxShape.setFillColor(this->checked ? this->checkedHoverColor : this->uncheckedHoverColor);
-        this->boxShape.setOutlineColor(this->outlineHoverColor);
-        this->text.setFillColor(this->textHoverColor);
-        break;
-    case CBX_ACTIVE:
-        this->boxShape.setFillColor(this->checked ? this->checkedActiveColor : this->uncheckedActiveColor);
-        this->boxShape.setOutlineColor(this->outlineActiveColor);
-        this->text.setFillColor(this->textActiveColor);
+	// Обновление визуального состояния
+	switch (checkboxState) {
+	case CBX_IDLE:
+		boxShape.setFillColor(bChecked ? checkedIdleColor : uncheckedIdleColor);
+		boxShape.setOutlineColor(outlineIdleColor);
+		text.setFillColor(textIdleColor);
+		break;
+	case CBX_HOVER:
+		boxShape.setFillColor(bChecked ? checkedHoverColor : uncheckedHoverColor);
+		boxShape.setOutlineColor(outlineHoverColor);
+		text.setFillColor(textHoverColor);
+		break;
+	case CBX_ACTIVE:
+		boxShape.setFillColor(bChecked ? checkedActiveColor : uncheckedActiveColor);
+		boxShape.setOutlineColor(outlineActiveColor);
+		text.setFillColor(textActiveColor);
 
-        // Переключение состояния при отпускании кнопки мыши
+	   // Переключение состояния при отпускании кнопки мыши
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-            was_pressed = true;
-        else if (was_pressed)
-        {
-            was_pressed = false;
-            this->toggle();
-        }
-        break;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			was_pressed = true;
+		else if (was_pressed) {
+			was_pressed = false;
+			toggle();
+		}
+		break;
 
-    default:
-        this->boxShape.setFillColor(sf::Color::Red);
-        this->boxShape.setOutlineColor(sf::Color::Green);
-        this->text.setFillColor(sf::Color::Blue);
-        was_pressed = false;
-        break;
-    }
+	default:
+		boxShape.setFillColor(sf::Color::Red);
+		boxShape.setOutlineColor(sf::Color::Green);
+		text.setFillColor(sf::Color::Blue);
+		was_pressed = false;
+		break;
+	}
 }

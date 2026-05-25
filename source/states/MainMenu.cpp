@@ -1,8 +1,4 @@
-#include "../core/header.h"
-
 #include "MainMenu.hpp"
-
-
 
 void MainMenu::initRenderDefines() {
 	if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x, IstateData->sd_Window.lock()->getSize().y}))
@@ -62,8 +58,8 @@ void MainMenu::initButtons() {
 //	};
 //
 //
-//	float offsetX = mmath::p2pX(5U, Iwindow.lock()->getSize().x);
-//	float offsetY = mmath::p2pX(5U, Iwindow.lock()->getSize().y);
+//	float offsetX = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().x));
+//	float offsetY = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().y));
 //
 //	sf::Vector2f sizebutton = sf::Vector2f(
 //		static_cast<float>(mmath::p2pX(15U, Iwindow.lock()->getSize().x)),
@@ -87,20 +83,20 @@ void MainMenu::initButtons() {
 //		{"EXIT_BTN", helperText::Button::BUTTON_EXIT}};
 //
 //  // Добавляем кнопку для отладки в режиме отладки
-//#if __MDEBUG__ == 1
+//#ifdef _DEBUG
 //	buttonData.push_back({"DRS_BTN", helperText::Button::BUTTON_DEBUG_ROOM_STATE});
 //
 //	// Добавляем позицию для кнопки отладки
 //	buttonOffsets.push_back({offsetX, offsetY});
 //#endif
 
-  // Цикл для создания кнопок с данными из массива
-  //for (size_t i = 0; i < buttonData.size(); ++i) {
-  //  const auto &button = buttonData[i];
-  //  buttons[button.key] = std::make_unique<gui::Button>(
-  //      buttonOffsets[i], sizebutton, button.text,
-  //      gui::styles::buttons::btn_default, gui::type::BUTTON);
-  //}
+	//Цикл для создания кнопок с данными из массива
+	//for (size_t i = 0; i < buttonData.size(); ++i) {
+	//	const auto& button = buttonData[i];
+	//	buttons[button.key] = std::make_unique<gui::Button>(
+	//		buttonOffsets[i], sizebutton, button.text,
+	//		gui::styles::buttons::btn_default, gui::type::BUTTON);
+	//}
 }
 
 void MainMenu::initGUI() {
@@ -109,8 +105,8 @@ void MainMenu::initGUI() {
 }
 
 void MainMenu::resetGUI() {
-  // delete buttons
-  //if (!buttons.empty()) buttons.clear();
+	// delete buttons
+	//if (!buttons.empty()) buttons.clear();
 
 	backgrond_shapes.clear();
 
@@ -137,8 +133,11 @@ void MainMenu::initSounds() {
 			  {gfx::SoundCategory::vol_UI, myConst::sounds::selbtn_menu, "SELECT_MENU"},
 			  {gfx::SoundCategory::vol_UI, myConst::sounds::press_newg, "PRESS_NEW_GAME"},
 			  {gfx::SoundCategory::vol_UI, myConst::sounds::press_btn, "PRESS_BUTTON"}})
-			if (!loadSoundtoBuffer(category, soundKey, mapKey))
-				throw soundKey;
+			if (!loadSoundtoBuffer(category, soundKey, mapKey)) {
+				char tmp[256];
+				sprintf(tmp, "%s", soundKey);
+				throw std::exception(tmp);
+			}
 	} catch (std::exception& e) {
 		Logger::logStatic("can't load: " + std::string(e.what()), "MainMenu::initSounds()", logType::LERROR);
 	}
@@ -171,7 +170,7 @@ MainMenu::~MainMenu() {
 	Logger::logStatic("MainMenu destructor", "MainMenu");
 
 	// delete buttons
-	//if (!buttons.empty()) buttons.clear();
+//	if (!buttons.empty()) buttons.clear();
 
 	backgrond_shapes.clear();
 	IsoundsMap.clear();
@@ -200,31 +199,31 @@ void MainMenu::updateInput(const float& delta_time) {
 }
 
 void MainMenu::updateButtons() {
-  //if (!buttons.empty()) {
-  //  for (auto &it : buttons) {
-  //    it.second->update(ImousePosWindow);
-  //    if (it.second->isPressed())
-  //      if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
-  //    if (it.second->isHover())
-  //      if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
-  //  }
+	//if (!buttons.empty()) {
+	//	for (auto& it : buttons) {
+	//		it.second->update(ImousePosWindow);
+	//		if (it.second->isPressed())
+	//			if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
+	//		if (it.second->isHover())
+	//			if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
+	//	}
 
-  //  if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
-  //    endState();
+	  //  if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
+	  //    endState();
 
-  //  if (buttons["START_BTN"]->isPressed() && getKeytime())
-  //    Istates->push(new Process(IstateData, false));
+	  //  if (buttons["START_BTN"]->isPressed() && getKeytime())
+	  //    Istates->push(new Process(IstateData, false));
 
-  //  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
-  //    Istates->push(new Process(IstateData, true));
-  //    resetView();
-  //  }
-  //  if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
-  //    Istates->push(new SettingsState(IstateData));
+	  //  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
+	  //    Istates->push(new Process(IstateData, true));
+	  //    resetView();
+	  //  }
+	  //  if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
+	  //    Istates->push(new SettingsState(IstateData));
 
-  //  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
-  //    Istates->push(new EditorState(IstateData));
-  //}
+	  //  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
+	  //    Istates->push(new EditorState(IstateData));
+	//}
 }
 
 void MainMenu::updateGUI(const float& delta_time) {
@@ -295,14 +294,14 @@ void MainMenu::render(sf::RenderWindow& target) {
 	for (auto& it : backgrond_shapes)
 		renderTexture.draw(it);
 
-	  // render GUI
-	//  // Отрисовываем кнопки в renderTexture, а не в target
+	   //render GUI
+	   //Отрисовываем кнопки в renderTexture, а не в target
 	//if (!buttons.empty())
 	//	for (auto& it : buttons)
 	//		renderTexture.draw(*it.second.get());
 
-		// debug text
-	//if (Idebud) renderTexture.draw(Itext);
+		 //debug text
+	if (Idebud) renderTexture.draw(Itext);
 
 	renderTexture.setView(renderTexture.getDefaultView());
 	renderTexture.display();

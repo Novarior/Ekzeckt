@@ -8,9 +8,10 @@
 // поэтому важно чтобы они были в отдельном файле
 // и было легко их заменить на другой язык
 
-#include "../core/header.h"
 #include <string>
-#include "../core/systemFunctionUNIX.hpp"
+#include "../core/_myConst.h"
+#include "../core/header.h"
+#include "../core/tools/path.hpp"
 #include "../core/tools/LOGGER.hpp"
 
 
@@ -20,7 +21,7 @@ namespace helperText
     enum class Language
     {
         ENG,
-        RUS
+        UKR
     };
 
     // абстрактный класс которы хранит текущий выбраный язык
@@ -30,10 +31,10 @@ namespace helperText
     {
     private:
         static nlohmann::json loadedJson;
-        static std::string currentFilePath;
+        static std::filesystem::path currentFilePath;
 
         // Метод для загрузки JSON-файла, если он не был загружен ранее
-        static bool loadLocalizationFile(const std::string &filename);
+        static bool loadLocalizationFile(const std::filesystem::path& _filename);
 
     public:
         // Загружает локализацию в зависимости от языка

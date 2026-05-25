@@ -8,7 +8,7 @@ struct noiceData {
 	unsigned int mapSizeY = 0;
 	unsigned int mapSizeZ = 0;
 	float gridSize = 0;
-	uint32_t seed = 0;
+	int seed = 0;
 	int offsetSeed = 0xffff;
 	float chanceToSpawnTree = 0.0f;
 	unsigned octaves = 0;
@@ -23,16 +23,18 @@ struct noiceData {
 
 class ProcessGenerationNoice {
 private:
-	noiceData* m_data = nullptr;
+	noiceData* m_data ;
 
-	double InterpolatedNoise(int i, double x, double y);
+	double InterpolatedNoise(double i, double x, double y);
 	double Interpolate(double a, double b, double x);
-	double SmoothedNoise(int i, int x, int y);
-	double FastSmoothedNoise(int i, int x, int y);
-	double Noise(int i, int x, int y);
+	double SmoothedNoise(double i, double x, double y);
+	double FastSmoothedNoise(double i, double x, double y);
+	double Noise(double i, double x, double y);
 
 public:
-	ProcessGenerationNoice() {}
+	ProcessGenerationNoice() {
+		m_data = nullptr;
+	}
 	virtual ~ProcessGenerationNoice() {}
 
 	void setNoiceData(noiceData* data) { this->m_data = data; }

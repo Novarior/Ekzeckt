@@ -9,6 +9,7 @@ CMakeFiles/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+vs_temp/
 
 # Compiled binary files
 bin/
@@ -24,10 +25,11 @@ Ekzeckt/**
 
 # Lua folder
 
-**source/res/scripts
+**res/scripts
 
 # Cache and log files
 .cache
 *.log
 *.tmp
 *.cmake
+*.etl

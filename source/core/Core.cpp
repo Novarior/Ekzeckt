@@ -1,7 +1,4 @@
-#include "header.h"
-
 #include "Core.h"
-
 
 // инициализация реестра предметов
 //std::map<int, std::shared_ptr<Item>> ItemRegistry::items = {};
@@ -12,13 +9,15 @@ unsigned int FPS::mFps = 0;
 sf::Clock FPS::mClock = sf::Clock();
 std::unordered_map<std::string, sf::Texture> TextureManager::m_textures;
 std::unordered_map<TextureID, std::string> TextureIDMapping::idToStringMap;
+std::filesystem::path AppFn::pResources;
+std::filesystem::path AppFn::pDocuments;
 
 // check if app directory exists
 void Core::coreInitDirectories() {
-	if (ApplicationsFunctions::checkAppDirectoryExists())
+	if (AppFn::checkAppDirectoryesExists())
 		Logger::logStatic("App directory already exists", "Core::coreInitDirectories()");
 	else
-		ApplicationsFunctions::createAppDirectories();
+		AppFn::createAppDirectories();
 }
 
 // coreInitialisations root data, window, fonts and etc
@@ -48,10 +47,10 @@ void Core::coreInitVariabless() {
 	cr_deltaClock.restart();
 
 	// coreInit fonts
-	if (!cr_GameFont_basic.openFromFile(std::string(ApplicationsFunctions::get_resources_dir() + myConst::fonts::data_gameproces_font_path)))
+	if (!cr_GameFont_basic.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path)))
 		Logger::logStatic("Debug font failed to load", "Core::coreInitVariables()");
 
-	if (!cr_debugFont.openFromFile(std::string(ApplicationsFunctions::get_resources_dir() + myConst::fonts::data_debugfont_path)))
+	if (!cr_debugFont.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_debugfont_path)))
 		Logger::logStatic("Debug font failed to load", "Core::coreInitVariables()");
 
 #if __MDEBUG__ == ENABLE
@@ -94,18 +93,18 @@ void Core::coreInitWindow() {
 void Core::coreInitTextures() {
 
 	TextureManager::initialize();
-	//TextureManager::loadTexture(TextureID::TEXTURE_DEEP_OCEAN, myConst::textures::texture_DEEP_OCEAN);
-	//TextureManager::loadTexture(TextureID::TEXTURE_OCEAN, myConst::textures::texture_OCEAN);
-	//TextureManager::loadTexture(TextureID::TEXTURE_SAND, myConst::textures::texture_SAND);
-	//TextureManager::loadTexture(TextureID::TEXTURE_GRASS, myConst::textures::texture_GRASS);
-	//TextureManager::loadTexture(TextureID::TEXTURE_DIRT, myConst::textures::texture_DIRT);
-	//TextureManager::loadTexture(TextureID::TEXTURE_STONE, myConst::textures::texture_STONE);
-	//TextureManager::loadTexture(TextureID::TEXTURE_SNOW, myConst::textures::texture_SNOW);
-	//TextureManager::loadTexture(TextureID::TEXTURE_PLAYER, myConst::sprites::texture_PLAYER);
-	//TextureManager::loadTexture(TextureID::TEXTURE_SLIME, myConst::sprites::texture_SLIME);
-	//TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_1, myConst::gui::texture_background_mainmenu_lay_1);
-	//TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_2, myConst::gui::texture_background_mainmenu_lay_2);
-	//TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_3, myConst::gui::texture_background_mainmenu_lay_3);
+	TextureManager::loadTexture(TextureID::TEXTURE_DEEP_OCEAN, myConst::textures::texture_DEEP_OCEAN);
+	TextureManager::loadTexture(TextureID::TEXTURE_OCEAN, myConst::textures::texture_OCEAN);
+	TextureManager::loadTexture(TextureID::TEXTURE_SAND, myConst::textures::texture_SAND);
+	TextureManager::loadTexture(TextureID::TEXTURE_GRASS, myConst::textures::texture_GRASS);
+	TextureManager::loadTexture(TextureID::TEXTURE_DIRT, myConst::textures::texture_DIRT);
+	TextureManager::loadTexture(TextureID::TEXTURE_STONE, myConst::textures::texture_STONE);
+	TextureManager::loadTexture(TextureID::TEXTURE_SNOW, myConst::textures::texture_SNOW);
+	TextureManager::loadTexture(TextureID::TEXTURE_PLAYER, myConst::sprites::texture_PLAYER);
+	TextureManager::loadTexture(TextureID::TEXTURE_SLIME, myConst::sprites::texture_SLIME);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_1, myConst::gui::texture_background_mainmenu_lay_1);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_2, myConst::gui::texture_background_mainmenu_lay_2);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_3, myConst::gui::texture_background_mainmenu_lay_3);
 	//TextureManager::loadTexture(TextureID::INVENTORY_CELL_TEXTURE, ItemTextures::inv_cell_back);
 	//TextureManager::loadTexture(TextureID::ITEMS_POISON_SMALL_REGENERATION, ItemTextures::poison::item_img_poison_small_regeneration);
 	//TextureManager::loadTexture(TextureID::ITEMS_STONE, ItemTextures::items::item_stone);

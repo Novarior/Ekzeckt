@@ -34,25 +34,25 @@ double ProcessGenerationNoice::Interpolate(double a, double b, double x) {
 	return result;
 }
 
-double ProcessGenerationNoice::Noise(int i, int x, int y) {
-	uint32_t n = x + y * 31;
+double ProcessGenerationNoice::Noise(double i, double x, double y) {
+	uint32_t n = (uint32_t)(x)+(uint32_t)(y) * 31;
 	n = (n * 0x5DEECE66DULL) & ((n << 24) - 1);
-	int a = m_data->seed * x;
-	int b = m_data->seed * y; 
-	int c = m_data->seed * (x + y);
+	int a = m_data->seed * (int)(x);
+	int b = m_data->seed * (int)(y);
+	int c = m_data->seed * ((int)(x)+(int)(y));
 	int t = (n * (n * n * a + b) + c) & 0x7fffffff;
 	double ret = 1.0 - (double)(t) / 1073741824.0;
 	return ret;
 }
 
-double ProcessGenerationNoice::SmoothedNoise(int i, int x, int y) {
+double ProcessGenerationNoice::SmoothedNoise(double i, double x, double y) {
 	double corners = (Noise(i, x - 1, y - 1) + Noise(i, x + 1, y - 1) + Noise(i, x - 1, y + 1) + Noise(i, x + 1, y + 1)) / 8;
 	double sides = (Noise(i, x - 1, y) + Noise(i, x + 1, y) + Noise(i, x, y - 1) + Noise(i, x, y + 1)) / 4;
 	double center = Noise(i, x, y) / 2;
 	return corners + sides + center;
 }
 
-double ProcessGenerationNoice::FastSmoothedNoise(int i, int x, int y) {
+double ProcessGenerationNoice::FastSmoothedNoise(double i, double x, double y) {
 	double center = Noise(i, x, y);
 	double sides = (center + Noise(i, x + 1, y) + Noise(i, x, y + 1)) / 3;
 	double corners = (sides + Noise(i, x + 1, y + 1)) / 2;
@@ -72,10 +72,10 @@ double ProcessGenerationNoice::getNoice(double x, double y) {
 	return total / frequency;
 }
 
-double ProcessGenerationNoice::InterpolatedNoise(int i, double x, double y) {
-	int integer_X = x;
+double ProcessGenerationNoice::InterpolatedNoise(double i, double x, double y) {
+	double integer_X = x;
 	double fractional_X = x - integer_X;
-	int integer_Y = y;
+	double integer_Y = y;
 	double fractional_Y = y - integer_Y;
 
 	// init empty value for interpolated

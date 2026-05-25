@@ -13,7 +13,7 @@
 #include "../localisation/helperText.hpp"
 #include "../core/dataCollector/_man_Texture.hpp"
 
-// #include "../GUI/components/button.hpp"
+#include "../GUI/components/button.hpp"
 
 // The MainMenu class represents the game's main menu
 class MainMenu: public State {

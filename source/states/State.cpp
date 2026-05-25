@@ -1,4 +1,4 @@
-#include "../core/header.h"
+
 
 #include "State.hpp"
 
@@ -56,10 +56,11 @@ void State::initBuffer() {
 
 // load sound to buffer
 bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory,
-							  std::string _namepath, std::string _typename) {
+							  std::filesystem::path _namepath, std::string _typename) {
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile(std::string(ApplicationsFunctions::get_resources_dir()) + _namepath)) {
-		Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()");
+	auto bf = AppFn::getPathResourcesDir()+=_namepath;
+	if (!buffer.loadFromFile(bf)) {
+		Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()",logType::LERROR);
 		return false;
 	}
 

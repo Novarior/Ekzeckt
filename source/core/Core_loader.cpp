@@ -58,7 +58,7 @@ bool Core::cr_SaveData() {
 	auto a_gfx = cr_gfxSettings.get();
 	auto a_vol = cr_VolumeCollector.get();
 
-	std::filesystem::path filePath = ApplicationsFunctions::getAppConfigFolder().append("save").append(AppFiles::config_window);
+	std::filesystem::path filePath = AppFn::getPathConfigDirectory().append("save").append(appfiles::config_window);
 	std::ofstream ofs(filePath);
 	if (!ofs.is_open()) {
 		Logger::logStatic("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()");
