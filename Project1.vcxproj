@@ -27,6 +27,8 @@
     <ClCompile Include="source\core\math\mymath.cpp" />
     <ClCompile Include="source\core\pch.cpp" />
     <ClCompile Include="source\core\math\models noice\Noice_Simplex.cpp" />
+    <ClCompile Include="source\GUI\components\button.cpp" />
+    <ClCompile Include="source\GUI\GUI_Component.cpp" />
     <ClCompile Include="source\localisation\helperText.cpp" />
     <ClCompile Include="source\states\MainMenu.cpp" />
     <ClCompile Include="source\states\State.cpp" />
@@ -50,6 +52,8 @@
     <ClInclude Include="source\core\_myConst.h" />
     <ClInclude Include="source\core\_myFiles.h" />
     <ClInclude Include="source\core\math\models noice\Noice_Simplex.hpp" />
+    <ClInclude Include="source\GUI\components\button.hpp" />
+    <ClInclude Include="source\GUI\GUI_Component.hpp" />
     <ClInclude Include="source\localisation\helperText.hpp" />
     <ClInclude Include="source\states\MainMenu.hpp" />
     <ClInclude Include="source\states\State.hpp" />
@@ -67,13 +71,11 @@
     <None Include="resouces\shaders\fragment.glsl" />
     <None Include="resouces\shaders\shdr_glitch.glsl" />
     <None Include="resouces\styles\styles.json" />
-    <None Include="resouces\textures\items\stone.webp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico.png" />
     <Image Include="metadata\ico.png" />
     <Image Include="resouces\sprites\Slime_01.png" />
-    <Image Include="resouces\textures\1.png" />
     <Image Include="resouces\textures\gui\bag.png" />
     <Image Include="resouces\textures\gui\inv_cell_back.png" />
     <Image Include="resouces\textures\gui\item_common_rare.png" />
@@ -81,15 +83,12 @@
     <Image Include="resouces\textures\gui\Lay_1.png" />
     <Image Include="resouces\textures\gui\Lay_2.png" />
     <Image Include="resouces\textures\gui\Lay_3.png" />
-    <Image Include="resouces\textures\gui\nulltexture.png" />
     <Image Include="resouces\textures\items\coins\copper_nugget.png" />
     <Image Include="resouces\textures\items\coins\gold_nugget.png" />
     <Image Include="resouces\textures\items\coins\iron_nugget.png" />
     <Image Include="resouces\textures\items\item\crystal_01.png" />
     <Image Include="resouces\textures\items\item\stone_01.png" />
     <Image Include="resouces\textures\items\item\stone_02.png" />
-    <Image Include="resouces\textures\items\nulltexture.png" />
-    <Image Include="resouces\textures\NULL_TEXTURE.png" />
     <Image Include="resouces\textures\tiles\deep_ocean.png" />
     <Image Include="resouces\textures\tiles\dirt.png" />
     <Image Include="resouces\textures\tiles\grass.png" />
@@ -220,9 +219,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\CppLib\SFML-3.1.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;flac.lib;harfbuzzd.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/VERBOSE %(AdditionalOptions)</AdditionalOptions>
+      <LinkErrorReporting>SendErrorReport</LinkErrorReporting>
     </Link>
     <PostBuildEvent>
-      <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E</Command>
+      <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E /purge</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>dCopy resoreses to EXE</Message>
@@ -248,7 +249,7 @@
       <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;sfml-audio-s.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;harfbuzz.lib;ogg.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E</Command>
+      <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E /purge</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy resoreses to EXE</Message>

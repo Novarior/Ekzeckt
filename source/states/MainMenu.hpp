@@ -13,6 +13,7 @@
 #include "../localisation/helperText.hpp"
 #include "../core/dataCollector/_man_Texture.hpp"
 
+#include "../GUI/GUI_Component.hpp"
 #include "../GUI/components/button.hpp"
 
 // The MainMenu class represents the game's main menu
@@ -24,7 +25,7 @@ private:
 	sf::Sprite renderSprite;
 
 	// Menu buttons
-	//std::map<std::string, std::unique_ptr<gui::Button>> buttons;
+	std::map<std::string, std::unique_ptr<gui::Button>> buttons;
 
 	// Background textures and shapes
 	std::vector<sf::Texture> background_textures;
@@ -54,6 +55,6 @@ public:
 	void update(const float& delta_time);       // Update state
 	void render(sf::RenderWindow& target);      // Render
 
-	virtual size_t getMemoryUsage() const { return sizeof(*this); }
+	//virtual size_t getMemoryUsage() const { return sizeof(*this); }
 };
 #endif /* MAINMENU */

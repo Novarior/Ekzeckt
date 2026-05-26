@@ -2,10 +2,7 @@
 const double mmath::randZeroToOne() { return rand() / (RAND_MAX + 1.); }
 
 // precent to X
-template <typename T>
-T mmath::p2pX(T _percent, T _size) {
-	return floor(static_cast<float>(_size) * (_percent / 100.f));
-}
+
 
 // Для корректной работы с погрешностью, ограничиваем значение в пределах [-1,// 1]
 const float mmath::normalize(float value) {

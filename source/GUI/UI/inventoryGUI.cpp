@@ -1,5 +1,4 @@
 #include "inventoryGUI.hpp"
-#include "../../core/header.h"
 
 // Инициализация фона инвентаря
 void GUI::InventoryGUI::initBackground(sf::Vector2f screenSize)

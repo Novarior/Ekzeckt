@@ -2,7 +2,6 @@
 #define HEADER_H
 
 #include <chrono>
-#include <cmath>
 #include <exception>
 #include <filesystem>
 #include <fstream>
@@ -18,11 +17,9 @@
 #include <time.h>
 #include <unordered_map>
 #include <vector>
-#include <fstream>
 #include <ios>
 #include <istream>
-#include <sstream>
-#include <cstddef>
+#include <stddef.h>
 #include <strstream>
 
 #ifdef __APPLE__

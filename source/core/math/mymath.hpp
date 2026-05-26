@@ -1,12 +1,10 @@
 #ifndef CPP_MATH_CORE_HPP
 #define CPP_MATH_CORE_HPP
-#include <cmath>
+#define _USE_MATH_DEFINES
 #include <random>
-
+#include <math.h>
 namespace mmath {
-constexpr double M_PI = 3.14159265358979;
-constexpr double M_PI2 = 6.28318530717959;
-constexpr double M_PI_2 = 1.5707963267949;
+#define M_2PI	6.28318530717958647692	// 2*pi
 
 // interpolations
 namespace interpolation {
@@ -65,7 +63,9 @@ T randIntFromToNum(T _min, T _max) {
 }
 
 template <typename T>
-T p2pX(T _percent, T _size);
+inline T p2pX(T _percent, T _size) {
+	return floor((float)((_size) * (_percent / 100.f)));
+}
 
 const float normalize(float value);
 const double normalize(double value);

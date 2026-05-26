@@ -1,15 +1,13 @@
-
 #include "GUI_Component.hpp"
 
-gui::GuiComponent::GuiComponent()
-	: mData({0, 0}, {0, 0}, sf::Font(), 0, " ", false, ComponentState::ACTIVE,
-			"default", 0),
+gui::GuiComponent::GuiComponent():
+	mData({0, 0}, {0, 0}, sf::Font(), 0, " ", false, ComponentState::ACTIVE, "default", 0),
 	mDraw(sf::RectangleShape(), sf::Font(), " ", 1),
 	mColors(sf::Color::Black) {}
 
 gui::GuiComponent::~GuiComponent() {}
 
-void gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
+bool gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
 	// Load the style from a JSON file (multi-component loader)
 
 	std::filesystem::path fpath(AppFn::getPathResourcesDir().append("/styles").append(appfiles::config_style));
@@ -17,14 +15,13 @@ void gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
 
 	fs.open(fpath);
 	if (!fs.is_open())
-		throw std::filesystem::exists(fpath);
-
+		return false;
 	json js;
 	fs >> js;
 
 	// check if "components" section exists
-	if (!js.contains("components"))
-		throw std::runtime_error("Missing 'components' section in style file");
+	//if (!js.contains("components"))
+	//	throw std::runtime_error("Missing 'components' section in style file");
 
 	// get seection
 	const auto& componentStyles = js["components"][_type];
@@ -135,21 +132,10 @@ void gui::GuiComponent::update(const sf::Vector2i& mousePosWindow) {
 void gui::GuiComponent::updateAfterLoadStyle() {
 	mDraw.text.setFont(mData.font);
 	mDraw.text.setFillColor(mColors.textIdleColor);
-	mDraw.text.setCharacterSize(mmath::p2pX(mData.characterSize, static_cast<unsigned int>(mData.size.y)));
 	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f, mData.position.y + mDraw.text.getGlobalBounds().size.y / 2.f});
 	mDraw.text.setString(mData.textString);
-}
-
-const bool gui::GuiComponent::isHover() const {
-	if (mData.state == ComponentState::HOVER && mData.isActive)
-		return true;
-	return false;
-}
-
-const bool gui::GuiComponent::isPressed() const {
-	if (mData.state == ComponentState::ACTIVE && mData.isActive)
-		return true;
-	return false;
+	auto ch = mmath::p2pX((float)(mData.characterSize), mData.size.y);
+	//mDraw.text.setCharacterSize(20);
 }
 
 void gui::GuiComponent::togleActive() {
@@ -170,3 +156,13 @@ void gui::GuiComponent::setText(std::string _text) {
 	mData.textString = _text;
 	mDraw.text.setString(mData.textString);
 }
+void gui::GuiComponent::setID(unsigned _id) { mData.id = _id; }
+const unsigned& gui::GuiComponent::getID() const { return mData.id; }
+const std::string gui::GuiComponent::getStyle() const { return mData.styleName; }
+const std::string gui::GuiComponent::getText() const { return mData.textString; }
+const sf::Vector2f gui::GuiComponent::getPosition() const { return mData.position; }
+const sf::Vector2f gui::GuiComponent::getSize() const { return mData.size; }
+const bool gui::GuiComponent::isDisabled() const { return !mData.isActive; }
+const bool gui::GuiComponent::isActive() const { return mData.isActive; }
+const bool gui::GuiComponent::isPressed() const { return (mData.state == ComponentState::ACTIVE && mData.isActive) ? true : false; }
+const bool gui::GuiComponent::isHover() const { return (mData.state == ComponentState::HOVER && mData.isActive) ? true : false; }

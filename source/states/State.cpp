@@ -1,8 +1,4 @@
-
-
 #include "State.hpp"
-
-// #include "../source/mypars/parsJSON.hpp"
 
 /**
  * @brief Construct a new State:: State object
@@ -55,12 +51,11 @@ void State::initBuffer() {
 }
 
 // load sound to buffer
-bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory,
-							  std::filesystem::path _namepath, std::string _typename) {
+bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path _namepath, std::string _typename) {
 	sf::SoundBuffer buffer;
-	auto bf = AppFn::getPathResourcesDir()+=_namepath;
+	 auto bf = AppFn::getPathResourcesDir() += _namepath;
 	if (!buffer.loadFromFile(bf)) {
-		Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()",logType::LERROR);
+		Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()", logType::LERROR);
 		return false;
 	}
 

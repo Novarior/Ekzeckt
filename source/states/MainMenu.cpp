@@ -50,53 +50,53 @@ void MainMenu::initBackground() {
 }
 
 void MainMenu::initButtons() {
-//	struct ButtonLINFO {
-//		std::string key;
-//		std::string text;
-//
-//		ButtonLINFO(const char* k, std::string t): key(k), text(t) {}
-//	};
-//
-//
-//	float offsetX = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().x));
-//	float offsetY = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().y));
-//
-//	sf::Vector2f sizebutton = sf::Vector2f(
-//		static_cast<float>(mmath::p2pX(15U, Iwindow.lock()->getSize().x)),
-//		static_cast<float>(mmath::p2pX(7U, Iwindow.lock()->getSize().y)));
-//
-//	// Массив с координатами для каждой кнопки
-//	std::vector<sf::Vector2f> buttonOffsets = {
-//		{offsetX * 15.5f, offsetY * 2},  // noice
-//		{offsetX * 15.5f, offsetY * 10}, // continue
-//		{offsetX * 15.5f, offsetY * 12}, // start
-//		{offsetX * 15.5f, offsetY * 14}, // settings
-//		{offsetX * 15.5f, offsetY * 18}  // exit
-//	};
-//
-//	// Данные о кнопках
-//	std::vector<ButtonLINFO> buttonData = {
-//		{"NOICE_BTN", helperText::Button::BUTTON_NOICE_EDITOR},
-//		{"CONT_BTN", helperText::Button::BUTTON_CONTINUE},
-//		{"START_BTN", helperText::Button::BUTTON_PLAY},
-//		{"SETTINGS_BTN", helperText::Button::BUTTON_OPTIONS},
-//		{"EXIT_BTN", helperText::Button::BUTTON_EXIT}};
-//
-//  // Добавляем кнопку для отладки в режиме отладки
-//#ifdef _DEBUG
-//	buttonData.push_back({"DRS_BTN", helperText::Button::BUTTON_DEBUG_ROOM_STATE});
-//
-//	// Добавляем позицию для кнопки отладки
-//	buttonOffsets.push_back({offsetX, offsetY});
-//#endif
+	struct ButtonLINFO {
+		std::string key;
+		std::string text;
+
+		ButtonLINFO(const char* k, std::string t): key(k), text(t) {}
+	};
+
+	float offsetX = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().x));
+	float offsetY = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().y));
+
+	sf::Vector2f sizebutton = sf::Vector2f(
+		static_cast<float>(mmath::p2pX(15U, Iwindow.lock()->getSize().x)),
+		static_cast<float>(mmath::p2pX(7U, Iwindow.lock()->getSize().y)));
+
+	// Массив с координатами для каждой кнопки
+	std::vector<sf::Vector2f> buttonOffsets = {
+		{offsetX * 15.5f, offsetY * 2},  // noice
+		{offsetX * 15.5f, offsetY * 10}, // continue
+		{offsetX * 15.5f, offsetY * 12}, // start
+		{offsetX * 15.5f, offsetY * 14}, // settings
+		{offsetX * 15.5f, offsetY * 18}  // exit
+	};
+
+	// Данные о кнопках
+	std::vector<ButtonLINFO> buttonData = {
+		{"NOICE_BTN", helperText::Button::BUTTON_NOICE_EDITOR},
+		{"CONT_BTN", helperText::Button::BUTTON_CONTINUE},
+		{"START_BTN", helperText::Button::BUTTON_PLAY},
+		{"SETTINGS_BTN", helperText::Button::BUTTON_OPTIONS},
+		{"EXIT_BTN", helperText::Button::BUTTON_EXIT}};
+
+  // Добавляем кнопку для отладки в режиме отладки
+#ifdef _DEBUG
+	buttonData.push_back({"DRS_BTN", helperText::Button::BUTTON_DEBUG_ROOM_STATE});
+
+	// Добавляем позицию для кнопки отладки
+	buttonOffsets.push_back({offsetX, offsetY});
+#endif
 
 	//Цикл для создания кнопок с данными из массива
-	//for (size_t i = 0; i < buttonData.size(); ++i) {
-	//	const auto& button = buttonData[i];
-	//	buttons[button.key] = std::make_unique<gui::Button>(
-	//		buttonOffsets[i], sizebutton, button.text,
-	//		gui::styles::buttons::btn_default, gui::type::BUTTON);
-	//}
+	//Цикл для создания кнопок с данными из массива
+	for (size_t i = 0; i < buttonData.size(); ++i) {
+		const auto& button = buttonData[i];
+		buttons[button.key] = std::make_unique<gui::Button>(
+			buttonOffsets[i], sizebutton, button.text,
+			gui::styles::buttons::btn_default, gui::type::BUTTON);
+	}
 }
 
 void MainMenu::initGUI() {
@@ -106,7 +106,7 @@ void MainMenu::initGUI() {
 
 void MainMenu::resetGUI() {
 	// delete buttons
-	//if (!buttons.empty()) buttons.clear();
+	if (!buttons.empty()) buttons.clear();
 
 	backgrond_shapes.clear();
 
@@ -170,7 +170,7 @@ MainMenu::~MainMenu() {
 	Logger::logStatic("MainMenu destructor", "MainMenu");
 
 	// delete buttons
-//	if (!buttons.empty()) buttons.clear();
+	if (!buttons.empty()) buttons.clear();
 
 	backgrond_shapes.clear();
 	IsoundsMap.clear();
@@ -199,14 +199,17 @@ void MainMenu::updateInput(const float& delta_time) {
 }
 
 void MainMenu::updateButtons() {
-	//if (!buttons.empty()) {
-	//	for (auto& it : buttons) {
-	//		it.second->update(ImousePosWindow);
-	//		if (it.second->isPressed())
-	//			if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
-	//		if (it.second->isHover())
-	//			if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
-	//	}
+	if (!buttons.empty()) {
+		auto& it = buttons;
+		for (auto& q : it)
+			q.second.get()->update(ImousePosWindow);
+	}
+
+		//	if (it.second->isPressed())
+		//		if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
+		//	if (it.second->isHover())
+		//		if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
+		//}
 
 	  //  if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
 	  //    endState();
@@ -223,7 +226,7 @@ void MainMenu::updateButtons() {
 
 	  //  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
 	  //    Istates->push(new EditorState(IstateData));
-	//}
+
 }
 
 void MainMenu::updateGUI(const float& delta_time) {
@@ -231,8 +234,8 @@ void MainMenu::updateGUI(const float& delta_time) {
 	if (Idebud) {
 		IstringStream
 			<< "\nver:\t" << CMAKE_PROJECT_VERSION << "\nCurrent memory usage:\t"
-			<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-			<< "\nCurrent state memory usage:\t" << getMemoryUsage() << " bytes"
+			//<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
+			//<< "\nCurrent state memory usage:\t" << getMemoryUsage() << " bytes"
 			<< "\nFPS delta:\t" << 1 / delta_time << "\nFPS Clock:\t"
 			<< FPS::getFPS() << "\nFPS limit:\t"
 			<< IstateData->sd_gfxSettings.lock()->frameRateLimit
@@ -296,9 +299,9 @@ void MainMenu::render(sf::RenderWindow& target) {
 
 	   //render GUI
 	   //Отрисовываем кнопки в renderTexture, а не в target
-	//if (!buttons.empty())
-	//	for (auto& it : buttons)
-	//		renderTexture.draw(*it.second.get());
+	if (!buttons.empty())
+		for (auto& it : buttons)
+			renderTexture.draw(*it.second.get());
 
 		 //debug text
 	if (Idebud) renderTexture.draw(Itext);

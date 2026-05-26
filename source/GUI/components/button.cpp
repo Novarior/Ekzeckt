@@ -1,5 +1,4 @@
 #include "button.hpp"
-#include <string>
 
 gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string _text, std::string style, std::string _type, unsigned id) {
 
@@ -25,6 +24,7 @@ gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string _text,
 							mData.position.y + mData.size.y / 2 + mDraw.text.getGlobalBounds().size.y / 2.f});
 	mDraw.text.setString(mData.textString);
 }
+
 
 // Accessors
 
