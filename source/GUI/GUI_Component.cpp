@@ -7,6 +7,36 @@ gui::GuiComponent::GuiComponent():
 
 gui::GuiComponent::~GuiComponent() {}
 
+void gui::GuiComponent::loadDefaultStyle() {
+	mData.styleName = "_DefaultStyle";
+
+	sf::Color c = {220U,220U,220U,225U};
+
+	sf::Color b = sf::Color::Black;
+
+	mColors.textIdleColor = c;
+	mColors.textHoverColor = c;
+	mColors.textActiveColor = c;
+	mColors.textDisableColor = c;
+
+	mColors.shapeIdleColor = {74U,83U,91U};
+	mColors.shapeHoverColor = {116U, 131U,142U};
+	mColors.shapeActiveColor = {60U,65U,70U};
+	mColors.shapeDisableColor = {23U,27U,28U};
+
+	mColors.outlineIdleColor = b;
+	mColors.outlineHoverColor = b;
+	mColors.outlineActiveColor = b;
+	mColors.outlineDisableColor = b;
+
+	mDraw.shape.setOutlineThickness(-1.f);
+	if (mData.font.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path_3)));
+
+	mDraw.text.setCharacterSize(16U);
+	mData.characterSize = 16U;
+	updateAfterLoadStyle();
+}
+
 bool gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
 	// Load the style from a JSON file (multi-component loader)
 

@@ -107,6 +107,7 @@ public:
 	   // set style like a string
 	const std::string getStyle() const;
 	bool loadStyle(std::string _style, std::string _type);
+	void loadDefaultStyle();
 
 	const std::string getText() const;
 	void setText(std::string _text);

@@ -9,7 +9,8 @@ gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string _text,
 	mData.position = position;
 	mData.size = size;
 
-	loadStyle(style, _type);
+	if (!loadStyle(style, _type))
+		loadDefaultStyle();
 
 	mDraw.shape.setPosition(sf::Vector2f(position.x, position.y));
 	mDraw.shape.setSize(sf::Vector2f(size.x, size.y));

@@ -41,6 +41,7 @@ public:
 	std::weak_ptr<std::map<std::string, uint16_t>> sd_KeySupports;
 	// pointer to keyboard
 	// std::weak_ptr<keyboardOSX> sd_keyboard_prt;
+	
 	// Character size for text's
 	unsigned int sd_characterSize_debug;
 	unsigned int sd_characterSize_game_big;

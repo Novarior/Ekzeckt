@@ -7,7 +7,9 @@ void MainMenu::initRenderDefines() {
 	renderTexture.setSmooth(true);
 
 	renderSprite.setTexture(renderTexture.getTexture());
-	renderSprite.setTextureRect(sf::IntRect({0, 0}, {static_cast<int>(IstateData->sd_Window.lock()->getSize().x),               static_cast<int>(IstateData->sd_Window.lock()->getSize().y)}));
+	renderSprite.setTextureRect(sf::IntRect({0, 0},
+								{static_cast<int>(IstateData->sd_Window.lock()->getSize().x),
+								static_cast<int>(IstateData->sd_Window.lock()->getSize().y)}));
 
 	view.setSize(sf::Vector2f(
 		static_cast<float>(IstateData->sd_Window.lock()->getSize().x),
@@ -211,8 +213,8 @@ void MainMenu::updateButtons() {
 		//		if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
 		//}
 
-	  //  if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
-	  //    endState();
+	    if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
+	      endState();
 
 	  //  if (buttons["START_BTN"]->isPressed() && getKeytime())
 	  //    Istates->push(new Process(IstateData, false));

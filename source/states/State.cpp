@@ -6,7 +6,7 @@
  * @param state_data
  */
 State::State(StateData* state_data)
-	: IstateData(state_data), Itext(IstateData->sd_debugFont, "", IstateData->sd_characterSize_game_medium) {
+	: IstateData(state_data), Itext(IstateData->sd_debugFont, "", IstateData->sd_characterSize_game_small) {
   // write log message what im here doing something
 	Logger::logStatic("Start initilization state", "State::State()");
 
