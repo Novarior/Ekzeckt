@@ -309,6 +309,9 @@ void Core::updateEventsWindow() {
 		if (event->is<sf::Event::Closed>()) {
 			cr_Window->close();
 		}
+		if (event->is < sf::Event::Resized>()) {
+			if (!cr_State.empty()) cr_State.top()->wasUpdateWindon();
+		}
 	}
 }
 

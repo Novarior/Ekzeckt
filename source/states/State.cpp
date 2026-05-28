@@ -120,3 +120,10 @@ void State::updateMousePositions(sf::View* view) {
 
 	Iwindow.lock()->setView(Iwindow.lock()->getDefaultView());
 }
+
+void State::setVolume(gfx::SoundCategory _category, const float _newVal) // Set volume for all categories
+{
+	IstateData->sd_VolumeCollector.lock()->setCategoryVolume(_category, _newVal);
+	for (auto& it : IsoundsMap)
+		it.second.setVolume(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(_category));
+}

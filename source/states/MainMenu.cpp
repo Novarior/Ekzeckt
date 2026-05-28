@@ -180,9 +180,6 @@ void MainMenu::update(const float& delta_time) {
 void MainMenu::updateInput(const float& delta_time) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Slash) && getKeytime())
 		Idebud = !Idebud;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && getKeytime())
-		resetGUI();
 }
 
 void MainMenu::updateButtons() {
@@ -208,8 +205,8 @@ void MainMenu::updateButtons() {
 	//    Istates->push(new Process(IstateData, true));
 	//    resetView();
 	//  }
-	//  if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
-	//    Istates->push(new SettingsState(IstateData));
+	if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
+		Istates->push(new SettingsState(IstateData));
 
 	//  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
 	//    Istates->push(new EditorState(IstateData));
@@ -244,8 +241,6 @@ void MainMenu::updateGUI(const float& delta_time) {
 			<< "\n\tENVIRONMENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT));
 		Itext.setString(IstringStream.str());
 		IstringStream.str("");
-
-
 	}
 
 	// update GUI

@@ -5,14 +5,11 @@
 
 //#include "EditorState.hpp"
 //#include "Process.hpp"
-//#include "settings.hpp"
+#include "settings.hpp"
 
 #include "../core/cmakever.h"
-#include "../core/tools/MemoryUsageMonitor.hpp"
 #include "../core/tools/staticFPSMetter.hpp"
 #include "../localisation/helperText.hpp"
-#include "../core/dataCollector/_man_Texture.hpp"
-
 #include "../GUI/GUI_Component.hpp"
 #include "../GUI/components/button.hpp"
 

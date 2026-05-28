@@ -28,7 +28,6 @@ public:
 		sd_characterSize_game_small = 0;
 	}
 
-	float sd_gridSize;                         // Size of the grid
 	std::weak_ptr<sf::RenderWindow> sd_Window; // Pointer to the SFML window
 	// Font used in the game
 	sf::Font sd_GameFont_basic;
@@ -49,6 +48,7 @@ public:
 	unsigned int sd_characterSize_game_big;
 	unsigned int sd_characterSize_game_medium;
 	unsigned int sd_characterSize_game_small;
+	float sd_gridSize;                         // Size of the grid
 	// Flag to reset GUI
 	bool sd_reserGUI;
 
@@ -74,6 +74,7 @@ protected:
 	// Resources
 	bool Iquit;        // Flag to quit the state
 	bool Ipaused;      // Flag to pause the state
+	bool Idebud;                     // Flag for debug mode into game
 	float Ikeytime;    // Time since last key press
 	float IkeytimeMax; // Maximum time between key presses
 	float IgridSize;   // Size of the grid
@@ -85,7 +86,6 @@ protected:
 
 	std::stringstream IstringStream; // Stream for debug string
 	sf::Text Itext;                  // Debug text
-	bool Idebud;                     // Flag for debug mode into game
 
 	// Sounds and him elements for game (volume, sound, buffer, ect )
 	// shared map with sounds and name itself
@@ -94,24 +94,20 @@ protected:
 	// Map of sound buffers, one key one sound
 	std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>> IsoundBufferMap;
 
-	void initRenderDefines();
 	void initBuffer();               // Initialize buffer
 	void reCaclulateCharacterSize(); // Recalculate character size
 
+	void initRenderDefines();
 	void resetView();
-	// Functions for sounds key
-	// for calling sf::Sound from map using category layer
+		// Functions for sounds key
+		// for calling sf::Sound from map using category layer
 	virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path, std::string _typename);
 
    // void playSound(gfx::SoundCategory _soundcategory, std::string _typename); // Play sound from category[_typename]
 
 	// functions accses
-	void setVolume(gfx::SoundCategory _category, const float _newVal) // Set volume for all categories
-	{
-		IstateData->sd_VolumeCollector.lock()->setCategoryVolume(_category, _newVal);
-		for (auto& it : IsoundsMap)
-			it.second.setVolume(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(_category));
-	}
+	void setVolume(gfx::SoundCategory _category, const float _newVal); // Set volume for all categories
+
 
 public:
   // Constructor
@@ -123,10 +119,13 @@ public:
 	const bool& getQuit() const { return this->Iquit; } // Get quit flag
 	const bool getKeytime();                            // Get key time
 
+
 	// Functions
 	void endState() { this->Iquit = true; }        // End the state
 	void pauseState() { this->Ipaused = true; }    // Pause the state
 	void unpauseState() { this->Ipaused = false; } // Unpause the state
+	void wasUpdateWindon() { IstateData->sd_reserGUI = true; }
+
 
 	// update sounds (virtual function)
 	virtual void updateSounds(const float& delta_time) = 0;
