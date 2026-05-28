@@ -1,27 +1,8 @@
 #include "MainMenu.hpp"
 
-void MainMenu::initRenderDefines() {
-	if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x, IstateData->sd_Window.lock()->getSize().y}))
-		Logger::logStatic("renderTexture cannot be resize", "MainMenu::initRenderDefines()", logType::LERROR);
-
-	renderTexture.setSmooth(true);
-
-	renderSprite.setTexture(renderTexture.getTexture());
-	renderSprite.setTextureRect(sf::IntRect({0, 0},
-								{static_cast<int>(IstateData->sd_Window.lock()->getSize().x),
-								static_cast<int>(IstateData->sd_Window.lock()->getSize().y)}));
-
-	view.setSize(sf::Vector2f(
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().x),
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().y)));
-
-	view.setCenter(sf::Vector2f(
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().x) / 2,
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().y) / 2));
-}
 
 void MainMenu::initBackground() {
-
+	auto ws = Iwindow.lock()->getSize();
 	sf::Texture tx;
 	for (int i = 0; i < 3; i++)
 		background_textures.push_back(sf::Texture());
@@ -45,8 +26,8 @@ void MainMenu::initBackground() {
 			sf::Vector2f(backgrond_shapes[i].getSize().x / 2, backgrond_shapes[i].getSize().y / 2));
 
 		backgrond_shapes[i].setPosition(sf::Vector2f(
-			static_cast<float>(IstateData->sd_Window.lock()->getSize().x) / 2 - (backgrond_shapes[i].getSize().x / 2) + backgrond_shapes[i].getOrigin().x,
-			static_cast<float>(IstateData->sd_Window.lock()->getSize().y) / 2 - (backgrond_shapes[i].getSize().y / 2) + backgrond_shapes[i].getOrigin().y));
+			static_cast<float>(ws.x) / 2 - (backgrond_shapes[i].getSize().x / 2) + backgrond_shapes[i].getOrigin().x,
+			static_cast<float>(ws.y) / 2 - (backgrond_shapes[i].getSize().y / 2) + backgrond_shapes[i].getOrigin().y));
 	}
 	backgrond_shapes[0].scale(sf::Vector2f(2.f, 2.f));
 }
@@ -59,12 +40,13 @@ void MainMenu::initButtons() {
 		ButtonLINFO(const char* k, std::string t): key(k), text(t) {}
 	};
 
-	float offsetX = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().x));
-	float offsetY = mmath::p2pX(5.f, static_cast<float>(Iwindow.lock()->getSize().y));
+	auto ws = Iwindow.lock()->getSize();
+	float offsetX = mmath::p2pX(5.f, static_cast<float>(ws.x));
+	float offsetY = mmath::p2pX(5.f, static_cast<float>(ws.y));
 
 	sf::Vector2f sizebutton = sf::Vector2f(
-		static_cast<float>(mmath::p2pX(15U, Iwindow.lock()->getSize().x)),
-		static_cast<float>(mmath::p2pX(7U, Iwindow.lock()->getSize().y)));
+		static_cast<float>(mmath::p2pX(15U, ws.x)),
+		static_cast<float>(mmath::p2pX(7U, ws.y)));
 
 	// Массив с координатами для каждой кнопки
 	std::vector<sf::Vector2f> buttonOffsets = {
@@ -92,7 +74,6 @@ void MainMenu::initButtons() {
 #endif
 
 	//Цикл для создания кнопок с данными из массива
-	//Цикл для создания кнопок с данными из массива
 	for (size_t i = 0; i < buttonData.size(); ++i) {
 		const auto& button = buttonData[i];
 		buttons[button.key] = std::make_unique<gui::Button>(
@@ -108,24 +89,28 @@ void MainMenu::initGUI() {
 
 void MainMenu::resetGUI() {
 	// delete buttons
-	if (!buttons.empty()) buttons.clear();
-
+	if (!buttons.empty())
+		buttons.clear();
 	backgrond_shapes.clear();
 
+	//einitRenderDefines();
+	resetView();
+	reCaclulateCharacterSize();
 	initBackground();
 	initButtons();
-	initRenderDefines();
 	IstateData->sd_reserGUI = false;
-}
-
-void MainMenu::resetView() {
-	view.setSize(sf::Vector2f(
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().x),
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().y)));
-
-	view.setCenter(sf::Vector2f(
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().x) / 2,
-		static_cast<float>(IstateData->sd_Window.lock()->getSize().y) / 2));
+	//std::stringstream ss;
+	//ss << "\nISD_SD_WIN:\t" << IstateData->sd_Window.lock()->getSize().x << " x " << IstateData->sd_Window.lock()->getSize().y
+	//	<< "\nnISD_SD_WIN_VS:\t" << IstateData->sd_Window.lock()->getView().getSize().x << " x " << IstateData->sd_Window.lock()->getView().getSize().y
+	//	<< "\nnISD_SD_WIN_VC:\t" << IstateData->sd_Window.lock()->getView().getCenter().x << " x " << IstateData->sd_Window.lock()->getView().getCenter().y
+	//	<< "\nnIWinRes:\t" << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
+	//	<< "\nIWIN_VS:\t" << Iwindow.lock()->getView().getSize().x << " x " << Iwindow.lock()->getView().getSize().y
+	//	<< "\nnWIN_VC:\t" << Iwindow.lock()->getView().getCenter().x << " x " << Iwindow.lock()->getView().getCenter().y
+	//	<< "\nnViev:\t" << view.getSize().x << " x " << view.getSize().y
+	//	<< "\nnRenTex:\t" << renderTexture.getTexture().getSize().x << " x " << renderTexture.getTexture().getSize().y
+	//	<< "\nnRenSprt:\t" << renderSprite.getTextureRect().size.x << " x " << renderSprite.getTextureRect().size.y
+	//	<< "\n";
+	//Logger::logStatic(ss.str(), "rGUI");
 }
 
 void MainMenu::initSounds() {
@@ -158,7 +143,7 @@ void MainMenu::initSounds() {
 }
 
 MainMenu::MainMenu(StateData* statedata)
-	: State(statedata), renderSprite(TextureManager::getTexture(TextureID::TEXTURE_NULL)) {
+	: State(statedata) {
   // logger
 	Logger::logStatic("MainMenu constructor", "MainMenu");
 	initRenderDefines();
@@ -193,11 +178,11 @@ void MainMenu::update(const float& delta_time) {
 }
 
 void MainMenu::updateInput(const float& delta_time) {
-//  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && getKeytime())
-//    Idebud = !Idebud;
-//
-//  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_R)) && getKeytime())
-//    resetGUI();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Slash) && getKeytime())
+		Idebud = !Idebud;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && getKeytime())
+		resetGUI();
 }
 
 void MainMenu::updateButtons() {
@@ -213,21 +198,21 @@ void MainMenu::updateButtons() {
 		//		if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
 		//}
 
-	    if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
-	      endState();
+	if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
+		endState();
 
-	  //  if (buttons["START_BTN"]->isPressed() && getKeytime())
-	  //    Istates->push(new Process(IstateData, false));
+	//  if (buttons["START_BTN"]->isPressed() && getKeytime())
+	//    Istates->push(new Process(IstateData, false));
 
-	  //  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
-	  //    Istates->push(new Process(IstateData, true));
-	  //    resetView();
-	  //  }
-	  //  if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
-	  //    Istates->push(new SettingsState(IstateData));
+	//  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
+	//    Istates->push(new Process(IstateData, true));
+	//    resetView();
+	//  }
+	//  if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
+	//    Istates->push(new SettingsState(IstateData));
 
-	  //  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
-	  //    Istates->push(new EditorState(IstateData));
+	//  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
+	//    Istates->push(new EditorState(IstateData));
 
 }
 
@@ -241,10 +226,9 @@ void MainMenu::updateGUI(const float& delta_time) {
 			<< "\nFPS delta:\t" << 1 / delta_time << "\nFPS Clock:\t"
 			<< FPS::getFPS() << "\nFPS limit:\t"
 			<< IstateData->sd_gfxSettings.lock()->frameRateLimit
-			<< "\nDelta Time:\t" << delta_time << "\nResolution:\t"
-			<< IstateData->sd_Window.lock()->getSize().x << " x "
-			<< IstateData->sd_Window.lock()->getSize().y << "\nAntialiasing:\t"
-			<< IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
+			<< "\nDelta Time:\t" << delta_time
+			<< "\nResolution:\t" << IstateData->sd_Window.lock()->getSize().x << " x " << IstateData->sd_Window.lock()->getSize().y
+			<< "\nAntialiasing:\t" << IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
 			<< "\nvSync:\t" << IstateData->sd_gfxSettings.lock()->verticalSync
 			<< "\nMouse Pos:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y
 			<< "\nVolume: "
@@ -260,6 +244,8 @@ void MainMenu::updateGUI(const float& delta_time) {
 			<< "\n\tENVIRONMENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT));
 		Itext.setString(IstringStream.str());
 		IstringStream.str("");
+
+
 	}
 
 	// update GUI
@@ -292,23 +278,18 @@ void MainMenu::updateSounds(const float& delta_time) {
 }
 
 void MainMenu::render(sf::RenderWindow& target) {
-	renderTexture.clear();
-	renderTexture.setView(view);
-
-	// render background shapes
+	IRenderTexture.clear();
+	IRenderTexture.setView(view);
 	for (auto& it : backgrond_shapes)
-		renderTexture.draw(it);
+		IRenderTexture.draw(it);
 
-	   //render GUI
-	   //Отрисовываем кнопки в renderTexture, а не в target
 	if (!buttons.empty())
 		for (auto& it : buttons)
-			renderTexture.draw(*it.second.get());
+			IRenderTexture.draw(*it.second.get());
 
-		 //debug text
-	if (Idebud) renderTexture.draw(Itext);
+	//renderTexture.setView(target.getDefaultView());
+	if (Idebud) IRenderTexture.draw(Itext);
 
-	renderTexture.setView(renderTexture.getDefaultView());
-	renderTexture.display();
-	target.draw(renderSprite);
+	IRenderTexture.display();
+	target.draw(IRenderSprite);
 }

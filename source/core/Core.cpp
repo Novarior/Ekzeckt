@@ -75,8 +75,15 @@ void Core::coreInitLocations() {
 }
 
 void Core::coreInitWindow() {
-	cr_Window = std::make_shared<sf::RenderWindow>(sf::RenderWindow(cr_gfxSettings->resolution, cr_gfxSettings->title, sf::State::Windowed));
+	cr_Window = std::make_shared<sf::RenderWindow>(sf::RenderWindow(sf::VideoMode::getFullscreenModes()[2], cr_gfxSettings->title, sf::State::Windowed));
+#ifdef _DEBUG
+	std::stringstream s;
+	auto vs = sf::VideoMode::getFullscreenModes();
+	for (auto& t : vs)
+		s << "\nvm:\t" << t.size.x << " x " << t.size.y;
 
+	Logger::logStatic(s.str(), "CORE");
+#endif
 	if (cr_gfxSettings->fullscreen && cr_Window->isOpen()) {
 		cr_gfxSettings->_winResolutions = cr_Window->getSize();
 		cr_Window->create(sf::VideoMode({cr_gfxSettings->_winResolutions.x, cr_gfxSettings->_winResolutions.y}),
@@ -134,7 +141,7 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 	// character sizes and grid size
 	cr_Statedata.sd_gridSize = cr_gridSize;
 	auto ws = cr_Window->getSize();
-	cr_Statedata.sd_characterSize_debug = mmath::calcCharSize(ws.x, ws.y, 150U);
+	cr_Statedata.sd_characterSize_debug = mmath::calcCharSize(ws.x, ws.y, 200U);
 	cr_Statedata.sd_characterSize_game_big = mmath::calcCharSize(ws.x, ws.y, 60U);
 	cr_Statedata.sd_characterSize_game_medium = mmath::calcCharSize(ws.x, ws.y, 85U);
 	cr_Statedata.sd_characterSize_game_small = mmath::calcCharSize(ws.x, ws.y, 100U);

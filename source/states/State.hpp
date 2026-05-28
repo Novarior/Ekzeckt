@@ -6,6 +6,8 @@
 #include "../core/dataCollector/_keybind_enum.h"
 #include "../core/dataCollector/_man_Volume.hpp"
 #include "../core/dataCollector/_man_graphics.hpp"
+#include "../core/dataCollector/_man_Texture.hpp"
+
 #include "../core/math/mymath.hpp"
 
 // Forward declaration of State class
@@ -41,7 +43,7 @@ public:
 	std::weak_ptr<std::map<std::string, uint16_t>> sd_KeySupports;
 	// pointer to keyboard
 	// std::weak_ptr<keyboardOSX> sd_keyboard_prt;
-	
+
 	// Character size for text's
 	unsigned int sd_characterSize_debug;
 	unsigned int sd_characterSize_game_big;
@@ -62,6 +64,9 @@ protected:
 	StateData* IstateData;                   // Pointer to shared state data
 	std::stack<State*>* Istates;            // Stack of states
 	std::weak_ptr<sf::RenderWindow> Iwindow; // Weak pointer to the SFML window
+	sf::View view;
+	sf::RenderTexture IRenderTexture;
+	sf::Sprite IRenderSprite;
 	// Map of Binds keys
 	std::weak_ptr<std::map<std::string, uint16_t>> IKeySupports;
 	//   std::weak_ptr<keyboardOSX> IKeyboard; // Pointer to keyboard
@@ -89,9 +94,11 @@ protected:
 	// Map of sound buffers, one key one sound
 	std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>> IsoundBufferMap;
 
+	void initRenderDefines();
 	void initBuffer();               // Initialize buffer
 	void reCaclulateCharacterSize(); // Recalculate character size
 
+	void resetView();
 	// Functions for sounds key
 	// for calling sf::Sound from map using category layer
 	virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path, std::string _typename);

@@ -19,11 +19,6 @@
 // The MainMenu class represents the game's main menu
 class MainMenu: public State {
 private:
-  // Render components
-	sf::View view;
-	sf::RenderTexture renderTexture;
-	sf::Sprite renderSprite;
-
 	// Menu buttons
 	std::map<std::string, std::unique_ptr<gui::Button>> buttons;
 
@@ -32,8 +27,6 @@ private:
 	std::vector<sf::RectangleShape> backgrond_shapes;
 
 	// Initialization methods
-	void initRenderDefines(); // Initialize render settings
-
 	void initButtons();    // Initialize buttons
 	void initBackground(); // Initialize background
 	void initGUI();        // Initialize GUI
@@ -41,7 +34,6 @@ private:
 	void initSounds();     // Initialize sounds
 
 	// Elements for start
-	void resetView(); // Reset view
 
 public:
 	MainMenu(StateData* sDate); // Constructor

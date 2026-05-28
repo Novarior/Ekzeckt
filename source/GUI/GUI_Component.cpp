@@ -33,7 +33,7 @@ void gui::GuiComponent::loadDefaultStyle() {
 	if (mData.font.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path_3)));
 
 	mDraw.text.setCharacterSize(16U);
-	mData.characterSize = 16U;
+	mData.characterSize = 20U;
 	updateAfterLoadStyle();
 }
 
