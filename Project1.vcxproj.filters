@@ -150,7 +150,7 @@
     <None Include="metadata\Info.plist" />
     <None Include="metadata\Info.plist.in" />
     <None Include="resouces\localisation\ENG.json" />
-    <None Include="resouces\localisation\RUS.json" />
+    <None Include="resouces\localisation\UKR.json" />
     <None Include="resouces\shaders\fragment.glsl" />
     <None Include="resouces\shaders\shdr_glitch.glsl" />
     <None Include="resouces\styles\styles.json" />

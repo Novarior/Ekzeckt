@@ -72,7 +72,7 @@
     <None Include="Project1.slnx" />
     <None Include="README.md" />
     <None Include="resouces\localisation\ENG.json" />
-    <None Include="resouces\localisation\RUS.json" />
+    <None Include="resouces\localisation\UKR.json" />
     <None Include="resouces\shaders\fragment.glsl" />
     <None Include="resouces\shaders\shdr_glitch.glsl" />
     <None Include="resouces\styles\styles.json" />
@@ -172,6 +172,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)vs_temp\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
@@ -218,6 +219,7 @@
       <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

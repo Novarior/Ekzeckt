@@ -135,7 +135,6 @@ public:
 		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
 		  // сохраняем текстуру в контейнер
 			m_textures.emplace(textureName, std::move(texture));
-			Logger::logStatic("success load: " + textureName, "TextureManager::loadTexture()", logType::LINFO); // Логируем успешную загрузку
 			return true;
 		} else {
 			Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
@@ -155,15 +154,7 @@ public:
 			return m_textures[textureName];
 		} else { // В случае отсутствия текстуры, логируем ошибку
 			Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
-
-			// Проверяем, есть ли текстура NULL
-			if (m_textures.find("texture_null") != m_textures.end()) {
-				return m_textures["texture_null"];
-			} else {
-			  // Если NULL текстуры нет, бросаем исключение
-				Logger::logStatic("TEXTURE_NULL is also missing!", "TextureManager::getTexture()", logType::LERROR);
-				throw std::runtime_error("Critical error: Both requested texture and "	 "TEXTURE_NULL are missing.");
-			}
+				return m_textures["texture_null"];			
 		}
 	}
 

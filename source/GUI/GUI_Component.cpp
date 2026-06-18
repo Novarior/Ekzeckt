@@ -104,6 +104,7 @@ bool gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
 	}
 
 	updateAfterLoadStyle();
+	return true;
 }
 
 void gui::GuiComponent::setPosition(sf::Vector2f _newPos) {

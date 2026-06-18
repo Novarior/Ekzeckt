@@ -33,3 +33,4 @@ Ekzeckt/**
 *.tmp
 *.cmake
 *.etl
+*.user

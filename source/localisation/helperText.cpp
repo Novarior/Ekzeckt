@@ -46,15 +46,12 @@ bool helperText::Localization::initializeLocalization(Language language) {
 	return loadLocalizationFile(p);
 }
 
-std::string
-helperText::Localization::getLocalizedString(const std::string& category,
-											 const std::string& key,
-											 const std::string& defaultValue) {
+std::string helperText::Localization::getLocalizedString(const std::string& category, const std::string& key, const std::string& defaultValue) {
 	if (loadedJson.contains(category))
 		return loadedJson[category].value(key, defaultValue);
-
 	else {
-		std::cerr << "LERROR: Category '" << category << "' not found in localization JSON." << std::endl;
+		Logger::logStatic(std::string("val: '").append(key).append(" ").append(category)
+						  .append("' not found in localization."), "LoadLocalis", logType::LWARNING);
 		return defaultValue;
 	}
 }

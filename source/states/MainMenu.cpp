@@ -44,9 +44,7 @@ void MainMenu::initButtons() {
 	float offsetX = mmath::p2pX(5.f, static_cast<float>(ws.x));
 	float offsetY = mmath::p2pX(5.f, static_cast<float>(ws.y));
 
-	sf::Vector2f sizebutton = sf::Vector2f(
-		static_cast<float>(mmath::p2pX(15U, ws.x)),
-		static_cast<float>(mmath::p2pX(7U, ws.y)));
+	sf::Vector2f sizebutton{mmath::p2pX(15.f, (float)(ws.x)),mmath::p2pX(7.f, (float)(ws.y))};
 
 	// Массив с координатами для каждой кнопки
 	std::vector<sf::Vector2f> buttonOffsets = {

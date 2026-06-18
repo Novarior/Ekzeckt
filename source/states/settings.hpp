@@ -49,10 +49,11 @@ private:
 	std::vector<sf::RectangleShape> _keybindBackground; // List of keybind backgrounds
 
 	// Resources for AudioSettings
-	std::map<gfx::SoundCategory, std::unique_ptr<gui::SliderInt>> _sound_SliderMap; // Map case for Master, Music, Sound, Ambient, Voice
+	std::map<gfx::SoundCategory, std::unique_ptr<gui::SliderFloat>> _sound_SliderMap; // Map case for Master, Music, Sound, Ambient, Voice
 
 	// Gui selectors
 	std::map<std::string, std::unique_ptr<gui::Selector>> _selectors; // Map of selectors
+	
 
 	settingPage page; // Current page of settings
 
