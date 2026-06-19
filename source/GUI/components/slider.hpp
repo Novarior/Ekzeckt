@@ -89,7 +89,7 @@ public:
 	// update slider (cricles) position and value using mouse position
 	// if mouse is on slider, slider is litle bit bigger and litle bit red
 	void update(const sf::Vector2f& mouse_pos_view) {
-		if (_sliderFillCircle.getGlobalBounds().contains(mouse_pos_view) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+		if (_sliderBox.getGlobalBounds().contains(mouse_pos_view) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 			float radius = _sliderFillCircle.getRadius();
 			float minX = _sliderBox.getPosition().x - radius;
 			float maxX = minX + _sliderBox.getSize().x;
