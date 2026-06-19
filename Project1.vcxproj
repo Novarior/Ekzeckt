@@ -55,6 +55,7 @@
     <ClInclude Include="source\core\_myFiles.h" />
     <ClInclude Include="source\core\math\models noice\Noice_Simplex.hpp" />
     <ClInclude Include="source\GUI\components\button.hpp" />
+    <ClInclude Include="source\GUI\components\checkbox.hpp" />
     <ClInclude Include="source\GUI\components\selector.hpp" />
     <ClInclude Include="source\GUI\components\slider.hpp" />
     <ClInclude Include="source\GUI\GUI_Component.hpp" />

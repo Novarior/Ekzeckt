@@ -4,7 +4,7 @@
 #include "../../core/header.h"
 
 namespace gui {
-class CheckBox: public sf::Drawable {
+class CheckBox : public sf::Drawable{
 private:
 	enum checkbox_states {
 		CBX_IDLE = 0,
@@ -27,7 +27,7 @@ private:
 		target.draw(boxShape, states);
 		if (_mActive)
 			target.draw(checkShape, states);
-	//	target.draw(text, states);
+		target.draw(text, states);
 	}
 
 public:
@@ -49,8 +49,8 @@ public:
 		checkShape.setFillColor(fill);
 
 	   // Текст рядом с чекбоксом
-		text.setFillColor(sf::Color(255, 255, 255, 200));
-		text.setPosition({_pos.x + _size + 10.f, _pos.y + _size / 2.f - text.getGlobalBounds().size.y / 2.f});
+		text.setFillColor(sf::Color(220, 220, 220));
+		text.setPosition({_pos.x + _size + offset, _pos.y + text.getGlobalBounds().size.y / 4.f});
 	}
 	~CheckBox() {}
 
@@ -78,17 +78,14 @@ public:
 		switch (_mState) {
 		case CBX_IDLE:
 			checkShape.setFillColor(fill);
-			//text.setFillColor(textIdleColor);
 			break;
 		case CBX_HOVER:
 			checkShape.setFillColor(fill + offset);
-			//text.setFillColor(textHoverColor);
 			_isBlocked = false;
 			break;
 		case CBX_ACTIVE:
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && _isBlocked == false) {
 				checkShape.setFillColor(fill - offset);
-				//text.setFillColor(textActiveColor);
 
 				toggle();
 				_isBlocked = true;
