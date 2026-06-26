@@ -1,7 +1,7 @@
 #include "inventoryGUI.hpp"
 
 // Инициализация фона инвентаря
-void GUI::InventoryGUI::initBackground(sf::Vector2f screenSize)
+void GUI::InventoryGUI::initBackground(sf::Vector2u screenSize)
 {
     // Размер инвентаря - 65% от ширины и 75% от высоты экрана
     sf::Vector2f size(screenSize.x * 0.65f, screenSize.y * 0.75f);

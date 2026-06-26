@@ -15,7 +15,7 @@ public:
 			unsigned int itemID = item->getID();
 			for (const auto& pair : items) {
 				if (pair.second->getID() == itemID && id != itemID) {
-					Logger::logStatic("Conflict detected: Item with ID " + std::to_string(itemID) + " already exists with a different registry key: " + std::to_string(pair.first), "ItemRegistry", logType::LWARNING);
+					Logger::logStatic("Collision detected: Item with ID " + std::to_string(itemID) + " already exists with a different registry key: " + std::to_string(pair.first), "ItemRegistry", logType::LWARNING);
 					return false;
 				}
 			}

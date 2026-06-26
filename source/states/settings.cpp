@@ -232,62 +232,19 @@ void SettingsState::initSounsPage() { // init sound page
 
   // init sound sliders basic _pageBackground position and size
 	sf::Vector2f slider_size = {mmath::p2pX(60.f, _pageBackground.getSize().x), 20.f};
-	float offsetY = 10.f;
+	float offsetY = 20.f;
 	sf::Vector2f bgsize = _pageBackground.getSize();
 	sf::Vector2f bgpos = _pageBackground.getPosition();
 	// next init all sliders for sound categories
 
+	for (int i = 0; i< int(gfx::SoundCategory::vol_COUNT); i++)
 
 		// init MASTER slider
-	_sound_SliderMap[gfx::SoundCategory::vol_MASTER] = std::make_unique<gui::SliderFloat>(
-		sf::Vector2f(bgpos.x,bgpos.y+offsetY), slider_size, font,
-		IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MASTER),
+	_sound_SliderMap[gfx::SoundCategory(i)] = std::make_unique<gui::SliderFloat>(
+		sf::Vector2f(bgpos.x, bgpos.y + offsetY*i + slider_size.y * i), slider_size, font,
+		IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory(i)),
 		0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_MASTER);
 
-_sound_SliderMap[gfx::SoundCategory::vol_SFX] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY+ slider_size.y *2.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_SFX),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_SFX);
-
-_sound_SliderMap[gfx::SoundCategory::vol_MUSIC] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 3.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MUSIC),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_MUSIC);
-
-_sound_SliderMap[gfx::SoundCategory::vol_AMBIENT] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 4.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_AMBIENT),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_AMBIENT);
-
-_sound_SliderMap[gfx::SoundCategory::vol_ENTITY] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 5.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENTITY),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_ENTITYSFX);
-
-_sound_SliderMap[gfx::SoundCategory::vol_UI] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 6.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_UI),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_UI_VOL);
-
-_sound_SliderMap[gfx::SoundCategory::vol_DIALOGUE] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 7.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_DIALOGUE),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_DIALOGUE_VOL);
-
-_sound_SliderMap[gfx::SoundCategory::vol_FOLEY] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 8.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_FOLEY),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_FOLEYVOL);
-
-_sound_SliderMap[gfx::SoundCategory::vol_WEAPON] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 9.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_WEAPON),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_WEAPONVOL);
-
-_sound_SliderMap[gfx::SoundCategory::vol_ENVIRONMENT] = std::make_unique<gui::SliderFloat>(
-	sf::Vector2f(bgpos.x, bgpos.y + offsetY + slider_size.y * 10.f), slider_size, font,
-	IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT),
-	0.f, 100.f, this->IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_ENVIRONMENTVOL);
 }
 
 void SettingsState::initKeyboardPage() { // init keyboard page

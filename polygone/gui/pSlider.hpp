@@ -1,10 +1,8 @@
-#ifndef GUI_SIMPLE_SLIDER_HPP
-#define GUI_SIMPLE_SLIDER_HPP
+#ifndef POLYGON_SLIDER
+#define POLIGON_SLIDER
 
-#include "../../core/header.h"
+#include "Header.h"
 
-namespace gui {
-template <typename T>
 class Slider:public sf::Drawable {
 private:
 	sf::RectangleShape _sliderBox, _sliderFillBox;
@@ -13,10 +11,10 @@ private:
 	sf::Text _nameSlider; // название слайдера
 	sf::Text _textValue;  // текстовое значение слайдера
 	sf::Font& _font;      // шрифт
-	T _value;
-	T _newValue;
-	T _min;
-	T _max;
+	float _value;
+	int _newValue;
+	int _min;
+	int _max;
 
 	bool isChanged = false;
 
@@ -35,14 +33,14 @@ private:
 	}
 public:
 	Slider(sf::Vector2f position, sf::Vector2f size,
-		   sf::Font& font, T base_value, T  min_val, T  max_val,
-		   const unsigned character_size = 20U, const std::string& name = "FIX ME")
+		   sf::Font& font, int base_value, int  min_val, int  max_val,
+		   const unsigned character_size = 20, const std::string& name = "FIX ME")
 		: _font(font), _value(base_value), _newValue(base_value), _min(min_val), _max(max_val),
-		_nameSlider(font, name, character_size), _textValue(font, std::to_string(base_value), character_size) {
+		_nameSlider(font, name, character_size), _textValue(font, "", character_size) {
 
-		float size2X = float(size.x) / 2.f;
-		float size2Y = float(size.y) / 2.f;
-		float size10Y = float(size.y) / 10.f;
+		float size2X = size.x / 2.f;
+		float size2Y = size.y / 2.f;
+		float size10Y = size.y / 10.f;
 		sf::Color backfill = sf::Color(30, 40, 65);
 		sf::Color fill = sf::Color(90, 120, 185);
 
@@ -74,22 +72,22 @@ public:
 
 		// text fields
 		_textValue.setString(std::to_string((int)(_value)));
-		_textValue.setPosition({position.x + size.x + size2Y, position.y + size.y});
+		_textValue.setPosition({position.x + size.x + size2Y, position.y + size.y });
 		_textValue.setFillColor(sf::Color::White);
 		_textValue.setLineAlignment(sf::Text::LineAlignment::Right);
 
-		_nameSlider.setPosition({position.x + size2Y, position.y + size.y});
+		_nameSlider.setPosition({position.x + size2Y, position.y + size.y });
 	}
 
 	// destructor
 	~Slider() {}
 
-	T getValue() const { return _value; }
+	float getValue() const { return _value; }
 
 	// update slider (cricles) position and value using mouse position
 	// if mouse is on slider, slider is litle bit bigger and litle bit red
 	void update(const sf::Vector2f& mouse_pos_view) {
-		if (_sliderBox.getGlobalBounds().contains(mouse_pos_view) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+		if (_sliderFillCircle.getGlobalBounds().contains(mouse_pos_view) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 			float radius = _sliderFillCircle.getRadius();
 			float minX = _sliderBox.getPosition().x - radius;
 			float maxX = minX + _sliderBox.getSize().x;
@@ -105,7 +103,7 @@ public:
 			float ratio = (centerX - minX) / _sliderBox.getSize().x;
 			ratio = std::fmax(0.f, std::fmin(1.f, ratio));
 
-			_value = std::roundf(float(_min) + ratio * (float(_max) - float(_min)));
+			_value = std::roundf(_min + ratio * (_max - _min));
 
 			if (_value != _newValue) {
 				isChanged = true;
@@ -123,10 +121,4 @@ public:
 
 
 }; // namespace gui
-
-typedef Slider<int> SliderInt;
-typedef Slider<unsigned int> SliderUInt;
-typedef Slider<float> SliderFloat;
-
-};
-#endif // !GUI_SIMPLE_SLIDER_HPP
+#endif // POLYGON_SLIDER
