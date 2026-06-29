@@ -2,6 +2,8 @@
 #define _MAN_TEXTURE
 
 #include "../header.h"
+#include "../tools/LOGGER.hpp"
+
 
 // Создаем перечисление для текстур, чтобы можно было использовать вместо
 // строковых литералов
@@ -82,15 +84,16 @@ struct TextureIDMapping {
 
 class TextureManager {
 private:
-	static sf::Image getDefaultNullTexture() {
+	static inline sf::Image getDefaultNullTexture() {
 		sf::Vector2u size(128, 128);
 		sf::Image image(size, sf::Color::Black);
 		unsigned int blockSize = 16;
-
+		unsigned int blockX = 0;
+		unsigned int blockY = 0;
 		for (unsigned int x = 0; x < size.x; x++) {
 			for (unsigned int y = 0; y < size.y; y++) {
-				unsigned int blockX = x / blockSize;
-				unsigned int blockY = y / blockSize;
+				blockX = x / blockSize;
+				blockY = y / blockSize;
 
 				sf::Color color = ((blockX + blockY) % 2 == 0) ? sf::Color::Black : sf::Color(255, 0, 255);
 				image.setPixel({x, y}, color);
@@ -101,19 +104,9 @@ private:
 	}
 
 public:
-	static void initialize() {
+	static inline void initialize() {
 		TextureIDMapping::initTextureIDMapping();
 		initNULLTEXTURE();
-	}
-
-	// Метод для загрузки текстуры по паре ключ-значение (перечисление-путь)
-	static bool loadTexture(TextureID textureID, const std::string& filePath) {
-		std::string textureName = TextureIDMapping::toString(textureID);
-		if (textureName == "texture_null") {
-			Logger::logStatic("ThrowBack TEXTURE_NAME: " + filePath, "TextureManager::loadTexture()", logType::LERROR);
-			return false;
-		}
-		return loadTexture(textureName, filePath);
 	}
 
 	static void initNULLTEXTURE() {
@@ -123,17 +116,36 @@ public:
 		m_textures.emplace(TextureIDMapping::toString(TextureID::TEXTURE_NULL), std::move(tx));
 	}
 
-	// Метод для загрузки текстуры (оригинальный)
-	static bool loadTexture(const std::string& textureName, const std::string& filePath) {
+	// load texture with using "textureID"
+	static inline bool loadTexture(TextureID textureID, const std::string& filePath) {
+		std::string textureName = TextureIDMapping::toString(textureID);
+		if (textureName == "texture_null") {
+			Logger::logStatic("ThrowBack TEXTURE_NAME: " + filePath, "TextureManager::loadTexture()", logType::LERROR);
+			return false;
+		}
+
+		sf::Texture texture;
+		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
+			// emplase loaded texture 
+			m_textures.emplace(textureName, std::move(texture));
+			return true;
+		} else {
+			Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
+			return false;
+		}
+	}
+
+	// load texture with using "textureName"
+	static inline bool loadTexture(const std::string& textureName, const std::string& filePath) {
 		if (m_textures.find(textureName) != m_textures.end()) {
-		  // Если текстура уже загружена, возвращаем true
+			// if testure already exist, return true and log it
 			Logger::logStatic("texture " + textureName + " already loaded", "TextureManager::loadTexture()", logType::LINFO);
 			return true;
 		}
 
 		sf::Texture texture;
 		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
-		  // сохраняем текстуру в контейнер
+			// emplase loaded texture 
 			m_textures.emplace(textureName, std::move(texture));
 			return true;
 		} else {
@@ -143,54 +155,61 @@ public:
 	}
 
 	// Метод для получения текстуры по перечислению
-	static sf::Texture& getTexture(TextureID textureID) {
+	static inline sf::Texture& getTexture(TextureID textureID) {
 		std::string textureName = TextureIDMapping::toString(textureID);
-		return getTexture(textureName);
-	}
 
-	// Метод для получения текстуры по имени (оригинальный)
-	static sf::Texture& getTexture(const std::string& textureName) {
 		if (m_textures.find(textureName) != m_textures.end()) {
 			return m_textures[textureName];
-		} else { // В случае отсутствия текстуры, логируем ошибку
+		} else { // texture with "textureName" not exist, log this and return null
 			Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
-				return m_textures["texture_null"];			
+			return m_textures["texture_null"];
 		}
 	}
 
-	// Метод для проверки, существует ли текстура по перечислению
-	static bool hasTexture(TextureID textureID) {
-		std::string textureName = TextureIDMapping::toString(textureID);
-		return hasTexture(textureName);
+	//	get null texture
+	static inline sf::Texture& getTexture() { return m_textures["texture_null"]; }
+
+	// get texture with usage "textureName" as ref, if not exist will be get null texture
+	static inline sf::Texture& getTexture(const std::string& textureName) {
+		if (m_textures.find(textureName) != m_textures.end()) {
+			return m_textures[textureName];
+		} else { // texture with "textureName" not exist, log this and return null
+			Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
+			return m_textures["texture_null"];
+		}
+	}
+	// check if some texture with ID already exist
+	static inline bool hasTexture(TextureID textureID) {
+		return m_textures.find(TextureIDMapping::toString(textureID)) != m_textures.end();
 	}
 
-	// Метод для проверки, существует ли текстура (оригинальный)
-	static bool hasTexture(const std::string& textureName) {
+	static inline bool hasTexture(const std::string& textureName) {
 		return m_textures.find(textureName) != m_textures.end();
 	}
 
 	~TextureManager() { m_textures.clear(); }
 
-	// Контейнер для хранения текстур (теперь это статический контейнер)
 	static std::unordered_map<std::string, sf::Texture> m_textures;
 };
 
-// int main()
-// {
-//     TextureManager textureManager;
+//	int main()
+//	{
+//		TextureManager textureManager;
 
-//     // Загружаем текстуру
-//     textureManager.loadTexture("player", "path_to_player_texture.png");
-//     textureManager.loadTexture("enemy", "path_to_enemy_texture.png");
+//		// load some texture
+//		textureManager.loadTexture("player", "path_to_player_texture.png");
+//		textureManager.loadTexture("enemy", "path_to_enemy_texture.png");
 
-//     // Получаем и используем текстуру для спрайта
-//     if (textureManager.hasTexture("player")) {
-//         sf::Sprite playerSprite;
-//         playerSprite.setTexture(textureManager.getTexture("player"));
-//         // Теперь можно использовать playerSprite
-//     }
+//		sf::Sprite playerSprite;
+// 
+//		// get texture 
+//		if (textureManager.hasTexture("player")) {
+//			playerSprite.setTexture(textureManager.getTexture("player"));
+//
+//			// and now sprite ready to usage
+//		}
 
-//     return 0;
-// }
+//		return 0;
+//	}
 
 #endif /* _MAN_TEXTURE */

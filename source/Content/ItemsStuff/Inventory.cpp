@@ -1,156 +1,198 @@
-#include "../../core/header.h"
-
 
 #include "Inventory.hpp"
-#include "../../GUI/UI/inventoryGUI.hpp"
-#include "itemtextures.hpp"
 
-// Очистка инвентаря
-void Inventory::clearInventory() {
-  // if not nullptr
-  if (InventoryArray[0][0] == nullptr)
-    return; // Если инвентарь пуст, ничего не делаем
-
-  for (auto &row : InventoryArray)
-    for (auto &item : row) {
-      item.reset(); // Умное указание освободит память
-    }
+Inventory::Inventory() {
+	int nsize = INV_SIZE_ROW * INV_SIZE_COL;
+	mInventory.resize(nsize);
 }
 
-// Конструктор инвентаря
-Inventory::Inventory(unsigned int rows, unsigned int cols): isOpened(false), m_Coins(0, 0, 0), m_gui() {
-  InventoryArray.resize(rows,                 std::vector<std::shared_ptr<Item>>(cols, nullptr));
+Inventory::~Inventory() {}
+
+size_t Inventory::getSize() {
+	return mInventory.size();
 }
 
-/// Получаем ID текущей ячейки по позиции мыши
-/// @param mouse_pos Позиция мыши в окне
-/// @return ID ячейки или -1, если мышь не в пределах инвентаря
-/// @note ID ячейки - это номер ячейки в инвентаре, начиная с 0
-/// @note Если мышь не в пределах инвентаря, возвращаем -1
-unsigned int Inventory::getCurrentCellID(sf::Vector2i mouse_pos) const {
-  // // Получаем размеры ячеек
-  // // Предполагаем, что все ячейки одного размера
-  // float cell_size = CellsInventory[0][0].getSize().x;
+const std::string Inventory::getInfo() const {
+	std::string ss;
 
-  // // Проверяем, что позиция мыши находится в пределах инвентаря
-  // if (mouse_pos.x < inventoryPosition.x || mouse_pos.y < inventoryPosition.y
-  // ||
-  //     mouse_pos.x > inventoryPosition.x + inventoryPosition.x ||
-  //     mouse_pos.y > inventoryPosition.y + inventoryPosition.y) {
-  //   return -1; // Если мышь не внутри инвентаря
-  // }
+	ss.clear();
+	ss.append("Current vecSize: ").append(std::to_string(mInventory.size())).append("\n");
+	for (int it = 0; it < mInventory.size(); it++) {
 
-  // // Рассчитываем индексы строки и столбца в сетке инвентаря
-  // unsigned int row = (mouse_pos.x - inventoryPosition.x) / cell_size;
-  // unsigned int col = (mouse_pos.y - inventoryPosition.y) / cell_size;
+		if (!mInventory[it].isEmpty() && mInventory[it].mItem != nullptr)
+			ss.append("vIndex: ").append(std::to_string(it)).append(" exist Item: ").append(mInventory[it].mItem.get()->getName()).append("\n");
+		else if (mInventory[it].isEmpty())
+			ss.append("vIndex: ").append(std::to_string(it)).append(" isEmpty\n");
+		else
+			ss.append("vIndex: ").append(std::to_string(it)).append(" Cell Exist with item\n");
+	}
 
-  // // Проверяем, что индексы находятся в пределах размеров инвентаря
-  // if (row >= CellsInventory.size() || col >= CellsInventory[0].size()) {
-  //   return -1; // Если координаты вне допустимого диапазона
-  // }
-
-  // // Возвращаем идентификатор ячейки
-  // return CellsInventory[row][col].getIDCell();
-  return 0;
+	return ss;
 }
 
-// Деструктор инвентаря
-Inventory::~Inventory() { clearInventory(); }
+bool Inventory::addItem(Item& item) {
+	// if item is stackable
+	Cell* firstFreeSlot = nullptr;
+	bool firstFree = false;
+	if (item.isStackable()) {
+		for (auto& slot : mInventory) {
+			if (slot.isEmpty()) {
+				if (!firstFree) {
+					firstFree = !firstFree;
+					firstFreeSlot = &slot;
+				}
+				continue;
+			}
 
-bool Inventory::addItem(std::shared_ptr<Item> item) {
-  if (!item)
-    return false;
+			if (slot.mItem->getID() != item.getID())
+				continue;
 
-  // Если предмет можно складывать
-  if (item->isStackable())
-    for (auto &row : InventoryArray)
-      for (auto &slot : row)
-        if (slot && slot->getID() == item->getID() &&
-            slot->getAmount() < slot->getMaxAmount()) {
-          slot->addAmount(item->getAmount());
+			if (slot.mItem->getAmount() == slot.mItem->getMaxAmount())
+				continue;
 
-          // Обновляем позиции всех предметов через GUI
-          if (auto gui = m_gui.lock()) {
-            gui->updateItemPosGUI();
-          }
+			if (slot.mItem->addAmount(item))
+				continue;
 
-          return true;
-        }
+			// item wass fully moved to slot
+			return true;
+		}
+	} else {
+		// else item is not stackable forund first free position
+		for (auto& slot : mInventory)
+			if (slot.isEmpty()) {
+				slot.mItem = std::make_unique<Item>(item);
 
-  // Если предмет не складывается, ищем пустой слот
-  for (size_t row = 0; row < InventoryArray.size(); ++row)
-    for (size_t col = 0; col < InventoryArray[row].size(); ++col)
-      if (!InventoryArray[row][col]) {
-        InventoryArray[row][col] = item;
+				return true;
+			}
+	}
 
-        // Обновляем позиции всех предметов через GUI
-        if (auto gui = m_gui.lock()) {
-          gui->updateItemPosGUI();
-        }
-
-        return true;
-      }
-
-  return false; // Инвентарь заполнен
+	return false; // inventory is Full
 }
 
-bool Inventory::removeItemByID(unsigned int ID) {
-  for (auto &row : InventoryArray) {
-    auto it =
-        std::find_if(row.begin(), row.end(), [ID](std::shared_ptr<Item> slot) {
-          return slot && slot->getID() == ID;
-        });
+bool Inventory::removeItemByID(uint32_t ID) {
+	// find item on vec using ID as reference
+	auto it = std::find_if(mInventory.begin(), mInventory.end(), [ID](Cell& slot) {
+		return slot.mItem.get()->getID() == ID;
+	});
 
-    if (it != row.end()) {
-      *it = nullptr; // Освобождение слота
-
-      // Обновляем позиции всех предметов через GUI
-      if (auto gui = m_gui.lock()) {
-        gui->updateItemPosGUI();
-      }
-
-      return true;
-    }
-  }
-  return false; // Предмет с таким ID не найден
+	if (it != mInventory.end()) {
+		it->removeItem();
+		// Item was deleted
+		return true;
+	}
+	return false; // Item with this ID not found
 }
 
-/// Получаем предмет по ID предмета
-std::shared_ptr<Item> Inventory::getItem(unsigned int ID) const {
-  for (const auto &row : InventoryArray)
-    for (const auto &item : row)
-      if (item && item->getID() == ID)
-        return item;
-  // Предмет не найден
-  // Возвращаем предмет затычку
-  return ItemRegistry::getItem(0); // Предмет не найден
+bool Inventory::removeItemByItem(Item& item) {
+	// find item on vec using item as reference
+	auto it = std::find_if(mInventory.begin(), mInventory.end(), [item](Cell& slot) {
+		return slot.mItem.get() == &item;
+	});
+
+	if (it != mInventory.end()) {
+		it->removeItem();
+		// Item was deleted
+		return true;
+	}
+	// item not Found
+	return false;
 }
 
-std::shared_ptr<Item> Inventory::getItemFromSlot(unsigned int slot) const {
-  // Проверяем, что инвентарь не пуст
-  if (InventoryArray.empty() || InventoryArray[0].empty()) {
-    Logger::logStatic("LERROR::INVENTORY::GET_ITEM_FROM_SLOT::EMPTY_INVENTORY",
-                      "Inventory", logType::LERROR);
-    return ItemRegistry::getItem(0); // Возвращаем предмет-затычку
-  }
-
-  unsigned int rows = InventoryArray.size();
-  unsigned int cols = InventoryArray[0].size();
-
-  // Проверяем, что слот находится в пределах инвентаря
-  if (slot >= rows * cols) {
-    Logger::logStatic(        "LERROR::INVENTORY::GET_ITEM_FROM_SLOT::OUT_OF_BOUNDS_SLOT: " +   std::to_string(slot),     "Inventory", logType::LWARNING);
-    return ItemRegistry::getItem(0); // Возвращаем предмет-затычку
-  }
-
-  // Возвращаем предмет из указанного слота или предмет-затычку, если слот пуст
-  auto item = InventoryArray[slot / cols][slot % cols];
-  return item ? item : ItemRegistry::getItem(0);
-}
-
-int Inventory::getTotalSlots() const {
-  return static_cast<int>(InventoryArray.size() * InventoryArray[0].size());
-}
-
-// Обновление инвентаря
-void Inventory::update(sf::Vector2i mouse_pos) {}
+//#include "Inventory.h"
+//
+//Inventory::Inventory() {
+//	int nsize = INV_SIZE_ROW * INV_SIZE_COL;
+//	mInventory.resize(nsize);
+//}
+//
+//Inventory::~Inventory() {}
+//
+//size_t Inventory::getSize() {
+//	return mInventory.size();
+//}
+//
+//const std::string Inventory::getInfo() const {
+//	std::string ss;
+//
+//	ss.clear();
+//	ss.append("Current vecSize: ").append(std::to_string(mInventory.size())).append("\n");
+//	for (int it = 0; it < mInventory.size(); it++) {
+//
+//		if (!mInventory[it].isEmpty() && mInventory[it].mItem != nullptr)
+//			ss.append("vIndex: ").append(std::to_string(it)).append(" exist Item: ").append(mInventory[it].mItem.get()->getName()).append("\n");
+//		else if (mInventory[it].isEmpty())
+//			ss.append("vIndex: ").append(std::to_string(it)).append(" isEmpty\n");
+//		else
+//			ss.append("vIndex: ").append(std::to_string(it)).append(" Cell Exist with item\n");
+//	}
+//
+//	return ss;
+//}
+//
+//bool Inventory::addItem(Item& item) {
+//	// if item is stackable
+//	Cell* firstFreeSlot = nullptr;
+//	bool firstFree = false;
+//	if (item.isStackable()) {
+//		for (auto& slot : mInventory) {
+//			if (slot.isEmpty()) {
+//				if (!firstFree) {
+//					firstFree = !firstFree;
+//					firstFreeSlot = &slot;
+//				}
+//				continue;
+//			}
+//
+//			if (slot.mItem->getID() != item.getID())
+//				continue;
+//
+//			if (slot.mItem->getAmmount() == slot.mItem->getMaxAmmount())
+//				continue;
+//
+//			if (slot.mItem->addAmount(item))
+//				continue;
+//
+//			// item wass fully moved to slot
+//			return true;
+//		}
+//	} else {
+//		// else item is not stackable forund first free position
+//		for (auto& slot : mInventory)
+//			if (slot.isEmpty()) {
+//				slot.mItem = std::make_unique<Item>(item);
+//
+//				return true;
+//			}
+//	}
+//
+//	return false; // inventory is Full
+//}
+//
+//bool Inventory::removeItemByID(uint32_t ID) {
+//	// find item on vec using ID as reference
+//	auto it = std::find_if(mInventory.begin(), mInventory.end(), [ID](Cell& slot) {
+//		return slot.mItem.get()->getID() == ID;
+//	});
+//
+//	if (it != mInventory.end()) {
+//		it->removeItem();
+//		// Item was deleted
+//		return true;
+//	}
+//	return false; // Item with this ID not found
+//}
+//
+//bool Inventory::removeItemByItem(Item& item) {
+//	// find item on vec using item as reference
+//	auto it = std::find_if(mInventory.begin(), mInventory.end(), [item](Cell& slot) {
+//		return slot.mItem.get() == &item;
+//	});
+//
+//	if (it != mInventory.end()) {
+//		it->removeItem();
+//		// Item was deleted
+//		return true;
+//	}
+//	// item not Found
+//	return false;
+//}

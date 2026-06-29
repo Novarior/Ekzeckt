@@ -3,7 +3,6 @@
 
 #include "../../../core/tools/LOGGER.hpp"
 #include "../Item.hpp"
-#include "all_items.hpp"
 
 class ItemRegistry {
 private:
@@ -38,9 +37,7 @@ public:
 	}
 
 	static const std::map<int, std::shared_ptr<Item>>& getAllItems() { return items; }
-
 	static void unregisterItem(int id) { items.erase(id); }
-
 	static bool containsItem(int id) { return items.find(id) != items.end(); }
 };
 
