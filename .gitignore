@@ -11,10 +11,12 @@ Makefile
 cmake_install.cmake
 
 # Compiled binary files
+x64/
 bin/
 bin/*
 
 # VSCode settings
+.vs/
 .vscode/
 .github/
 metadata/
