@@ -3,24 +3,22 @@
 
 #include "AIOption.hpp"
 
-class AIWander : public AIOption
-{
+class AIWander: public AIOption {
 private:
-    sf::Vector2f _direction;
-    sf::Vector2f _center;
-    float _distance;
-    float _radius;
+	sf::Vector2f _direction;
+	sf::Vector2f _center;
+	float _distance;
+	float _radius;
 
-    // debuging
 
-    sf::VertexArray _line;
+	sf::VertexArray _line; // debuging
 
 public:
-    AIWander(Entity &self, float radius);
-    ~AIWander();
+	AIWander(Entity* self, float radius);
+	~AIWander();
 
-    void update(const float &delta_time);
+	void update(const float& delta_time);
 
-    void render(sf::RenderTarget &target) { target.draw(_line); }
+	void render(sf::RenderTarget& target) { target.draw(_line); }
 };
 #endif

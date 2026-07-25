@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../Poligone/Poligone.vcxproj" Id="3460e455-5b9b-4a68-9cd4-ee2ca28296f6" />
+  <Project Path="Project1.vcxproj" Id="19ab6527-1093-49b2-b98b-7fce2073b718" />
+</Solution>

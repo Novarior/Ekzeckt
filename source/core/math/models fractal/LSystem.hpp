@@ -1,6 +1,7 @@
 #ifndef CPP_MATH_LSYSTEM_HPP
 #define CPP_MATH_LSYSTEM_HPP
-#include "mymath.hpp"
+#include "../mymath.hpp"
+#include "../../header.h"
 
 struct GData
 {
@@ -50,25 +51,25 @@ public:
     LSystem();
     ~LSystem();
     // get all sf::RectangleShape on array
-    sf::RectangleShape *internalArray() { return this->line.data(); }
-    size_t getSizeArray() { return this->line.size(); }
+    sf::RectangleShape *internalArray() { return  line.data(); }
+    size_t getSizeArray() { return  line.size(); }
 
     // REWRITING
     // genetare tree from basic axiom unsing some rules
     //
     // see on LSystem::applyRules for more detail
     void generate();
-    void setAxiom(std::string axiom) { this->axiom = axiom; }
-    void setRules(std::map<char, std::string> rules) { this->rules = rules; }
-    void setRule(char key, std::string value) { this->rules[key] = value; }
-    void setAxiom(char axiom) { this->axiom = axiom; }
+    void setAxiom(std::string axiom) {  axiom = axiom; }
+    void setRules(std::map<char, std::string> rules) {  rules = rules; }
+    void setRule(char key, std::string value) {  rules[key] = value; }
+    void setAxiom(char axiom) {  axiom = axiom; }
     size_t getAxiomSize();
     void setOffsetPos(sf::Vector2f offsetPos)
     {
-        this->data.offsetPos = offsetPos;
+         data.offsetPos = offsetPos;
     }
 
-    size_t getSizeTree() { return this->line.size(); }
+    size_t getSizeTree() { return  line.size(); }
 
     void update(const float &delta_time);
     void render(sf::RenderTarget &target);

@@ -20,7 +20,7 @@ struct myGFXStruct {
     verticalSync = false;
     resolution = sf::VideoMode::getDesktopMode();
     videoModes = sf::VideoMode::getFullscreenModes();
-    fullscreen = true;
+    fullscreen = false;
     frameRateLimit = 120;
     contextSettings.antiAliasingLevel = 8;
     

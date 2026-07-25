@@ -1,62 +1,46 @@
 #ifndef INVENTORY
 #define INVENTORY
 
+constexpr unsigned short INV_SIZE_ROW = 8U;
+constexpr unsigned short INV_SIZE_COL = 5U;
+
 #include "Coins.hpp"
+#include "Item.hpp"
 #include "Items/ItemRegister.hpp"
 
-namespace GUI {
-class InventoryGUI;
-}
+class Cell {
+public:
+	std::unique_ptr<Item> mItem;
+
+	bool isEmpty() const { return mItem == nullptr; }
+	void unique_swap(std::unique_ptr<Item>& item) { mItem.swap(item); }
+	void removeItem() { mItem.reset(); }
+};
 
 class Inventory {
-public:
-  Inventory(unsigned int rows, unsigned int cols);
-  virtual ~Inventory();
-
-  // Основные функции
-  unsigned int getCurrentCellID(sf::Vector2i mouse_pos) const;
-  void update(sf::Vector2i mouse_pos);
-
-  // Функции для работы с предметами
-  bool addItem(std::shared_ptr<Item> _item);
-  //  bool removeItem(std::shared_ptr<Item> _item);
-  bool removeItemByID(unsigned int _id);
-  void clearInventory();
-
-  std::shared_ptr<Item> getItem(unsigned int _id) const;
-  std::shared_ptr<Item> getItemFromSlot(unsigned int slot) const;
-
-  // get cells
-
-  // get inventory array
-  const std::vector<std::vector<std::shared_ptr<Item>>> &
-  getInventoryArray() const {
-    return InventoryArray;
-  }
-
-  // Управление открытием/закрытием инвентаря
-  void openInventory() { isOpened = true; }
-  void closeInventory() { isOpened = false; }
-  void toggleInventory() { isOpened = !isOpened; }
-  const bool isInventoryOpened() const { return isOpened; }
-
-  // Получение состояния
-  int getTotalSlots() const;
-  inline const Coins &getCoins() { return m_Coins; }
-
-  // Ссылка на GUI инвентаря для позиционирования предметов
-  void setGUI(std::shared_ptr<GUI::InventoryGUI> gui) { m_gui = gui; }
-  std::weak_ptr<GUI::InventoryGUI> getGUI() const { return m_gui; }
-
 private:
-  // Открыт ли инвентарь
-  bool isOpened;
-  // Слоты для предметов
-  std::vector<std::vector<std::shared_ptr<Item>>> InventoryArray;
-  // Монеты
-  Coins m_Coins;
-  // Ссылка на GUI инвентаря
-  std::weak_ptr<GUI::InventoryGUI> m_gui;
+	std::vector<Cell> mInventory;
+	Coins m_Coins;
+
+public:
+	Inventory();
+	virtual ~Inventory();
+
+	inline const size_t getSize() const { return mInventory.size(); }
+
+	const std::string getInfo() const;
+	inline const Coins& getCoins() { return m_Coins; }
+
+	// return true if item fully moved to slot/free slo
+	// return false if item was stacked by half 
+	// (im mean	what this item still exist with another amount)
+	bool addItem(Item& item);
+	bool addItem(std::shared_ptr<Item>& item);
+
+	Cell& getSlotByID(uint16_t ID) { return mInventory[ID]; }
+
+	bool removeItemByID(uint32_t id);
+	bool removeItemByItem(Item& item);
 };
 
 #endif /* INVENTORY */

@@ -11,7 +11,7 @@ public:
     /// @param spawn_pos a position to spawn
     /// @param texture a texture to use for the slime
     /// @param targer_follow a target to follow (player)
-    Slime(float spawn_pos_x, float spawn_pos_y, Entity &targer_follow);
+    Slime(float spawn_pos_x, float spawn_pos_y, Entity *targer_follow);
     virtual ~Slime();
 
     void e_update(const float &delta_time);

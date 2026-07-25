@@ -1,6 +1,5 @@
 #include "entity.hpp"
-#include "entityEnum.hpp"
-#include <memory>
+
 
 void Entity::createHitboxComponent(sf::Sprite &sprite, float offset_x, float offset_y, float width, float height)
 {
@@ -21,9 +20,9 @@ void Entity::createAttributesComponent(Atri *attributes)
 }
 
 // Method to create an inventory component for the entity.
-void Entity::createInventoryComponent(unsigned int rows, unsigned int cols)
+void Entity::createInventoryComponent()
 {
-    this->e_inventory = std::make_shared<Inventory>(rows, cols);
+    this->e_inventory = std::make_shared<Inventory>();
 }
 
 // Method to create an item for entity
@@ -49,9 +48,9 @@ Entity::~Entity()
         this->e_inventory->clearInventory();
     this->e_inventory.reset();
     // call logger and print message with "Bit size"
-    Logger::logStatic("Entity has been destroyed, ID: " + std::to_string(this->ID_entity), "~Entity", logType::INFO);
-    // send info about inventory
-    Logger::logStatic("included inventory memory size: " + std::to_string(sizeof(*this->e_inventory)) + " bytes", "~Entity", logType::INFO);
+    Logger::logStatic("Entity has been destroyed, ID: " + std::to_string(this->ID_entity), "~Entity", logType::LINFO);
+    // send LINFO about inventory
+    Logger::logStatic("included inventory memory size: " + std::to_string(sizeof(*this->e_inventory)) + " bytes", "~Entity", logType::LINFO);
 
 #endif
     this->count_entitys--;
@@ -90,3 +89,5 @@ const sf::Vector2f Entity::e_getCenterPosition()
 {
     return sf::Vector2f(this->m_sprite.getPosition().x + this->m_sprite.getGlobalBounds().size.x / 2.f, this->m_sprite.getPosition().y + this->m_sprite.getGlobalBounds().size.y / 2.f);
 }
+
+uint32_t Entity::count_entitys = 0;

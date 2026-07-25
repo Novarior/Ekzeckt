@@ -6,456 +6,435 @@
 #include "../entitys/Enemys/slime.hpp"
 #include "../localisation/helperText.hpp"
 
+std::map<int, std::shared_ptr<Item>> ItemRegistry::items = {};
+
 const bool Process::loadGameData() {
-  // load noice config
-  // if (ParserJson::loadNoiceData(this->noicedata))
-  //   printf("ERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
-  //          AppFiles::config_noicedata);
-  // else {
-  //   this->noicedata.mapSizeX = 1000;
-  //   this->noicedata.mapSizeY = 1000;
-  //   this->noicedata.RenderWindowX =
-  //       this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
-  //   this->noicedata.RenderWindowY =
-  //       this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
-  //   this->noicedata.gridSize = this->IstateData->sd_gridSize;
-  // }
-  return true;
+	// load noice config
+	// if (ParserJson::loadNoiceData( noicedata))
+	//   printf("LERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
+	//          AppFiles::config_noicedata);
+	// else {
+	//    noicedata.mapSizeX = 1000;
+	//    noicedata.mapSizeY = 1000;
+	//    noicedata.RenderWindowX =
+	//        IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	//    noicedata.RenderWindowY =
+	//        IstateData->sd_gfxSettings.lock()->resolution.size.y;
+	//    noicedata.gridSize =  IstateData->sd_gridSize;
+	// }
+	return true;
 }
 
 const bool Process::saveGameData() {
-  // save player to JSON file
-  // if (ParserJson::savePlayer(this->player.get()))
-  //   Logger::logStatic("Parser::savePlayer()::ERROR::",
-  //                     "Process::saveGameData()", logType::ERROR);
-  // // save inventory to JSON file
-  // // if (ParserJson::saveInventory(t_inventory))
-  // //   Logger::logStatic("Parser::saveInventory()::ERROR::",
-  // //                     "Process::saveGameData()", logType::ERROR);
-  // // save entitys pos and other data
-  // if (ParserJson::saveEntitys(this->entitys))
-  //   Logger::logStatic("Parser::saveEntitys()::ERROR::",
-  //                     "Process::saveGameData()", logType::ERROR);
+	// save player to JSON file
+	// if (ParserJson::savePlayer( player.get()))
+	//   Logger::logStatic("Parser::savePlayer()::LERROR::",
+	//                     "Process::saveGameData()", logType::LERROR);
+	// // save inventory to JSON file
+	// // if (ParserJson::saveInventory(t_inventory))
+	// //   Logger::logStatic("Parser::saveInventory()::LERROR::",
+	// //                     "Process::saveGameData()", logType::LERROR);
+	// // save entitys pos and other data
+	// if (ParserJson::saveEntitys( entitys))
+	//   Logger::logStatic("Parser::saveEntitys()::LERROR::",
+	//                     "Process::saveGameData()", logType::LERROR);
 
-  return true;
+	return true;
 }
 
-void Process::initPauseMenu() {
-  const sf::VideoMode &vm = this->IstateData->sd_gfxSettings.lock()->resolution;
-  this->pausemenu = new PauseMenu(this->IstateData->sd_gfxSettings.lock()->resolution, this->IstateData->sd_GameFont_basic);
-  this->pausemenu->addButton("EXIT_BUTTON", mmath::p2pX(74.f, vm), mmath::p2pX(13.f, vm), mmath::p2pX(6.f, vm), mmath::calcCharSize(vm), helperText::Button::BUTTON_PM_PAUSE);
-  this->pausemenu->addButton("GEN", mmath::p2pX(20, vm), mmath::p2pX(74.f, vm), mmath::p2pX(13.f, vm), mmath::calcCharSize(vm), helperText::Button::BUTTON_PM_GENERATE);
+
+void Process::initTileMapData() { // Defauld Init Data
+	noicedata = new NoiceData();
+
+	noicedata->mapSizeX = 620;
+	noicedata->mapSizeY = 430;
+	noicedata->seed = std::time(0);
+	noicedata->offsetSeed = 0;
+	noicedata->gridSize = IstateData->sd_gridSize;
+	noicedata->octaves = 9;
+	noicedata->frequency = 8;
+	noicedata->persistence = 0.6f;
+	noicedata->amplifire = 0.7f;
+	noicedata->fastMode = 1;
+	noicedata->smoothMode = 1;
+	noicedata->RenderWindowX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	noicedata->RenderWindowY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
 }
+
 
 void Process::initTileMap() {
-  this->myGN = new ProcessGenerationNoice(this->noicedata);
-  this->mapTiles = std::make_shared<TileMap>(this->noicedata, myGN);
+
+	myGN = new ProcessGenerationNoice(noicedata);
+	mapTiles = new TileMap(noicedata, myGN);
 }
 
 void Process::intGUI() { // init GUI
-  // init player HP bar on top right on screen math position using mmath::p2pX/X
-  this->playerBar["HP_BAR"] = new gui::ProgressBar(
-      sf::Vector2f(mmath::p2pX(75, this->IstateData->sd_Window.lock()->getSize().x), mmath::p2pX(3, this->IstateData->sd_Window.lock()->getSize().y)),
-      sf::Vector2f(mmath::p2pX(20, this->IstateData->sd_Window.lock()->getSize().x), mmath::p2pX(3, this->IstateData->sd_Window.lock()->getSize().y)),
-      sf::Color::Red, this->IstateData->sd_characterSize_game_small, this->IstateData->sd_GameFont_basic);
+	const sf::Vector2f res = {(float)IstateData->sd_gfxSettings.lock()->resolution.size.x,
+							(float)IstateData->sd_gfxSettings.lock()->resolution.size.y};
 
-  this->playerBar["MP_BAR"] = new gui::ProgressBar(
-      sf::Vector2f(mmath::p2pX(75, this->IstateData->sd_Window.lock()->getSize().x), mmath::p2pX(7, this->IstateData->sd_Window.lock()->getSize().y)),
-      sf::Vector2f(mmath::p2pX(20, this->IstateData->sd_Window.lock()->getSize().x), mmath::p2pX(3, this->IstateData->sd_Window.lock()->getSize().y)),
-      sf::Color::Blue, this->IstateData->sd_characterSize_game_small, this->IstateData->sd_GameFont_basic);
+	initPauseMenu(res);
+	initMiniMap(res);
+	initGUIInventory(res);
+	initGUIBars(res);
+}
 
-  this->initMiniMap();
+void Process::initPauseMenu(sf::Vector2f res) {
+	const sf::Vector2f vm = {(float)IstateData->sd_gfxSettings.lock()->resolution.size.x,
+							(float)IstateData->sd_gfxSettings.lock()->resolution.size.y};
+
+	pausemenu = std::make_unique<PauseMenu>(vm, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_PAUSE);
+	pausemenu->addButton("EXIT_BUTTON", mmath::p2pX(74.f, vm.x), mmath::p2pX(13.f, vm.x), mmath::p2pX(6.f, vm.x), mmath::calcCharSize(vm.x, vm.y), helperText::Button::BUTTON_PM_PAUSE);
+	pausemenu->addButton("GEN", mmath::p2pX(20.f, vm.x), mmath::p2pX(74.f, vm.x), mmath::p2pX(13.f, vm.x), mmath::calcCharSize(vm.x, vm.y), helperText::Button::BUTTON_PM_GENERATE);
+}
+
+
+void Process::initGUIInventory(sf::Vector2f res) {	// create GUI for inventory
+	inventoryGUI = new gui::InventoryGUI(res, IstateData->sd_GameFont_basic, player->e_getInventory());
+	//player->e_getInventory(), // get player inventory for watch for him
+	//sf::Vector2f(res),
+	//IstateData->sd_GameFont_basic, 64.0f,
+	//IstateData->sd_characterSize_game_small);
+
+	Logger::logStatic("Inventory GUI initialized", "Process::initInventoryGUI()");
+}
+
+void Process::initMiniMap(sf::Vector2f res) { // init minimap
+	sf::IntRect worldBounds({0, 0}, mapTiles->getMapSizeOnInt());
+	minimap = std::make_unique<gui::MiniMap>(
+		sf::Vector2f(mmath::p2pX(75.f, res.x), mmath::p2pX(10.f, res.y)),
+		sf::Vector2f(mmath::p2pX(20.f, res.x), mmath::p2pX(20.f, res.y)), worldBounds);
+
+	minimap->setImage(mapTiles->getMinimapImage());
+}
+
+void Process::initGUIBars(sf::Vector2f res) {
+	// init player HP bar on top right on screen math position using mmath::p2pX/X
+	playerBar["HP_BAR"] = std::make_unique<gui::ProgressBar>(
+		sf::Vector2f(mmath::p2pX(75.f, res.x), mmath::p2pX(3.f, res.y)), sf::Vector2f(mmath::p2pX(20.f, res.x), mmath::p2pX(3.f, res.y)),
+		IstateData->sd_characterSize_game_small, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_BAR_HP);
+
+	playerBar["MP_BAR"] = std::make_unique<gui::ProgressBar>(
+		sf::Vector2f(mmath::p2pX(75.f, res.x), mmath::p2pX(7.f, res.y)), sf::Vector2f(mmath::p2pX(20.f, res.x), mmath::p2pX(3.f, res.y)),
+		IstateData->sd_characterSize_game_small, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_BAR_MP);
 }
 
 void Process::initView() {
-  sf::Vector2f halfSize = sf::Vector2f(static_cast<float>(this->IstateData->sd_Window.lock()->getSize().x) / 2.f, static_cast<float>(this->IstateData->sd_Window.lock()->getSize().y) / 2.f);
+	sf::Vector2f halfSize = sf::Vector2f(static_cast<float>(IstateData->sd_Window.lock()->getSize().x) / 2.f, static_cast<float>(IstateData->sd_Window.lock()->getSize().y) / 2.f);
 
-  this->view.setSize(halfSize);
-  this->view.setCenter(halfSize);
-  this->playerView.setSize(halfSize);
-  this->playerView.setCenter(halfSize);
+	view.setSize(halfSize);
+	view.setCenter(halfSize);
+	playerView.setSize(halfSize);
+	playerView.setCenter(halfSize);
 
-  if (!this->renderTexture.resize({this->IstateData->sd_Window.lock()->getSize().x, this->IstateData->sd_Window.lock()->getSize().y}))
-    sf::RenderTexture _buffRenderTexture({this->IstateData->sd_Window.lock()->getSize().x, this->IstateData->sd_Window.lock()->getSize().y});
+	if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x,  IstateData->sd_Window.lock()->getSize().y}))
+		sf::RenderTexture _buffRenderTexture({IstateData->sd_Window.lock()->getSize().x,  IstateData->sd_Window.lock()->getSize().y});
 
-  this->renderSprite.setTexture(this->renderTexture.getTexture());
-  this->renderSprite.setTextureRect(sf::IntRect(
-      {0, 0}, sf::Vector2i(this->IstateData->sd_Window.lock()->getSize().x,
-                           this->IstateData->sd_Window.lock()->getSize().y)));
+	renderSprite.setTexture(renderTexture.getTexture());
+	renderSprite.setTextureRect(sf::IntRect(
+		{0, 0}, sf::Vector2i(IstateData->sd_Window.lock()->getSize().x,
+		IstateData->sd_Window.lock()->getSize().y)));
 }
 
 void Process::initPlayer() {
-  // get array with posible spawn positions
-  std::vector<sf::Vector2f> spawnPosArray = this->mapTiles->getSpawnPosArray();
-  // set player position to random position getting from spawnPosArray
-  this->player = std::make_shared<Player>(spawnPosArray[rand() % spawnPosArray.size()]);
+	// get array with posible spawn positions
+	std::vector<sf::Vector2f> spawnPosArray = mapTiles->getSpawnPosArray();
+	// set player position to random position getting from spawnPosArray
+	player = new Player(spawnPosArray[rand() % spawnPosArray.size()]);
 
-  std::shared_ptr<Item> stoneItem = std::make_shared<Items::Stone>(64); // 64 - это gridSizeI
+	Item stoneItem = Items::Stone(); // 64 - это gridSizeI
 
-  // add item like stone to player inventory
-  this->player->e_getInventory()->addItem(stoneItem);
+	// add item like stone to player inventory
+	player->e_getInventory()->addItem(stoneItem);
 
-  // add item like a from registry
-  this->player->e_getInventory()->addItem(ItemRegistry::getItem(2));
+	// add item like a from registry
+	player->e_getInventory()->addItem(ItemRegistry::getItem(2));
 
-  // add test item to player inventory
-  this->player->e_getInventory()->addItem(ItemRegistry::getItem(99));
-}
-
-void Process::initMiniMap() // init minimap
-{
-  sf::IntRect worldBounds({0, 0}, this->mapTiles->getMapSizeOnInt());
-
-  this->minimap = new gui::MiniMap(
-      sf::Vector2f(
-          mmath::p2pX(75, this->IstateData->sd_Window.lock()->getSize().x),
-          mmath::p2pX(10, this->IstateData->sd_Window.lock()->getSize().y)),
-      sf::Vector2f(
-          mmath::p2pX(20, this->IstateData->sd_Window.lock()->getSize().x),
-          mmath::p2pX(20, this->IstateData->sd_Window.lock()->getSize().y)),
-      worldBounds);
-
-  this->minimap->setImage(this->mapTiles->getMinimapImage());
-}
-
-void Process::initTileMapData() { // Defauld Init Data
-  this->noicedata.seed = std::time(0);
-  this->noicedata.gridSize = this->IstateData->sd_gridSize;
-  this->noicedata.octaves = 9;
-  this->noicedata.frequency = 8;
-  this->noicedata.persistence = 0.6f;
-  this->noicedata.amplifire = 0.7f;
-  this->noicedata.fastMode = 1;
-  this->noicedata.smoothMode = 1;
-  this->noicedata.RenderWindowX = this->IstateData->sd_gfxSettings.lock()->resolution.size.x;
-  this->noicedata.RenderWindowY = this->IstateData->sd_gfxSettings.lock()->resolution.size.y;
-  this->noicedata.mapSizeX = 620;
-  this->noicedata.mapSizeY = 430;
+	// add test item to player inventory
+	player->e_getInventory()->addItem(ItemRegistry::getItem(99));
 }
 
 void Process::initEntitys() {
-  // get random position from map array
-  std::vector<sf::Vector2f> spawnPosArray = this->mapTiles->getSpawnPosArray();
+	// get random position from map array
+	std::vector<sf::Vector2f> spawnPosArray = mapTiles->getSpawnPosArray();
 
-  // call function to get random position
-  for (size_t i = 0; i < 1; i++)
-    this->entitys.push_back(new Slime(
-        spawnPosArray[rand() % spawnPosArray.size()].x,
-        spawnPosArray[rand() % spawnPosArray.size()].y, *this->player));
+	// call function to get random position
+	for (size_t i = 0; i < 1; i++)
+		entitys.push_back(new Slime(spawnPosArray[rand() % spawnPosArray.size()].x, spawnPosArray[rand() % spawnPosArray.size()].y, player));
 
-  // add item like stone to world
-  this->entitys.push_back(new EntityItem(ItemRegistry::getItem(1)));
+	Slime sl(spawnPosArray[rand() % spawnPosArray.size()].x, spawnPosArray[rand() % spawnPosArray.size()].y, player);
+
+	// add item like stone to world
+	entitys.push_back(new EntityItem(ItemRegistry::getItem(1)));
 }
 
-void Process::registerItems() {
-  int size = this->IstateData->sd_gridSize;
+void Process::registerItems() { // register items to registry
+	ItemRegistry::registerItem(0, Items::Item_NULL());
+	ItemRegistry::registerItem(1, Items::Stone());
+	ItemRegistry::registerItem(2, Items::PoisonSmallRegeneration());
+	ItemRegistry::registerItem(3, Items::Wood());
+	ItemRegistry::registerItem(4, Items::IronSword());
+	ItemRegistry::registerItem(5, Items::Bread());
+	ItemRegistry::registerItem(6, Items::LeatherArmor());
+	ItemRegistry::registerItem(7, Items::HealthPotion());
+	ItemRegistry::registerItem(8, Items::GoldCoin());
+	ItemRegistry::registerItem(99, Items::TestItem()); // Регистрация тестового предмета
 
-  // register items to registry
-  ItemRegistry::registerItem(0, std::make_unique<Items::Item_NULL>());
-  ItemRegistry::registerItem(1, std::make_unique<Items::Stone>(size));
-  ItemRegistry::registerItem(2, std::make_unique<Items::PoisonSmallRegeneration>(size));
-  ItemRegistry::registerItem(3, std::make_unique<Items::Wood>(size));
-  ItemRegistry::registerItem(4, std::make_unique<Items::IronSword>(size));
-  ItemRegistry::registerItem(5, std::make_unique<Items::Bread>(size));
-  ItemRegistry::registerItem(6, std::make_unique<Items::LeatherArmor>(size));
-  ItemRegistry::registerItem(7, std::make_unique<Items::HealthPotion>(size));
-  ItemRegistry::registerItem(8, std::make_unique<Items::GoldCoin>(size));
-  ItemRegistry::registerItem(99, std::make_unique<Items::TestItem>(size)); // Регистрация тестового предмета
-
-  Logger::logStatic("Items has been registered", "Process::registerItems()");
-  Logger::logStatic("Items count: " + std::to_string(ItemRegistry::getAllItems().size()), "Process::registerItems()");
+	Logger::logStatic("Items has been registered", "Process::registerItems()");
+	Logger::logStatic("Items count: " + std::to_string(ItemRegistry::getAllItems().size()), "Process::registerItems()");
 }
 
-void Process::initInventoryGUI() {
-  // Создаем GUI для инвентаря
-  this->inventoryGUI = std::make_unique<GUI::InventoryGUI>(
-      this->player->e_getInventory(), // e_getInventory уже возвращает shared_ptr, который будет автоматически преобразован в weak_ptr
-      sf::Vector2f(this->IstateData->sd_Window.lock()->getSize()),
-      this->IstateData->sd_GameFont_basic, 64.0f,
-      this->IstateData->sd_characterSize_game_small);
-
-  Logger::logStatic("Inventory GUI initialized", "Process::initInventoryGUI()");
-}
-
-Process::Process(StateData *state_data, const bool defaultLoad)
-    : State(state_data), renderSprite(TextureManager::getTexture("texture_null"))
+Process::Process(StateData* state_data, const bool defaultLoad)
+	: State(state_data), renderSprite(TextureManager::getTexture("texture_null"))
 
 { // init Parser
-  if (defaultLoad)
-    this->loadGameData();
-  else
-    this->initTileMapData();
+	if (defaultLoad)
+		loadGameData();
+	else
+		initTileMapData();
 
-  this->initView();
-  this->initPauseMenu();
-  this->registerItems();
-  this->initTileMap();
-  this->initPlayer();
-  this->initEntitys();
-  this->intGUI();
-  this->initInventoryGUI();
+	initView();
+	registerItems();
+	initTileMap();
+	initPlayer();
+	initEntitys();
 
-  Logger::logStatic("End initilization process", "Process::Process()");
+	intGUI();
+
+	Logger::logStatic("End initilization process", "Process::Process()");
 }
 
 Process::~Process() {
-  if (this->saveGameData())
-    Logger::logStatic("Game Data has be saved", "Process::~Process()::saveGameData()");
-  else
-    Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::ERROR);
+	if (saveGameData())
+		Logger::logStatic("Game Data has be saved", "Process::~Process()::saveGameData()");
+	else
+		Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::LERROR);
 
-  delete this->myGN;
-  this->mapTiles.reset();
-  delete this->pausemenu;
-  this->player.reset();
-  delete this->minimap;
+	delete myGN;
+	delete mapTiles;
+	delete player;
+	delete noicedata;
+	delete inventoryGUI;
 
-  // clear bar
-  for (auto &it : this->playerBar)
-    delete it.second;
+	pausemenu.reset();
+	minimap.reset();
 
-  // clear vector entitys
-  for (size_t i = 0; i < this->entitys.size(); i++)
-    delete this->entitys[i];
+	// clear bar
+	playerBar.clear();
+
+	// clear vector entitys
+	for (auto& it : entitys)
+		delete it;
+	entitys.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 // sub update functions
-void Process::updateInput(const float &delta_time) {
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_TAB_MENU)) && this->getKeytime())
-    this->player->e_getInventory()->toggleInventory();
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_CLOSE)) && this->getKeytime())
-    this->Ipaused = !this->Ipaused;
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::ACTION_DEBUG_SWITCH)) && this->getKeytime())
-    this->Idebud = !this->Idebud;
+void Process::updateInput(const float& delta_time) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Tab) && getKeytime())
+		inventoryGUI->toggleVisible();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && getKeytime())
+		Ipaused = !Ipaused;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Slash) && getKeytime())
+		Idebud = !Idebud;
 }
 
-void Process::updatePlayerInputs(const float &delta_time) {
+void Process::updatePlayerInputs(const float& delta_time) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) // left
+		player->e_move(-1.f, 0.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) // right
+		player->e_move(1.f, 0.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) // down
+		player->e_move(0.f, 1.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) // up
+		player->e_move(0.f, -1.f, delta_time);
 
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_A)))
-    this->player->e_move(-1.f, 0.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_D)))
-    this->player->e_move(1.f, 0.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_S)))
-    this->player->e_move(0.f, 1.f, delta_time);
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_W)))
-    this->player->e_move(0.f, -1.f, delta_time);
-
-  if (keyboardCocoa::keyIsPressed(IKeySupports.lock()->at(ActionKeyBind::KEY_SPACE)) && this->getKeytime()) {
-    for (auto &it : this->entitys)
-      this->player->e_attack(it, delta_time);
-  }
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && getKeytime()) {
+		for (auto& it : entitys)
+			player->e_attack(it, delta_time);
+	}
 }
 
-void Process::updateTileMap(const float &delta_time) { // update tilemap
-  this->mapTiles->updateRenderArea(this->player->e_getGridPositionInt(this->IgridSize));
-  this->mapTiles->update(this->player.get(), delta_time);
+void Process::updateTileMap(const float& delta_time) { // update tilemap
+	mapTiles->updateRenderArea(player->e_getGridPositionInt(int(std::floorf(IgridSize))));
+	mapTiles->update(*player, delta_time);
 
-  // update entitys collision
-  for (size_t i = 0; i < this->entitys.size(); i++)
-    this->mapTiles->update(this->entitys[i], delta_time);
+	// update entitys collision
+	for (size_t i = 0; i < entitys.size(); i++)
+		mapTiles->update(*entitys[i], delta_time);
 }
 
-void Process::updateEntitys(const float &delta_time) { // update entitys
-  for (size_t i = 0; i < this->entitys.size(); i++) {
-    this->entitys[i]->e_update(delta_time);
+void Process::updateEntitys(const float& delta_time) { // update entitys
+	for (size_t i = 0; i < entitys.size(); i++) {
+		entitys[i]->e_update(delta_time);
 
-    if (!this->entitys[i]->getAttributes())
-      if (!this->entitys[i]->e_isAlive())
-        this->entitys.erase(this->entitys.begin() + i);
-  }
+		if (!entitys[i]->getAttributes())
+			if (!entitys[i]->e_isAlive())
+				entitys.erase(entitys.begin() + i);
+	}
 }
 
-void Process::updateGUI(const float &delta_time) {
-  // Обновляем GUI инвентаря, если он открыт
-  if (this->player->e_getInventory()->isInventoryOpened()) {
-    this->inventoryGUI->update(delta_time, this->ImousePosWindow);
-    // Синхронизируем видимость с состоянием инвентаря
-    this->inventoryGUI->setVisible(true);
-  } else // Скрываем GUI инвентаря, если инвентарь закрыт
+void Process::updateGUI(const float& delta_time) {
+	// update player GUI inventory
+	if (inventoryGUI->isVisible())
+		inventoryGUI->update(ImousePosWindow);
+	// update minimap
+	if (minimap != nullptr)
+		minimap->update(player->e_getPosition(), entitys[0]->e_getPosition());
 
-    this->inventoryGUI->setVisible(false);
-
-  // Обновляем мини-карту
-  if (this->minimap != nullptr)
-    this->minimap->update(this->player->e_getPosition(),
-                          this->entitys[0]->e_getPosition());
-
-  // Обновляем полоски здоровья и маны
-  this->playerBar["HP_BAR"]->update(this->player->getAttributes()->getAttributes().health, this->player->getAttributes()->getAttributes().max_health);
-  this->playerBar["MP_BAR"]->update(this->player->getAttributes()->getAttributes().mana, this->player->getAttributes()->getAttributes().max_mana);
+	// Обновляем полоски здоровья и маны
+	playerBar["HP_BAR"]->update(player->getAttributes()->getAttributes().health, player->getAttributes()->getAttributes().max_health);
+	playerBar["MP_BAR"]->update(player->getAttributes()->getAttributes().mana, player->getAttributes()->getAttributes().max_mana);
 }
 
 // main update function
-void Process::update(const float &delta_time) {
-  // always update mouse position, inputs, and keyTime
-  this->updateMousePositions(&this->view);
-  this->updateKeytime(delta_time);
-  this->updateInput(delta_time);
+void Process::update(const float& delta_time) {
+	// always update mouse position, inputs, and keyTime
+	updateMousePositions(&view);
+	updateKeytime(delta_time);
+	updateInput(delta_time);
 
-  // one more update
-  if (this->Idebud)
-    this->updateDebug(delta_time);
+	// one more update
+	if (Idebud)
+		updateDebug(delta_time);
 
-  if (this->Ipaused) { // update pause
-    this->pausemenu->update(this->ImousePosWindow);
+	if (Ipaused) { // update pause
+		pausemenu->update(ImousePosWindow);
 
-    if (this->pausemenu->isButtonPressed("EXIT_BUTTON") && this->getKeytime())
-      this->endState();
-    if (this->pausemenu->isButtonPressed("GEN") && this->getKeytime()) {
-      delete this->myGN;
-      this->mapTiles.reset();
-      delete this->minimap;
-      this->initTileMapData();
-      this->initTileMap();
-      this->initMiniMap();
-      this->reCaclulateCharacterSize();
-    }
-  } else {
-    // Обработка событий GUI инвентаря
-    // Обновляем интерфейс инвентаря напрямую без событий
-    // Поскольку события уже обрабатываются в State::updateKeyTime
-    if (this->player->e_getInventory()->isInventoryOpened())
-      this->inventoryGUI->setVisible(true);
+		if (pausemenu->isButtonPressed("EXIT_BUTTON") && getKeytime())
+			endState();
+		if (pausemenu->isButtonPressed("GEN") && getKeytime()) {
+			mapTiles->regenerateMap();
 
-    else
-      this->inventoryGUI->setVisible(false);
+			reCaclulateCharacterSize();
+			initTileMapData();
+			initTileMap();
 
-    this->updateEntitys(delta_time);
-    this->updatePlayerInputs(delta_time);
-    this->player->e_update(delta_time);
-    if (this->player->e_isAlive() == false)
-      this->endState();
-    this->updateGUI(delta_time);
-  }
-  this->updateTileMap(delta_time);
+			minimap->setImage(mapTiles->getMinimapImage());
+		}
+	} else {
+		// Обработка событий GUI инвентаря
+		// Обновляем интерфейс инвентаря напрямую без событий
+		// Поскольку события уже обрабатываются в State::updateKeyTime
+		if (inventoryGUI->isVisible())
+			inventoryGUI->update(ImousePosScreen);
+
+
+		updateEntitys(delta_time);
+		updatePlayerInputs(delta_time);
+		player->e_update(delta_time);
+		if (player->e_isAlive() == false)
+			endState();
+		updateGUI(delta_time);
+	}
+	updateTileMap(delta_time);
 }
 
-void Process::updateDebug(const float &delta_time) {
-  double fps = 1.0f / delta_time;
-  this->IstringStream << "FPS:\t" << fps << "\nCurrent memory usage:\t"
-                      << MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-                      << "\nResolution: " << this->Iwindow.lock()->getSize().x << " x " << this->Iwindow.lock()->getSize().y
-                      << "\nPlayer:"
-                      << "\nComponents: " << "\n\tvelX: " << this->player->e_getVelocity().x << "\n\tvelY: " << this->player->e_getVelocity().y
-                      << "\nPosition:" << "\n\tx: " << this->player->e_getPosition().x << "\n\ty: " << this->player->e_getPosition().y;
-  if (this->player->e_getInventory()->isInventoryOpened()) {
-    // предмет буффер для отладки инвентаря
-    Item *mitem = this->player->e_getInventory()->getItemFromSlot(this->player->e_getInventory()->getCurrentCellID(this->ImousePosWindow)).get();
-    this->IstringStream << "\nPlayer Inv:"
-                        << "\n\tSecected Cell ID: "
-                        << this->player->e_getInventory()->getCurrentCellID(this->ImousePosWindow)
-                        << "\n\tSelected Item: " << mitem->getName()
-                        << "\n\tSelected Item ID: " << mitem->getID()
-                        << "\n\tSelected Item Amount: " << mitem->getAmount()
-                        << "\n\tSelected Item Pickable: " << mitem->isPickable()
-                        << "\n\tSelected Item Stackable: "
-                        << mitem->isStackable()
-                        << "\n\tSelected Item Usable: " << mitem->isUsable()
-                        << "\n\tSelected Item Price: " << mitem->getPrice();
-  }
-  this->IstringStream
-      << "\n\tgrid x: "
-      << this->player->e_getGridPositionFloat(this->IgridSize).x
-      << "\n\tgrid y: "
-      << this->player->e_getGridPositionFloat(this->IgridSize).y
-      << "\nMap Size: " << this->mapTiles->getMapSizeOnTiles().x << 'x'
-      << this->mapTiles->getMapSizeOnTiles().y
-      << "\nMap Area Render: " << this->mapTiles->getRenderArea().fromX << ' '
-      << this->mapTiles->getRenderArea().fromY << ' '
-      << this->mapTiles->getRenderArea().toX << ' '
-      << this->mapTiles->getRenderArea().toY << '\n'
-      << "Pause:\t" << this->Ipaused
-      << "\nMemory Usage: "
-      // get memory usage enemys on bytes
-      << "\n\tPlayer: " << sizeof(*this->player) << " = " << sizeof(Player)
-      << " bytes"
-      << "\n\tEntitys: " << this->entitys.size() << " x " << sizeof(Entity)
-      << " = " << this->entitys.size() * sizeof(Entity) << " bytes"
-      << "\n\tTotal Entitys: " << Entity::count_entitys << "\n\tEntity[0] Data:"
-      << "\n\t\tmovDir: "
-      << this->entitys[0]->getMovement()->getDirectionVec().x << ' '
-      << this->entitys[0]->getMovement()->getDirectionVec().y
-      << "\n\t\tmovVel: " << this->entitys[0]->getMovement()->getVelocity().x
-      << ' ' << this->entitys[0]->getMovement()->getVelocity().y
-      << "\n\tTileMap: " << sizeof(*this->mapTiles) << " bytes"
-      << "\n\tPauseMenu: " << sizeof(*this->pausemenu) << " bytes"
-      << "\n\tTotal usage: "
-      << sizeof(*this->player) + (this->entitys.size() * sizeof(Entity)) +
-             sizeof(this->mapTiles) + sizeof(*this->pausemenu)
-      << " bytes"
-      << "\nGenerator data:"
-      << "\n\tSeed:\t" << this->noicedata.seed << "\n\tOctaves:\t"
-      << this->noicedata.octaves << "\n\tFrequency:\t"
-      << this->noicedata.frequency << "\n\tAmplifire:\t"
-      << this->noicedata.amplifire << "\n\tPersistence:\t"
-      << this->noicedata.persistence << "\n\tNoiceSizeBYWindowX:\t"
-      << this->noicedata.RenderWindowX << "\n\tNoiceSizeBYWindowY:\t"
-      << this->noicedata.RenderWindowY << "\n\tNoiceSizeMapX:\t"
-      << this->noicedata.mapSizeX << "\n\tNoiceSizeMapY:\t"
-      << this->noicedata.mapSizeY;
+void Process::updateDebug(const float& delta_time) {
+	double fps = 1.0f / delta_time;
+	IstringStream << "FPS:\t" << fps << "\nCurrent memory usage:\t"
+		<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
+		<< "\nResolution: " << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
+		<< "\nPlayer:"
+		<< "\nComponents: " << "\n\tvelX: " << player->e_getVelocity().x << "\n\tvelY: " << player->e_getVelocity().y
+		<< "\nPosition:" << "\n\tx: " << player->e_getPosition().x << "\n\ty: " << player->e_getPosition().y
+		<< "\n\tgrid x: "
+		<< player->e_getGridPositionFloat(IgridSize).x
+		<< "\n\tgrid y: "
+		<< player->e_getGridPositionFloat(IgridSize).y
+		<< "\nMap Size: " << mapTiles->getMapSizeOnTiles().x << 'x'
+		<< mapTiles->getMapSizeOnTiles().y
+		<< "\nMap Area Render: " << mapTiles->getRenderArea().fromX << ' '
+		<< mapTiles->getRenderArea().fromY << ' '
+		<< mapTiles->getRenderArea().toX << ' '
+		<< mapTiles->getRenderArea().toY << '\n'
+		<< "Pause:\t" << Ipaused
+		<< "\nMemory Usage: "
+		// get memory usage enemys on bytes
+		<< "\n\tPlayer: " << sizeof(*player) << " = " << sizeof(Player)
+		<< " bytes"
+		<< "\n\tEntitys: " << entitys.size() << " x " << sizeof(Entity)
+		<< " = " << entitys.size() * sizeof(Entity) << " bytes"
+		<< "\n\tTotal Entitys: " << Entity::count_entitys << "\n\tEntity[0] Data:"
+		<< "\n\t\tmovDir: "
+		<< entitys[0]->getMovement()->getDirectionVec().x << ' '
+		<< entitys[0]->getMovement()->getDirectionVec().y
+		<< "\n\t\tmovVel: " << entitys[0]->getMovement()->getVelocity().x
+		<< ' ' << entitys[0]->getMovement()->getVelocity().y
+		<< "\n\tTileMap: " << sizeof(*mapTiles) << " bytes"
+		<< "\n\tPauseMenu: " << sizeof(*pausemenu) << " bytes"
+		<< "\n\tTotal usage: "
+		<< sizeof(*player) + (entitys.size() * sizeof(Entity)) +
+		sizeof(mapTiles) + sizeof(*pausemenu)
+		<< " bytes"
+		<< "\nGenerator data:"
+		<< "\n\tSeed:\t"
+		<< noicedata->seed << "\n\tOctaves:\t"
+		<< noicedata->octaves << "\n\tFrequency:\t"
+		<< noicedata->frequency << "\n\tAmplifire:\t"
+		<< noicedata->amplifire << "\n\tPersistence:\t"
+		<< noicedata->persistence << "\n\tNoiceSizeBYWindowX:\t"
+		<< noicedata->RenderWindowX << "\n\tNoiceSizeBYWindowY:\t"
+		<< noicedata->RenderWindowY << "\n\tNoiceSizeMapX:\t"
+		<< noicedata->mapSizeX << "\n\tNoiceSizeMapY:\t"
+		<< noicedata->mapSizeY;
 
-  this->Itext.setString(this->IstringStream.str());
-  this->IstringStream.str("");
+	Itext.setString(IstringStream.str());
+	IstringStream.str("");
 }
 
-void Process::updateSounds(const float &delta_time) {}
+void Process::updateSounds(const float& delta_time) {}
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 // sub render functions
-void Process::renderGUI(sf::RenderTarget &target) {
-  if (this->Idebud) // debuging text render
-    target.draw(this->Itext);
+void Process::renderGUI(sf::RenderTarget& target) {
+	if (Idebud) // debuging text render
+		target.draw(Itext);
 
-  // Отрисовка информации о здоровье и мане
-  for (auto &it : this->playerBar) // render player bars
-    it.second->render(target);
+	for (auto& it : playerBar) // render player bars
+		target.draw(*it.second);
 
-  // Отрисовка мини-карты
-  if (this->minimap != nullptr)
-    this->minimap->render(target);
+	if (minimap != nullptr) // Minimap Render
+		minimap->render(target);
 
-  if (this->Ipaused) // Pause menu render
-  {
-    if (this->pausemenu != nullptr)
-      this->pausemenu->render(target);
-  }
-  // if (this->player->e_getInventory()->isInventoryOpened() && this->inventoryGUI)
-  //     target.draw(*this->inventoryGUI);
+	if (inventoryGUI->isVisible() && inventoryGUI)
+		target.draw(*inventoryGUI);
+
+	if (Ipaused && pausemenu != nullptr) // Pause menu render
+		pausemenu->render(target);
 }
 
-void Process::renderTileMap(sf::RenderTarget &target) {
-  this->mapTiles->render(&target);
+void Process::renderTileMap(sf::RenderTarget& target) {
+	mapTiles->render(&target);
 }
 
-void Process::renderEntities(sf::RenderTarget &target) {
-  for (auto *enemy : this->entitys)
-    enemy->e_render(target, this->Idebud);
+void Process::renderEntities(sf::RenderTarget& target) {
+	for (auto& enemy : entitys)
+		enemy->e_render(target, Idebud);
 }
 
-void Process::renderPlayer(sf::RenderTarget &target) {
-  this->player->e_render(target, this->Idebud);
-  this->playerView.setCenter(this->player->e_getPosition());
+void Process::renderPlayer(sf::RenderTarget& target) {
+	player->e_render(target, Idebud);
+	playerView.setCenter(player->e_getPosition());
 }
 
 // main render function
-void Process::render(sf::RenderWindow &target) {
-  // CLEAR pre rendered texture
-  this->renderTexture.clear();
-  this->renderTexture.setView(this->playerView);
-  // render scne in custom view
-  this->renderTileMap(this->renderTexture);
-  this->renderEntities(this->renderTexture);
-  this->renderPlayer(this->renderTexture);
-  // reset view
-  this->renderTexture.setView(this->renderTexture.getDefaultView());
-  // render GUI elements
-  this->renderGUI(this->renderTexture);
-  // final render
-  this->renderTexture.display();
-  target.draw(this->renderSprite);
+void Process::render(sf::RenderWindow& target) {
+	// CLEAR pre rendered texture
+	renderTexture.clear();
+	renderTexture.setView(playerView);
+	// render scne in custom view
+	renderTileMap(renderTexture);
+	renderEntities(renderTexture);
+	renderPlayer(renderTexture);
+	// reset view
+	renderTexture.setView(renderTexture.getDefaultView());
+	// render GUI elements
+	renderGUI(renderTexture);
+	// final render
+	renderTexture.display();
+	target.draw(renderSprite);
 }

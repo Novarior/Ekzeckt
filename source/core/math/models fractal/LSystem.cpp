@@ -8,49 +8,49 @@ bool LSystem::compareByGreen(const sf::RectangleShape &a, const sf::RectangleSha
     return colorA.g < colorB.g; // Меньший зелёный оттенок будет впереди
 }
 
-size_t LSystem::getAxiomSize() { return this->sentence.length(); }
+size_t LSystem::getAxiomSize() { return  sentence.length(); }
 
 LSystem::LSystem()
 {
-    this->line.resize(1, sf::RectangleShape(sf::Vector2f(1, 1)));
+     line.resize(1, sf::RectangleShape(sf::Vector2f(1, 1)));
 }
 
 LSystem::~LSystem()
 {
     // очистка стека
-    while (!this->stack.empty())
-        this->stack.pop();
+    while (! stack.empty())
+         stack.pop();
     // очистка вектора
-    this->line.clear();
+     line.clear();
     // очистка правил
-    this->rules.clear();
+     rules.clear();
     // очистка строки
-    this->sentence.clear();
+     sentence.clear();
 }
 
 void LSystem::generate()
 {
-    if (!this->line.empty())
+    if (! line.empty())
         line.clear();
-    this->line.resize(1, sf::RectangleShape(sf::Vector2f(1, 1)));
+     line.resize(1, sf::RectangleShape(sf::Vector2f(1, 1)));
 
-    this->data.isGeneratorEnable = false;
-    this->data.pos = sf::Vector2f(0, 0);
-    this->data.angle = 15;
-    this->data.currentAngle = 0;
-    this->data.width = 15;
-    this->data.length = 25;
-    this->data.half_length = -this->data.width / 2;
-    this->data.steps = 9;
-    this->data.alpha = 255;
-    this->data.chanceSkip = 50;
-    this->data.seed = 0;
-    this->axiom = "qqqs";
-    this->sentence = axiom;
+     data.isGeneratorEnable = false;
+     data.pos = sf::Vector2f(0, 0);
+     data.angle = 15;
+     data.currentAngle = 0;
+     data.width = 15;
+     data.length = 25;
+     data.half_length = - data.width / 2;
+     data.steps = 9;
+     data.alpha = 255;
+     data.chanceSkip = 50;
+     data.seed = 0;
+     axiom = "qqqs";
+     sentence = axiom;
 
-    this->generateSentence();
+     generateSentence();
 
-    this->applyRules();
+     applyRules();
 }
 
 void LSystem::generateSentence()
@@ -65,7 +65,7 @@ void LSystem::generateSentence()
             else
                 nextSentence += c; // Оставляем символ без изменений
 
-        this->sentence = nextSentence;
+         sentence = nextSentence;
     }
 }
 
@@ -79,7 +79,7 @@ sf::Vector2f LSystem::rotate(sf::Vector2f v, float angle)
 
 void LSystem::applyRules()
 {
-    this->data.isGeneratorEnable = true;
+     data.isGeneratorEnable = true;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 100);
@@ -87,12 +87,12 @@ void LSystem::applyRules()
     std::uniform_int_distribution<> dis_color(80, 220);
 
     sf::RectangleShape bufferShape;
-    this->debug_dots = sf::VertexArray(sf::PrimitiveType::Points, this->sentence.size());
+     debug_dots = sf::VertexArray(sf::PrimitiveType::Points,  sentence.size());
     sf::Vertex p;
     data.nextPos = {0, 0};
     int randcolor = dis_color(gen);
 
-    for (char current : this->sentence)
+    for (char current :  sentence)
     {
         // Перебираем каждый символ текущего предложения
         // (строки команды L-системы)
@@ -102,17 +102,17 @@ void LSystem::applyRules()
         {
         case 'd':
         {
-            if (chance < this->data.chanceSkip)
+            if (chance <  data.chanceSkip)
                 break;
             // Задаём размеры и параметры формы, представляющей элемент ствола
-            bufferShape.setSize(sf::Vector2f(this->data.width, this->data.length));
+            bufferShape.setSize(sf::Vector2f( data.width,  data.length));
             // Устанавливаем точку вращения в центр
             bufferShape.setOrigin(sf::Vector2f(data.width / 2, data.length));
             bufferShape.setPosition(data.nextPos + data.offsetPos); // Смещаем позицию с учётом оффсета
             // Устанавливаем угол вращения
             bufferShape.setRotation(sf::degrees(data.currentAngle));
             // Устанавливаем цвет (цвет дерева)
-            bufferShape.setFillColor(sf::Color(80, 35, 25, this->data.alpha));
+            bufferShape.setFillColor(sf::Color(80, 35, 25,  data.alpha));
 
             ////DEBUG
 
@@ -122,24 +122,24 @@ void LSystem::applyRules()
             debug_dots.append(p);
 
             // Рассчитываем следующую позицию для элементов ствола
-            data.nextPos = this->data.pos + this->rotate(sf::Vector2f(0, -this->data.length), data.currentAngle + dis_angle(gen) * 0.3);
-            this->data.pos = data.nextPos; // Обновляем текущую позицию
+            data.nextPos =  data.pos +  rotate(sf::Vector2f(0, - data.length), data.currentAngle + dis_angle(gen) * 0.3);
+             data.pos = data.nextPos; // Обновляем текущую позицию
 
-            this->line.push_back(bufferShape); // Добавляем форму в линию (список элементов дерева)
+             line.push_back(bufferShape); // Добавляем форму в линию (список элементов дерева)
             break;
         }
         case 'q':
         { // Дерево — элемент ствола (с смещением)
-            if (chance < this->data.chanceSkip)
+            if (chance <  data.chanceSkip)
                 break; // Пропускаем текущий элемент с заданной вероятностью
 
             // Задаём размеры и параметры формы, представляющей элемент ствола
-            bufferShape.setSize(sf::Vector2f(this->data.width, this->data.length));
+            bufferShape.setSize(sf::Vector2f( data.width,  data.length));
             // Устанавливаем точку вращения в центр
             bufferShape.setOrigin(sf::Vector2f(data.width / 2, data.length));
             bufferShape.setPosition(data.nextPos + data.offsetPos);                          // Смещаем позицию с учётом оффсета
             bufferShape.setRotation(sf::degrees(data.currentAngle + dis_angle(gen) * 0.15)); // Устанавливаем угол вращения
-            bufferShape.setFillColor(sf::Color(80, 35, 25, this->data.alpha));               // Устанавливаем цвет (цвет дерева)
+            bufferShape.setFillColor(sf::Color(80, 35, 25,  data.alpha));               // Устанавливаем цвет (цвет дерева)
 
             ////DEBUG
             p.position = sf::Vector2f(data.nextPos + data.offsetPos);
@@ -147,9 +147,9 @@ void LSystem::applyRules()
             debug_dots.append(p);
 
             // Рассчитываем следующую позицию для элементов ствола
-            data.nextPos = this->data.pos + this->rotate(sf::Vector2f(0, -this->data.length), data.currentAngle + dis_angle(gen) * 0.3);
-            this->data.pos = data.nextPos;     // Обновляем текущую позицию
-            this->line.push_back(bufferShape); // Добавляем форму в линию (список элементов дерева)
+            data.nextPos =  data.pos +  rotate(sf::Vector2f(0, - data.length), data.currentAngle + dis_angle(gen) * 0.3);
+             data.pos = data.nextPos;     // Обновляем текущую позицию
+             line.push_back(bufferShape); // Добавляем форму в линию (список элементов дерева)
             break;
         }
         case 's':
@@ -157,76 +157,76 @@ void LSystem::applyRules()
             // Рассчитываем следующую позицию для элемента листвы
 
             // Настраиваем параметры формы для листвы
-            bufferShape.setSize(sf::Vector2f(this->data.length + dis_angle(gen) % 3 + 1, this->data.width * 2.25)); // Генерируем случайный размер листа
+            bufferShape.setSize(sf::Vector2f( data.length + dis_angle(gen) % 3 + 1,  data.width * 2.25)); // Генерируем случайный размер листа
             bufferShape.setOrigin(sf::Vector2f(data.width / 2, data.length));                                       // Устанавливаем точку вращения
-            bufferShape.setPosition(this->data.pos + data.offsetPos);                                               // Смещаем позицию с учётом
-            bufferShape.setRotation(sf::degrees(this->data.currentAngle + dis_angle(gen)));                         // Устанавливаем угол вращения
+            bufferShape.setPosition( data.pos + data.offsetPos);                                               // Смещаем позицию с учётом
+            bufferShape.setRotation(sf::degrees( data.currentAngle + dis_angle(gen)));                         // Устанавливаем угол вращения
 
             // Генерируем случайный оттенок зелёного цвета для листвы
             randcolor = dis_color(gen);
             bufferShape.setFillColor(sf::Color(0, randcolor, 0));
-            this->line.push_back(bufferShape); // Добавляем форму в линию
-            data.nextPos = this->data.pos + this->rotate(sf::Vector2f(0, -this->data.width), this->data.currentAngle + dis_angle(gen) * 0.5);
-            this->data.pos = data.nextPos; // Обновляем текущую позицию
+             line.push_back(bufferShape); // Добавляем форму в линию
+            data.nextPos =  data.pos +  rotate(sf::Vector2f(0, - data.width),  data.currentAngle + dis_angle(gen) * 0.5);
+             data.pos = data.nextPos; // Обновляем текущую позицию
             break;
         }
         case '|':
         {
             // Настраиваем параметры формы для листвы
-            bufferShape.setSize(sf::Vector2f(this->data.length + dis_angle(gen) % 3 + 1, this->data.width * 2.25)); // Генерируем случайный размер листа
+            bufferShape.setSize(sf::Vector2f( data.length + dis_angle(gen) % 3 + 1,  data.width * 2.25)); // Генерируем случайный размер листа
             bufferShape.setOrigin(sf::Vector2f(data.width / 2, data.length));                                       // Устанавливаем точку вращения
-            bufferShape.setPosition(this->data.pos + data.offsetPos);                                               // Смещаем позицию с учётом
+            bufferShape.setPosition( data.pos + data.offsetPos);                                               // Смещаем позицию с учётом
 
             bufferShape.setRotation(
-                sf::degrees(this->data.currentAngle +
+                sf::degrees( data.currentAngle +
                             dis_angle(gen))); // Устанавливаем угол вращения
 
             // Генерируем случайный оттенок зелёного цвета для листвы
             randcolor = dis_color(gen);
             bufferShape.setFillColor(sf::Color(0, randcolor, 0));
 
-            this->line.push_back(bufferShape); // Добавляем форму в линию
-            data.nextPos = this->data.pos + this->rotate(sf::Vector2f(0, -this->data.width), this->data.currentAngle + dis_angle(gen) * 0.5);
-            this->data.pos = data.nextPos; // Обновляем текущую позицию}
+             line.push_back(bufferShape); // Добавляем форму в линию
+            data.nextPos =  data.pos +  rotate(sf::Vector2f(0, - data.width),  data.currentAngle + dis_angle(gen) * 0.5);
+             data.pos = data.nextPos; // Обновляем текущую позицию}
             break;
         }
         case '+': // Вращение направо
-            this->data.currentAngle += 25 + dis_angle(gen);
+             data.currentAngle += 25.f + dis_angle(gen);
             break;
         case '-': // Вращение налево
-            this->data.currentAngle -= 25 + dis_angle(gen);
+             data.currentAngle -= 25.f + dis_angle(gen);
             break;
         case '[': // Сохраняем текущее состояние в стек
             if (data.length > 2.f)
-                this->data.length *= 0.85; // Уменьшаем длину элементов
+                 data.length *= 0.85f; // Уменьшаем длину элементов
             if (data.width > 1.f)
-                this->data.width *= 0.75;
-            this->data.alpha *= 0.9; // Уменьшаем прозрачность
-            // this->data.half_length = -this->data.width / 2;
-            this->stack.push(this->data); // Сохраняем состояние
+                 data.width *= 0.75f;
+            data.alpha *= uint8_t(float(data.alpha) * 0.9f); // Уменьшаем прозрачность
+            //  data.half_length = - data.width / 2;
+             stack.push( data); // Сохраняем состояние
             break;
         case ']':                           // Восстанавливаем состояние из стека
-            this->data = this->stack.top(); // Восстанавливаем данные
-            this->stack.pop();              // Удаляем верхний элемент стека
+             data =  stack.top(); // Восстанавливаем данные
+             stack.pop();              // Удаляем верхний элемент стека
             break;
         default:
             break;
         };
     }
 
-    std::sort(this->line.begin(), this->line.end(), this->compareByGreen);
-    this->data.isGeneratorEnable = false;
+    std::sort( line.begin(),  line.end(),  compareByGreen);
+     data.isGeneratorEnable = false;
 }
 
 void LSystem::update(const float &delta_time)
 {
-    // this->line[1].rotate(sf::radians(delta_time));
+    //  line[1].rotate(sf::radians(delta_time));
 }
 
 void LSystem::render(sf::RenderTarget &target)
 { // render shapes
-    if (!this->data.isGeneratorEnable)
-        for (auto &shape : this->line)
+    if (! data.isGeneratorEnable)
+        for (auto &shape :  line)
             target.draw(shape);
 
     // target.draw(debug_dots);

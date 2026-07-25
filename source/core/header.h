@@ -1,9 +1,7 @@
-#ifndef HEADER
-#define HEADER
+#ifndef HEADER_H
+#define HEADER_H
 
-// including stl lib
 #include <chrono>
-#include <cmath>
 #include <exception>
 #include <filesystem>
 #include <fstream>
@@ -14,19 +12,24 @@
 #include <sstream>
 #include <stack>
 #include <stdexcept>
-#include <stdio.h>
-#include <stdlib.h>
 #include <streambuf>
 #include <string>
-#include <sys/types.h>
 #include <time.h>
-#include <unistd.h>
 #include <unordered_map>
 #include <vector>
+#include <ios>
+#include <istream>
+#include <stddef.h>
+#include <strstream>
 
+#ifdef __APPLE__
+#include <sys/types.h>
 #include <Carbon/Carbon.h>
+#include <unistd.h>
+#endif // __APPLE__
 
-// include nlohmann-json libary
+
+// include nlohmann-json 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 using namespace nlohmann;
@@ -38,9 +41,9 @@ using namespace nlohmann;
 #include <SFML/Window.hpp>
 
 // include LUA libary
-extern "C" {
-#include <lua/lauxlib.h>
-#include <lua/lua.h>
-#include <lua/lualib.h>
-}
-#endif /* HEADER */
+//extern "C" {Z
+//#include <lua/lauxlib.h>
+//#include <lua/lua.h>
+//#include <lua/lualib.h>
+//}
+#endif /* HEADER_H */

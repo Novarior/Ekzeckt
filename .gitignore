@@ -3,30 +3,27 @@
 bin/.DS_Store
 **/DDFMM
 DDFMM/*
-# Build and CMake directories
+
+# Build and CMake directories with Compiled binary files
+vs_temp/
+out/
+bin/
+x64/
 build/
 CMakeFiles/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
 
-# Compiled binary files
-x64/
-bin/
-bin/*
-
 # VSCode settings
-.vs/
 .vscode/
 .github/
-metadata/
-
-# Lua folder
-
-**source/res/scripts
+.vs/
 
 # Cache and log files
 .cache
 *.log
 *.tmp
 *.cmake
+*.etl
+*.user
