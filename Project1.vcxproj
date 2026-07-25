@@ -20,19 +20,38 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Content\ItemsStuff\Inventory.cpp" />
+    <ClCompile Include="source\Content\ItemsStuff\ItemEntity\entity_item.cpp" />
+    <ClCompile Include="source\Content\Map\block.cpp" />
+    <ClCompile Include="source\Content\Map\TileMap.cpp" />
     <ClCompile Include="source\core\Core.cpp" />
     <ClCompile Include="source\core\Core_loader.cpp" />
     <ClCompile Include="source\core\main.cpp" />
     <ClCompile Include="source\core\math\models fractal\LSystem.cpp" />
     <ClCompile Include="source\core\math\models noice\Noice_Perlin.cpp" />
+    <ClCompile Include="source\core\math\models noice\Noice_PGN.cpp" />
     <ClCompile Include="source\core\math\mymath.cpp" />
     <ClCompile Include="source\core\pch.cpp" />
     <ClCompile Include="source\core\math\models noice\Noice_Simplex.cpp" />
+    <ClCompile Include="source\entitys\AI\AIAttack.cpp" />
+    <ClCompile Include="source\entitys\AI\AIComponent.cpp" />
+    <ClCompile Include="source\entitys\AI\AIFollow.cpp" />
+    <ClCompile Include="source\entitys\AI\AISearchRing.cpp" />
+    <ClCompile Include="source\entitys\AI\AIWander.cpp" />
+    <ClCompile Include="source\entitys\Enemys\slime.cpp" />
+    <ClCompile Include="source\entitys\entity.cpp" />
+    <ClCompile Include="source\entitys\player.cpp" />
+    <ClCompile Include="source\entitys\properties\attributes.cpp" />
+    <ClCompile Include="source\entitys\properties\hitbox.cpp" />
+    <ClCompile Include="source\entitys\properties\movement.cpp" />
     <ClCompile Include="source\GUI\components\button.cpp" />
     <ClCompile Include="source\GUI\components\selector.cpp" />
     <ClCompile Include="source\GUI\GUI_Component.cpp" />
+    <ClCompile Include="source\GUI\UI\inventoryGUI.cpp" />
+    <ClCompile Include="source\GUI\UI\minimap.cpp" />
     <ClCompile Include="source\localisation\helperText.cpp" />
     <ClCompile Include="source\states\MainMenu.cpp" />
+    <ClCompile Include="source\states\PauseMenu.cpp" />
+    <ClCompile Include="source\states\Process.cpp" />
     <ClCompile Include="source\states\settings.cpp" />
     <ClCompile Include="source\states\State.cpp" />
   </ItemGroup>
@@ -40,6 +59,7 @@
     <ClInclude Include="source\Content\ItemsStuff\Coins.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Inventory.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Item.hpp" />
+    <ClInclude Include="source\Content\ItemsStuff\ItemEntity\entity_item.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Items\all_items.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Items\ItemRegister.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Items\item_bread.hpp" />
@@ -53,6 +73,8 @@
     <ClInclude Include="source\Content\ItemsStuff\Items\item_test.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Items\item_wood.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\itemtextures.hpp" />
+    <ClInclude Include="source\Content\Map\block.hpp" />
+    <ClInclude Include="source\Content\Map\TileMap.hpp" />
     <ClInclude Include="source\core\cmakever.h" />
     <ClInclude Include="source\core\Core.h" />
     <ClInclude Include="source\core\dataCollector\_keybind_enum.h" />
@@ -62,6 +84,8 @@
     <ClInclude Include="source\core\header.h" />
     <ClInclude Include="source\core\math\models fractal\LSystem.hpp" />
     <ClInclude Include="source\core\math\models noice\Noice_Perlin.hpp" />
+    <ClInclude Include="source\core\math\models noice\Noice_PGN.hpp" />
+    <ClInclude Include="source\core\math\models noice\Noise_data.h" />
     <ClInclude Include="source\core\math\mymath.hpp" />
     <ClInclude Include="source\core\pch.h" />
     <ClInclude Include="source\core\tools\path.hpp" />
@@ -71,13 +95,30 @@
     <ClInclude Include="source\core\_myConst.h" />
     <ClInclude Include="source\core\_myFiles.h" />
     <ClInclude Include="source\core\math\models noice\Noice_Simplex.hpp" />
+    <ClInclude Include="source\entitys\AI\AIAttack.hpp" />
+    <ClInclude Include="source\entitys\AI\AIComponent.hpp" />
+    <ClInclude Include="source\entitys\AI\AIFollow.hpp" />
+    <ClInclude Include="source\entitys\AI\AIOption.hpp" />
+    <ClInclude Include="source\entitys\AI\AISearchRing.hpp" />
+    <ClInclude Include="source\entitys\AI\AIWander.hpp" />
+    <ClInclude Include="source\entitys\Enemys\slime.hpp" />
+    <ClInclude Include="source\entitys\entity.hpp" />
+    <ClInclude Include="source\entitys\entityEnum.hpp" />
+    <ClInclude Include="source\entitys\player.hpp" />
+    <ClInclude Include="source\entitys\properties\attributes.hpp" />
+    <ClInclude Include="source\entitys\properties\hitbox.hpp" />
+    <ClInclude Include="source\entitys\properties\movement.hpp" />
     <ClInclude Include="source\GUI\components\button.hpp" />
     <ClInclude Include="source\GUI\components\checkbox.hpp" />
     <ClInclude Include="source\GUI\components\selector.hpp" />
     <ClInclude Include="source\GUI\components\slider.hpp" />
     <ClInclude Include="source\GUI\GUI_Component.hpp" />
+    <ClInclude Include="source\GUI\UI\inventoryGUI.hpp" />
+    <ClInclude Include="source\GUI\UI\minimap.hpp" />
     <ClInclude Include="source\localisation\helperText.hpp" />
     <ClInclude Include="source\states\MainMenu.hpp" />
+    <ClInclude Include="source\states\PauseMenu.hpp" />
+    <ClInclude Include="source\states\Process.hpp" />
     <ClInclude Include="source\states\settings.hpp" />
     <ClInclude Include="source\states\State.hpp" />
   </ItemGroup>
@@ -190,7 +231,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)vs_temp\$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
@@ -246,6 +287,7 @@
       <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;flac.lib;harfbuzzd.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/VERBOSE %(AdditionalOptions)</AdditionalOptions>
       <LinkErrorReporting>SendErrorReport</LinkErrorReporting>
+      <UseDynamicDebugging>true</UseDynamicDebugging>
     </Link>
     <PostBuildEvent>
       <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E /purge</Command>

@@ -6,7 +6,7 @@ namespace Items {
 class PoisonSmallRegeneration: public Item {
 private:
 public:
-	PoisonSmallRegeneration(unsigned int gridSizeI):
+	PoisonSmallRegeneration():
 		Item(2, "Poison of Regeneration", true, true, false, 1, 2, 0, 0, {0, 1, 25}, TextureManager::getTexture("items_potion_small_regeneration")) {}
 	virtual ~PoisonSmallRegeneration() {}
 

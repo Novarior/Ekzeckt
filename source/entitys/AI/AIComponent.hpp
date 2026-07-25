@@ -6,25 +6,24 @@
 #include "AIFollow.hpp"
 #include "AIWander.hpp"
 
-class AIComponent
-{
+class AIComponent {
 private:
-    Entity &_target;
-    Entity &_self;
+	Entity* _target;
+	Entity* _self;
 
-    std::unique_ptr<AIFollow> _follow;
-    std::unique_ptr<AIAttack> _attack;
-    std::unique_ptr<AIWander> _wander;
+	std::unique_ptr<AIFollow> _follow;
+	std::unique_ptr<AIAttack> _attack;
+	std::unique_ptr<AIWander> _wander;
 
 public:
-    AIComponent(Entity &self, Entity &target);
-    ~AIComponent();
+	AIComponent(Entity* self, Entity* target);
+	~AIComponent();
 
-    void create_follow(int stopDistance);
-    void create_attack();
-    void create_wander();
+	void create_follow(int stopDistance);
+	void create_attack();
+	void create_wander();
 
-    void update(const float &delta_time);
-    void render(sf::RenderTarget &target);
+	void update(const float& delta_time);
+	void render(sf::RenderTarget& target);
 };
 #endif

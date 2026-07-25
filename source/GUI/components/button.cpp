@@ -22,8 +22,7 @@ gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string _text,
 	mDraw.text.setFillColor(mColors.textIdleColor);
 	mDraw.text.setCharacterSize(mData.characterSize);
 	mDraw.text.setString(mData.textString);
-	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f,
-							mData.position.y + mData.size.y / 2 - mDraw.text.getGlobalBounds().size.y });
+	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f,		mData.position.y + mData.size.y / 2 - mDraw.text.getGlobalBounds().size.y });
 }
 
 

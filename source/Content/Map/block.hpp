@@ -19,7 +19,7 @@ private:
   bool m_collision;
   bool m_isAnim;
   const unsigned short m_type;
-  static unsigned currentFrame;
+  static uint16_t currentFrame;
   unsigned framesCounter;
   bool isSetTree;
   sf::Vector2i m_size;
@@ -32,7 +32,7 @@ public:
 
   const sf::FloatRect getGlobalBounds();
   const bool intersects(sf::FloatRect rect);
-  inline const bool &getCollision() { return this->m_collision; }
+  inline const bool getCollision() const { return this->m_collision; }
   void updateFrame();
   sf::Color getBlockColor() { return this->m_sprite.getColor(); }
 

@@ -1,9 +1,7 @@
 #include "Core.h"
 
 // инициализация реестра предметов
-//std::map<int, std::shared_ptr<Item>> ItemRegistry::items = {};
-//unsigned int Entity::count_entitys = 0;
-//unsigned BrickBlock::currentFrame = 0;
+
 unsigned int FPS::mFrame = 0;
 unsigned int FPS::mFps = 0;
 sf::Clock FPS::mClock = sf::Clock();
@@ -63,9 +61,9 @@ void Core::coreInitVariabless() {
 		<< (cr_VolumeCollector.get() ? "\t allive" : "\t is null")
 		<< "KeyboadSupports_data:\t"
 		<< (cr_KeySuppors.get() ? "\t allive" : "\t is null");
-	for (const auto [key, value] : *cr_KeySuppors.get())
+	for (const auto& [key, value] : *cr_KeySuppors.get())
 		ss << "Key: " << key << ", Value: " << value << std::endl;
-	for (const auto [key, value] : *cr_KeySuppors.get())
+	for (const auto& [key, value] : *cr_KeySuppors.get())
 		ss << "Key: " << key << ", Value: " << value << std::endl;
 #endif
 }
@@ -78,7 +76,7 @@ void Core::coreInitWindow() {
 	cr_Window = std::make_shared<sf::RenderWindow>(sf::RenderWindow(sf::VideoMode::getFullscreenModes()[2], cr_gfxSettings->title, sf::State::Windowed));
 #ifdef _DEBUG
 	std::stringstream s;
-	auto vs = sf::VideoMode::getFullscreenModes();
+	auto& vs = sf::VideoMode::getFullscreenModes();
 	for (auto& t : vs)
 		s << "\nvm:\t" << t.size.x << " x " << t.size.y;
 
@@ -92,6 +90,7 @@ void Core::coreInitWindow() {
 	cr_Window->setFramerateLimit(cr_gfxSettings->frameRateLimit);
 	cr_Window->setVerticalSyncEnabled(cr_gfxSettings->verticalSync);
 	cr_Window->setKeyRepeatEnabled(false);
+	cr_Window->setPosition({0,0});
 
   ///  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
 }
@@ -162,7 +161,7 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 }
 
 void Core::coreInitState() {
-	this->cr_State.push(new MainMenu(&cr_Statedata));
+	 cr_State.push(new MainMenu(&cr_Statedata));
 
 #if __MDEBUG__ == 1
   // logger moment with states
@@ -277,30 +276,30 @@ void Core::run() {
 	Logger::logStatic("Start main loop", "Core::run()");
 
 	while (cr_Window->isOpen()) {
-		this->updateDeltaTime();
-		this->update();
-		this->updateSound();
-		this->render();
+		 updateDeltaTime();
+		 update();
+		 updateSound();
+		 render();
 	}
 }
 
 void Core::update() {
   // state update
-	this->updateEventsWindow();
+	 updateEventsWindow();
 
-	if (!this->cr_State.empty()) {
-		if (this->cr_Window->hasFocus()) {
-			this->cr_State.top()->update(this->cr_deltaTime);
+	if (! cr_State.empty()) {
+		if ( cr_Window->hasFocus()) {
+			 cr_State.top()->update( cr_deltaTime);
 
-			if (this->cr_State.top()->getQuit()) {
-				delete this->cr_State.top();
-				this->cr_State.pop();
+			if ( cr_State.top()->getQuit()) {
+				delete  cr_State.top();
+				 cr_State.pop();
 			}
 		}
 	}
 	// Application end
 	else {
-		this->cr_Window->close();
+		 cr_Window->close();
 	}
 }
 

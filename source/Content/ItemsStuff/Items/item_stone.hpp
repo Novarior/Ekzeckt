@@ -5,12 +5,12 @@
 namespace Items {
 class Stone: public Item {
 public:
-	Stone(unsigned int gridSizeI): Item(1, "Stone", true, true, false, 1, 99, 0, 0, {0, 0, 1}, TextureManager::getTexture(TextureID::ITEMS_STONE)) {}
+	Stone(): Item(1, "Stone", true, true, false, 1, 99, 0, 0, {0, 0, 1}, TextureManager::getTexture(TextureID::ITEMS_STONE)) {}
 	virtual ~Stone() {}
 
 	void useItem() override {
 		// print to console that you used this item
-		std::cout << this->iData.m_name << " is not usable" << std::endl;
+		std::cout <<  iData.m_name << " is not usable" << std::endl;
 	}
 
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}

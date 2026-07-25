@@ -116,14 +116,14 @@ public:
 	virtual ~State();
 
 	// Accessors
-	const bool& getQuit() const { return this->Iquit; } // Get quit flag
+	const bool& getQuit() const { return  Iquit; } // Get quit flag
 	const bool getKeytime();                            // Get key time
 
 
 	// Functions
-	void endState() { this->Iquit = true; }        // End the state
-	void pauseState() { this->Ipaused = true; }    // Pause the state
-	void unpauseState() { this->Ipaused = false; } // Unpause the state
+	void endState() {  Iquit = true; }        // End the state
+	void pauseState() {  Ipaused = true; }    // Pause the state
+	void unpauseState() {  Ipaused = false; } // Unpause the state
 	void wasUpdateWindon() { IstateData->sd_reserGUI = true; }
 
 

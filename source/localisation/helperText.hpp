@@ -80,7 +80,7 @@ struct Button {
 	}
 };
 
-// Структура с текстами для громкости
+// Struct for setting state page
 struct VolumeTexts {
 	static std::string VOL_MASTER;
 	static std::string VOL_SFX;
@@ -111,7 +111,7 @@ struct VolumeTexts {
 	}
 };
 
-// Структура с текстами для настроек
+// Struct for setting state page
 struct SettingsTexts {
 	static std::string TEXT_ON;
 	static std::string TEXT_OFF;
@@ -150,6 +150,26 @@ struct SettingsTexts {
 			TEXT_SAVE = localization.getLocalizedString("SETTING_OPTIONS", "LOCAL_SAVE", "@Save Text");
 			TEXT_LOAD = localization.getLocalizedString("SETTING_OPTIONS", "LOCAL_LOAD", "@Load Text");
 			TEXT_EXIT = localization.getLocalizedString("SETTING_OPTIONS", "LOCAL_EXIT", "@Exit Text");
+		}
+	}
+};
+
+// Struct for setting state page
+struct GamePlayText {
+	static std::string TEXT_BAR_MP;
+	static std::string TEXT_BAR_HP;
+	static std::string TEXT_INVENTORY;
+	static std::string TEXT_PAUSE;
+
+
+	static void initializeLocalization(Language language) {
+		Localization localization;
+
+		if (localization.initializeLocalization(language)) {
+			TEXT_BAR_MP = localization.getLocalizedString("GAMEPLAY_TEXT", "LOCAL_BAR_MP", "@MP");
+			TEXT_BAR_HP = localization.getLocalizedString("GAMEPLAY_TEXT", "LOCAL_BAR_HP", "@HP");
+			TEXT_INVENTORY = localization.getLocalizedString("GAMEPLAY_TEXT", "LOCAL_INVENTORY", "@Inventory");
+			TEXT_PAUSE = localization.getLocalizedString("GAMEPLAY_TEXT", "LOCAL_INVENTORY", "@Pause");
 		}
 	}
 };

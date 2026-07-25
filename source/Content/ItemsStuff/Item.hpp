@@ -7,15 +7,15 @@
 class Item {
 protected:
 	struct ItemData {
-		int32_t m_itemID;
-		std::string m_name;
-		int16_t m_amount;
-		int16_t m_maxAmount;
-		int16_t durability;
-		int16_t maxDurability;
-		bool m_pickable;
-		bool m_stackable;
-		bool m_usable;
+		std::string m_name = "";
+		int16_t m_amount = -1;
+		int16_t m_maxAmount = -1;
+		int16_t durability = -1;
+		int16_t maxDurability = -1;
+		int32_t m_itemID = -1;
+		bool m_pickable = false;
+		bool m_stackable = false;
+		bool m_usable = false;
 
 		// Flag for delete from inventory
 		// when item is used and when amount is 0
@@ -25,13 +25,11 @@ protected:
 	Coins m_price;
 	sf::Texture& m_texture;
 public:
-	Item(unsigned int id = 0, const std::string& name = "NULL",
+	Item(uint32_t id = 0, const std::string& name = "NULL",
 		 bool pickable = false, bool stackable = false, bool usable = false,
 		 int amount = 0, int16_t maxAmount = 0, int16_t durability = 0,
 		 int16_t maxDurability = 0, const Coins& price = {0, 0, 0},
-		 sf::Texture& texture = TextureManager::getTexture("items_NULL")):m_texture(texture) {
-
-		m_texture = texture;
+		 sf::Texture& texture = TextureManager::getTexture("items_NULL")): m_texture(texture), m_price(price) {
 		iData.m_name = name;
 		iData.m_itemID = id;
 		iData.m_pickable = pickable;
@@ -39,10 +37,13 @@ public:
 		iData.m_usable = usable;
 		iData.m_amount = amount;
 		iData.m_maxAmount = maxAmount;
-		m_price = price;
 	}
+	Item(ItemData _data, const Coins& price = {0, 0, 0},
+		 sf::Texture& texture = TextureManager::getTexture("items_NULL")):iData(_data), m_texture(texture), m_price(price) {}
 
 	virtual ~Item() noexcept = default;
+
+	const sf::Texture& getTexture() { return m_texture; }
 
 	// Modifiers
 	void addAmount(int16_t _amount) noexcept {

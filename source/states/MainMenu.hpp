@@ -4,7 +4,7 @@
 #include "State.hpp"
 
 //#include "EditorState.hpp"
-//#include "Process.hpp"
+#include "Process.hpp"
 #include "settings.hpp"
 
 #include "../core/cmakever.h"

@@ -3,16 +3,15 @@
 
 #include "AIOption.hpp"
 
-class AIAttack : public AIOption
-{
+class AIAttack: public AIOption {
 private:
-    unsigned short attackTarget;
+	unsigned short attackTarget;
 
 public:
-    AIAttack(Entity &self, Entity &entity);
-    ~AIAttack();
+	AIAttack(Entity* self, Entity* entity);
+	~AIAttack();
 
-    void update(const float &delta_time);
+	void update(const float& delta_time);
 };
 
 #endif

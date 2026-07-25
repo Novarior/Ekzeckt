@@ -44,24 +44,24 @@ public:
 	virtual ~Coins() {}
 
 	// Сеттеры
-	void set_GoldCoinCount(const int value) { this->m_gold = value; }
-	void set_SilverCoinCount(const int value) { this->m_silver = value; }
-	void set_CopperCoinCount(const int value) { this->m_copper = value; }
+	void set_GoldCoinCount(const int value) { m_gold = value; }
+	void set_SilverCoinCount(const int value) { m_silver = value; }
+	void set_CopperCoinCount(const int value) { m_copper = value; }
 
 	// Добавление монет
-	void add_GoldCoinCount(const int value) { this->m_gold += value; }
-	void add_SilverCoinCount(const int value) { this->m_silver += value; }
-	void add_CopperCoinCount(const int value) { this->m_copper += value; }
+	void add_GoldCoinCount(const int value) { m_gold += value; }
+	void add_SilverCoinCount(const int value) { m_silver += value; }
+	void add_CopperCoinCount(const int value) { m_copper += value; }
 
 	// Геттеры
-	inline int get_GoldCointCount() const { return this->m_gold; }
-	inline int get_SilverCointCount() const { return this->m_silver; }
-	inline int get_CopperCointCount() const { return this->m_copper; }
+	inline int get_GoldCointCount() const { return  m_gold; }
+	inline int get_SilverCointCount() const { return  m_silver; }
+	inline int get_CopperCointCount() const { return  m_copper; }
 
 	// Обновление монет
 	void updateCoins() {
-		normalizeCoins(this->m_silver, this->m_copper, 100);
-		normalizeCoins(this->m_gold, this->m_silver, 100);
+		normalizeCoins(m_silver, m_copper, 100);
+		normalizeCoins(m_gold, m_silver, 100);
 	}
 };
 

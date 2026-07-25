@@ -19,16 +19,16 @@ namespace gui
         MiniMap(const sf::Vector2f m_position, const sf::Vector2f m_size, sf::IntRect worldSize);
         ~MiniMap();
 
-        void setTexture(sf::Texture texture) { this->m_texture = texture; }
+        void setTexture(sf::Texture texture) {  m_texture = texture; }
         void setImage(sf::Image image)
         {
-            this->m_image = image;
-            if (!this->m_texture.loadFromImage(this->m_image))
+             m_image = image;
+            if (! m_texture.loadFromImage( m_image))
             {
                 Logger::logStatic("Failed to load texture from image", "MiniMap::setImage()");
-                this->m_texture = sf::Texture();
+                 m_texture = sf::Texture();
             }
-            this->m_background.setTexture(&this->m_texture);
+             m_background.setTexture(& m_texture);
         }
 
         void update(sf::Vector2f playerPos, sf::Vector2f entitys);

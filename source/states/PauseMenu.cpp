@@ -1,64 +1,62 @@
 #include "PauseMenu.hpp"
 #include "../core/tools/LOGGER.hpp"
-#include "../math/mymath.hpp"
+#include "../core/math/mymath.hpp"
 
-PauseMenu::PauseMenu(sf::VideoMode vm, sf::Font &font)
-    : font(font), menuText(font, "PAUSED", mmath::calcCharSize(vm)) {
-  // logger
-  Logger::logStatic("PauseMenu constructor", "PauseMenu");
-  // Init background
-  this->background.setSize(sf::Vector2f(static_cast<float>(vm.size.x), static_cast<float>(vm.size.y)));
-  this->background.setFillColor(sf::Color(30, 30, 30, 100));
+PauseMenu::PauseMenu(sf::Vector2f resolution, sf::Font& font, std::string& text):menuText(sf::Text(font)) {
+	menuText = sf::Text(font, text, mmath::calcCharSize(resolution.x, resolution.y));
 
-  // Init container
-  this->container.setSize(sf::Vector2f(static_cast<float>(vm.size.x) / 2.5f, static_cast<float>(vm.size.y) - mmath::p2pX(9.3f, vm)));
+	// logger
+	Logger::logStatic("PauseMenu constructor", "PauseMenu");
+	// Init background
+	sf::Vector2f offset = resolution / 6.f;
 
-  this->container.setFillColor(sf::Color(30, 30, 30, 180));
-  this->container.setPosition({static_cast<float>(vm.size.x) / 2.f - this->container.getSize().x / 2.f, 30.f});
+	background.setSize(resolution);
+	background.setFillColor(sf::Color(0, 0, 0, 100));
 
-  // Init text
-  this->menuText.setFillColor(sf::Color(200, 200, 200, 255));
-  this->menuText.setPosition({this->container.getPosition().x + this->container.getSize().x / 2.f - this->menuText.getGlobalBounds().size.x / 2.f, this->container.getPosition().y + mmath::p2pX(4.f, vm)});
+	// Init container
+	container.setSize(offset);
+
+	container.setFillColor(sf::Color(30, 30, 30, 180));
+	container.setPosition(offset);
+
+	// Init text
+	menuText.setFillColor(sf::Color(200, 200, 200, 255));
+	menuText.setPosition({container.getPosition().x + container.getSize().x / 2.f - menuText.getGlobalBounds().size.x / 2.f,  container.getPosition().y + mmath::p2pX(4.f, offset.x)});
 }
 
 PauseMenu::~PauseMenu() {
-  Logger::logStatic("PauseMenu destructor", "PauseMenu");
-  auto it = this->buttons.begin();
-  for (it = this->buttons.begin(); it != this->buttons.end(); ++it)
-    delete it->second;
+	Logger::logStatic("PauseMenu destructor", "PauseMenu");
+	buttons.clear();
 }
 
-std::map<std::string, gui::Button *> &PauseMenu::getButtons() {
-  return this->buttons;
-}
+
 
 // Functions
 const bool PauseMenu::isButtonPressed(const std::string key) {
-  return this->buttons[key]->isPressed();
+	return  buttons[key]->isPressed();
 }
 
 void PauseMenu::addButton(std::string key, float y, float width, float height, unsigned char_size, std::string text) {
-  auto x = this->container.getPosition().x + this->container.getSize().x / 2.f - width / 2.f;
+	auto x = container.getPosition().x + container.getSize().x / 2.f - width / 2.f;
 
-  this->buttons[key] = new gui::Button(sf::Vector2f(x, y), sf::Vector2f(width, height), text,
-                                       gui::styles::buttons::btn_pause, gui::type::BUTTON);
+	buttons[key] = std::make_shared<gui::Button>(sf::Vector2f(x, y), sf::Vector2f(width, height), text, gui::styles::buttons::btn_pause, gui::type::BUTTON);
 
 #ifdef __MDEBUG__
-  Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
+	Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
 #endif
 }
 
-void PauseMenu::update(const sf::Vector2i &mousePosWindow) {
-  for (auto &i : this->buttons)
-    i.second->update(mousePosWindow);
+void PauseMenu::update(const sf::Vector2i& mousePosWindow) {
+	for (auto& i : buttons)
+		i.second->update(mousePosWindow);
 }
 
-void PauseMenu::render(sf::RenderTarget &target) {
-  target.draw(this->background);
-  target.draw(this->container);
+void PauseMenu::render(sf::RenderTarget& target) {
+	target.draw(background);
+	target.draw(container);
 
-  for (auto &i : this->buttons)
-    target.draw(*i.second);
+	for (auto& i : buttons)
+		target.draw(*i.second);
 
-  target.draw(this->menuText);
+	target.draw(menuText);
 }

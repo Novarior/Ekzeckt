@@ -9,7 +9,7 @@ private:
     int _ai_stopDistance;
 
 public:
-    AIFollow(Entity &self, Entity &entity, int stopDistance = 500);
+    AIFollow(Entity *self, Entity *entity, int stopDistance = 500);
     ~AIFollow();
 
     void update(const float &delta_time);

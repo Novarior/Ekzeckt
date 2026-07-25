@@ -76,8 +76,8 @@ void State::resetView() {
 }
 // create shared maps with sounds and categoty, buffers and categoty
 void State::initBuffer() {
-	this->IsoundsMap = std::map<std::string, sf::Sound>();
-	this->IsoundBufferMap = std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>>();
+	 IsoundsMap = std::map<std::string, sf::Sound>();
+	 IsoundBufferMap = std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>>();
 }
 
 // load sound to buffer
@@ -89,7 +89,7 @@ bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem
 		return false;
 	}
 
-	this->IsoundBufferMap[_soundcategory][_typename] = buffer;
+	 IsoundBufferMap[_soundcategory][_typename] = buffer;
 	return true;
 }
 

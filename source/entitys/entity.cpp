@@ -1,7 +1,6 @@
 #include "entity.hpp"
 
 
-
 void Entity::createHitboxComponent(sf::Sprite &sprite, float offset_x, float offset_y, float width, float height)
 {
     this->e_hitbox = std::make_unique<HitboxComponent>(sprite, offset_x, offset_y, width, height);
@@ -21,9 +20,9 @@ void Entity::createAttributesComponent(Atri *attributes)
 }
 
 // Method to create an inventory component for the entity.
-void Entity::createInventoryComponent(unsigned int rows, unsigned int cols)
+void Entity::createInventoryComponent()
 {
-    this->e_inventory = std::make_shared<Inventory>(rows, cols);
+    this->e_inventory = std::make_shared<Inventory>();
 }
 
 // Method to create an item for entity
@@ -90,3 +89,5 @@ const sf::Vector2f Entity::e_getCenterPosition()
 {
     return sf::Vector2f(this->m_sprite.getPosition().x + this->m_sprite.getGlobalBounds().size.x / 2.f, this->m_sprite.getPosition().y + this->m_sprite.getGlobalBounds().size.y / 2.f);
 }
+
+uint32_t Entity::count_entitys = 0;

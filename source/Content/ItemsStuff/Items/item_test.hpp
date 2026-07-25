@@ -5,7 +5,7 @@
 namespace Items {
 class TestItem: public Item {
 public:
-	TestItem(unsigned int gridSizeI): Item(99, "Test Item", true, true, false, 1, 64, 0, 0, {0, 0, 5}, TextureManager::getTexture()) {}
+	TestItem(): Item(99, "Test Item", true, true, false, 1, 64, 0, 0, {0, 0, 5}, TextureManager::getTexture()) {}
 	virtual ~TestItem() {}
 
 	// empty todo

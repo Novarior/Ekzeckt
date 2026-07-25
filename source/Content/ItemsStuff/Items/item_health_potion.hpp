@@ -5,7 +5,7 @@
 namespace Items {
 class HealthPotion: public Item {
 public:
-	HealthPotion(unsigned int gridSizeI): Item(7, "Health Potion", true, true, true, 1, 5, 0, 0, {0, 2, 0}, TextureManager::getTexture("items_health_potion")) {}
+	HealthPotion(): Item(7, "Health Potion", true, true, true, 1, 5, 0, 0, {0, 2, 0}, TextureManager::getTexture("items_health_potion")) {}
 	virtual ~HealthPotion() {}
 
 	void useItem() override {

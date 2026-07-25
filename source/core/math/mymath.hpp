@@ -9,9 +9,9 @@ namespace mmath {
 // interpolations
 namespace interpolation {
 
-		  //////////////////////
-		 /// INTERPOLATIONS ///
-		//////////////////////
+//////////////////////
+/// INTERPOLATIONS ///
+//////////////////////
 
 static double  LinInter(double t, double a, double b) {
 	return a + t * (b - a);
@@ -64,7 +64,7 @@ T randIntFromToNum(T _min, T _max) {
 
 template <typename T>
 inline T p2pX(T _percent, T _size) {
-	return floor((float)((_size) * (_percent / 100.f)));
+	return (T)(floor(((_size) * (_percent / 100.f))));
 }
 
 const float normalize(float value);
@@ -83,7 +83,7 @@ const double Rescale(double r_value, double minInput, double maxInput, double mi
 
 template <typename T>
 T  calcCharSize(T _rx, T _ry, T _m = 60) {
-	return static_cast<unsigned int>((_rx + _ry) / _m);
+	return static_cast<T>((_rx + _ry) / _m);
 }
 }; // namespace mmath
 

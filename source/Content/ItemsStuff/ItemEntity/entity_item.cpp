@@ -8,7 +8,7 @@ EntityItem::EntityItem(std::shared_ptr<Item> _item)
              entityEnum::entityState::es_DISABLED,
              entityEnum::entityDirection::ed_VOID) {
   // set position of item
-  this->e_updateTexture(TextureManager::getTexture("items_stone"));
+  this->e_updateTexture(TextureManager::getTexture(TextureID::TEXTURE_STONE));
   this->m_sprite.setTexture(this->m_texture);
 
   // Создаем хитбокс для предмета

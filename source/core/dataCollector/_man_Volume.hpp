@@ -21,7 +21,7 @@ enum class SoundCategory {
 
 class VolumeCollector {
 private:
-  // Громкости
+	// Громкости
 	std::map<SoundCategory, float> categoryVolumes = {
 		{SoundCategory::vol_MASTER, 50.f},
 		{SoundCategory::vol_SFX, 50.f},
@@ -36,7 +36,7 @@ private:
 
 public:
 	VolumeCollector() {
-	  // write log message what im here doing something
+		// write log message what im here doing something
 		Logger::logStatic("Start initilization VolumeCollector", "VolumeCollector::VolumeCollector()");
 	}
 	// set value Volume by category
@@ -57,8 +57,7 @@ public:
 	const std::map<SoundCategory, float> getCategoryVolumes() const { return categoryVolumes; }
 
 	// set all categories from other map
-	void
-		setCategoryVolumes(const std::map<SoundCategory, float>& categoryVolumes) { this->categoryVolumes = categoryVolumes; }
+	void setCategoryVolumes(const std::map<SoundCategory, float>& category) { categoryVolumes = category; }
 
 	// get size of map categoryVolumes
 	const unsigned int getCategoriesSize() const { return static_cast<unsigned int>(SoundCategory::vol_COUNT); }

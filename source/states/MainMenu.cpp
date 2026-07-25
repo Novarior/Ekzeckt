@@ -196,8 +196,8 @@ void MainMenu::updateButtons() {
 	if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
 		endState();
 
-	//  if (buttons["START_BTN"]->isPressed() && getKeytime())
-	//    Istates->push(new Process(IstateData, false));
+	  if (buttons["START_BTN"]->isPressed() && getKeytime())
+	    Istates->push(new Process(IstateData, false));
 
 	//  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
 	//    Istates->push(new Process(IstateData, true));

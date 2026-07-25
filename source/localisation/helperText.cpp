@@ -101,3 +101,9 @@ std::string helperText::Button::BUTTON_NEW_GAME = "#NEW_GAME";
 std::string helperText::Button::BUTTON_CONTINUE = "#CONTINUE";
 std::string helperText::Button::BUTTON_NOICE_EDITOR = "#NOICE_EDITOR";
 std::string helperText::Button::BUTTON_DEBUG_ROOM_STATE = "#NOICE_EDITOR";
+
+// Gameplay text
+std::string helperText::GamePlayText::TEXT_BAR_HP= "#HP";
+std::string helperText::GamePlayText::TEXT_BAR_MP = "#MP";
+std::string helperText::GamePlayText::TEXT_INVENTORY = "#Inventory";
+std::string helperText::GamePlayText::TEXT_PAUSE = "#Pause";
