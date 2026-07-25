@@ -3,49 +3,29 @@
 This repository contains the game project "Ekzeckt"
 in it I learn the c++ language and its capabilities
 the SFML and Nolhmann-json libraries are included
-also minimal work with MacOS frameworks
+also minimal work with MacOS frameworks (already was removed)
 
 ## Features
 
-- **Texture Generation**: Procedural generation of textures using SFML.
+- **Texture Generation**: Procedural generation of textures using SFML and magic.
 - **Noise Viewer**: Tools for Perlin and Simplex noise manipulation and visualization.
 - **L-System Trees**: Implementation of L-systems for generating tree-like structures.
-- **SFML Integration**: work with  the SFML (2.x >> 3.0, depending on the commit).
+- **SFML Integration**: work with  the SFML 3.x.x, depending on the commit).
 
-## Requirements
-
-- **SFML Version**: 3.0 (or compatible version).
-- **Compiler**: GCC 9+, Clang 9+, MSVC 16+ (with C++17 support).
-- **CMake**: Version 3.10 or higher.
-
-## Installation
-
-guide for [install](https://github.com/Novarior/Ekzeckt/wiki/Getting-Started)
-
-## Structure
-
-- `source/`: Contains all source files.
-- `states/`: Contains files with application states, be it settings, editor or gameplay
-- `source/source`: Contains my parser for saving/loading data, based on Nolnmann-json
-- `math/`: Contains the mathematical part of the code
-- `res/`: Contains texts, fonts, style files and other resources.
+## Project Structure
+- `content/`: contains the map, items, and game entities 
+- `core/`: main functionality for initialising the application, also include math, data collections, and some tools
+- `states/`: Contains application states, be it settings, editor or gameplay
 - `Localisation/` contains implementation files for working with localisation (will add documentation in the future)
 - `GUI/`: some stuff Buttons, sliders, etc.
-- `entity/`: entity logic, some logic, useless for the current behaviour
-- `core/`: main functionality for initialising the application, contains code for calling some MacOS functions
-- `content/`: contains the map, items, and game entities
+- `entity/`: entity logic, useless for the current behaviour
 - `metadata`: some files for building on OSX
-- `build/`: Build directory (created during installation).
-
-
 
 ## Known Issues
 
 - Continued performance optimizations for large textures and noise rendering.
 - Continued search for keyboard input issue
-(keyboard is not handled correctly when app is launched directly instead of via VSCode)
-- Fix texture loading and its dependencies
-- Fix current entity behavior code
+(keyboard is not handled correctly when app is launched directly instead of via VSCode (macOS issues))
 - there is no correct initialization of text variables from/for localization
 
 ## Future Plans
@@ -56,7 +36,6 @@ guide for [install](https://github.com/Novarior/Ekzeckt/wiki/Getting-Started)
 - Improve save/load system something part of game, for uniform view 
 - Additional procedural generation tools (e.g., terrain generation, impot/export textures, map data).
 - Performance optimizations for real-time rendering.
-- Split debug and realize builds
 - Work with AI/Bot system (entity logic)
 - Add suport audio (for now its in test, first trying)
 
@@ -72,15 +51,9 @@ This repository is distributed under the MIT License. See `LICENSE` for details.
 
 For questions or feedback, open an issue or contact me via GitHub.
 
-
-
 ## using libs:
-- SFML 3.0.0 (https://github.com/SFML/SFML)
+- SFML (https://github.com/SFML/SFML)
 - nlohmann/JSON (https://github.com/nlohmann/json)
-
-usind frameworks:
-- CoreFoundation
-- CoreServices
 
 Fonts was taken from:
 - https://www.1001fonts.com
@@ -90,5 +63,4 @@ The FontStruction “7:12 Serif”
 under a Creative Commons Attribution Share Alike license
 (http://creativecommons.org/licenses/by-sa/3.0/).
 
-## Test was sucsessfully compiled and run on:
--  MacOS 13 and higher
+
