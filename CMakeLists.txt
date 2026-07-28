@@ -1,6 +1,6 @@
 # Установка минимальной версии CMake
 cmake_minimum_required(VERSION 3.10.0)
-project(Ekzeckt VERSION 0.0.10)
+project(Ekzeckt VERSION 0.0.11)
 
 # Установка минимальной версии C++ стандарта
 set(CMAKE_CXX_STANDARD 17)

@@ -206,8 +206,8 @@ void MainMenu::updateButtons() {
 	if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
 		Istates->push(new SettingsState(IstateData));
 
-	//  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
-	//    Istates->push(new EditorState(IstateData));
+	  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
+	    Istates->push(new EditorState(IstateData));
 
 }
 

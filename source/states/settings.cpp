@@ -2,7 +2,7 @@
 
 
 void SettingsState::initVariables() { // init variables
-  // init video modes like all supported modes
+	// init video modes like all supported modes
 	_video_modes = sf::VideoMode::getFullscreenModes();
 	// init framerates list
 	_gfxResource["GFX_FPS"] = std::vector<int>{30, 60, 90, 120};
@@ -12,39 +12,39 @@ void SettingsState::initVariables() { // init variables
 }
 
 void SettingsState::initFonts() { // init sd_font
-	 font =  IstateData->sd_GameFont_basic;
+	font = IstateData->sd_GameFont_basic;
 }
 
 void SettingsState::initGui() { // init gui with next call functions
 
-	sf::Vector2u window_size =  Iwindow.lock()->getSize();
+	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
 
 	// init background
-	 background.setSize(wsf);
+	background.setSize(wsf);
 	// darkest blue color
-	 background.setFillColor(sf::Color(20, 25, 40, 200));
+	background.setFillColor(sf::Color(20, 25, 40, 200));
 
 	// init page background, size of page background
 	_pageBackground.setSize({mmath::p2pX(70.f, wsf.x), mmath::p2pX(66.f, wsf.y)});
 
-		// position of page background
+	// position of page background
 	_pageBackground.setPosition({mmath::p2pX(50.f, wsf.x) - _pageBackground.getSize().x / 2.f,
 								mmath::p2pX(50.f, wsf.y) - _pageBackground.getSize().y / 2.f});
 	_pageBackground.setFillColor(sf::Color(110, 130, 140, 200));
 
 	sf::Vector2f button_size = {mmath::p2pX(16.f, wsf.x),mmath::p2pX(5.f, wsf.y)};
 
-	 initButtons();
-	 initGraphicsPage();
-	 initSounsPage();
-	 initGameplayPage();
-	 initKeyboardPage();
-	 initEctPage();
+	initButtons();
+	initGraphicsPage();
+	initSounsPage();
+	initGameplayPage();
+	initKeyboardPage();
+	initEctPage();
 }
 
 void SettingsState::initButtons() { // Navigaton buttons in settings
-	sf::Vector2u window_size =  Iwindow.lock()->getSize();
+	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
 
 	sf::Vector2f background_layer_pos = {
@@ -94,9 +94,9 @@ void SettingsState::initButtons() { // Navigaton buttons in settings
 }
 
 void SettingsState::initGraphicsPage() {
-  //=======================================   GRAPHICS
-  //===============================================
-	sf::Vector2u window_size =  Iwindow.lock()->getSize();
+	//=======================================   GRAPHICS
+	//===============================================
+	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
 	sf::Vector2f background_layer_pos = {mmath::p2pX(50.f, wsf.x) - _pageBackground.getSize().x / 2.f,	mmath::p2pX(50.f, wsf.y) - _pageBackground.getSize().y / 2.f};
 	sf::Vector2f background_layer_size = {mmath::p2pX(70.f, wsf.x), mmath::p2pX(66.f, wsf.y)};
@@ -120,7 +120,7 @@ void SettingsState::initGraphicsPage() {
 			background_layer_pos.y + mmath::p2pX(5.f, background_layer_size.y) +
 			i * mmath::p2pX(10.f, background_layer_size.y)));
 		shape.setSize(sf::Vector2f(mmath::p2pX(20.f, background_layer_size.x), mmath::p2pX(5.f, background_layer_size.y)));
-		sf::Text text( font, settingsNames[i],  IstateData->sd_characterSize_game_medium);
+		sf::Text text(font, settingsNames[i], IstateData->sd_characterSize_game_medium);
 
 		text.setPosition(sf::Vector2f(shape.getPosition().x, shape.getPosition().y + (shape.getGlobalBounds().position.y / 2) - (text.getGlobalBounds().position.y / 2)));
 
@@ -143,7 +143,7 @@ void SettingsState::initGraphicsPage() {
 		sf::Vector2f(
 		background_layer_pos.x + mmath::p2pX(55.f, background_layer_size.x),
 		background_layer_pos.y + mmath::p2pX(5.f, background_layer_size.y)),
-		button_size, font,  IstateData->sd_characterSize_game_medium,
+		button_size, font, IstateData->sd_characterSize_game_medium,
 		modes_str.data(), modes_str.size(), index);
 
 	////===================================   FULLSCREEN
@@ -159,12 +159,12 @@ void SettingsState::initGraphicsPage() {
 		if (fullscreen_list[fs] == (IstateData->sd_gfxSettings.lock()->fullscreen ? "Fullscreen" : "Windowed"))
 			break;
 
-		// init selector fullscreen
+	// init selector fullscreen
 	_selectors["SELEC_FULLSCREEN"] = std::make_unique<gui::Selector>(
 		sf::Vector2f(
 		background_layer_pos.x + mmath::p2pX(55.f, background_layer_size.x),
 		background_layer_pos.y + mmath::p2pX(15.f, background_layer_size.y)),
-		button_size, font,  IstateData->sd_characterSize_game_medium,
+		button_size, font, IstateData->sd_characterSize_game_medium,
 		fullscreen_list.data(), fullscreen_list.size(), fs);
 
 	////=======================================   VSYNC
@@ -180,12 +180,12 @@ void SettingsState::initGraphicsPage() {
 		if (vsync_list[vs] == (IstateData->sd_gfxSettings.lock()->verticalSync ? helperText::SettingsTexts::TEXT_ON : helperText::SettingsTexts::TEXT_OFF))
 			break;
 
-		// init selector vsync
+	// init selector vsync
 	_selectors["SELEC_VSYNC"] = std::make_unique<gui::Selector>(
 		sf::Vector2f(
 		background_layer_pos.x + mmath::p2pX(55.f, background_layer_size.x),
 		background_layer_pos.y + mmath::p2pX(25.f, background_layer_size.y)),
-		button_size, font,  IstateData->sd_characterSize_game_medium,
+		button_size, font, IstateData->sd_characterSize_game_medium,
 		vsync_list.data(), vsync_list.size(), vs);
 
 	////===================================   ANTIALIASING
@@ -203,7 +203,7 @@ void SettingsState::initGraphicsPage() {
 		sf::Vector2f(
 		background_layer_pos.x + mmath::p2pX(55.f, background_layer_size.x),
 		background_layer_pos.y + mmath::p2pX(35.f, background_layer_size.y)),
-		button_size, font,  IstateData->sd_characterSize_game_medium,
+		button_size, font, IstateData->sd_characterSize_game_medium,
 		antialiasing_list.data(), antialiasing_list.size(), AAS);
 
 	//=========================================   FPS
@@ -221,16 +221,16 @@ void SettingsState::initGraphicsPage() {
 		sf::Vector2f(
 		background_layer_pos.x + mmath::p2pX(55.f, background_layer_size.x),
 		background_layer_pos.y + mmath::p2pX(45.f, background_layer_size.y)),
-		button_size, font,  IstateData->sd_characterSize_game_medium,
+		button_size, font, IstateData->sd_characterSize_game_medium,
 		fps_limits.data(), fps_limits.size(), fpls);
 }
 
 void SettingsState::initSounsPage() { // init sound page
-  //============================================================================================
-  //================================		AUDIO SETTINGS		================================
-  //============================================================================================
+	//============================================================================================
+	//================================		AUDIO SETTINGS		================================
+	//============================================================================================
 
-  // init sound sliders basic _pageBackground position and size
+	// init sound sliders basic _pageBackground position and size
 	sf::Vector2f slider_size = {mmath::p2pX(60.f, _pageBackground.getSize().x), 20.f};
 	float offsetY = 20.f;
 	sf::Vector2f bgsize = _pageBackground.getSize();
@@ -240,25 +240,25 @@ void SettingsState::initSounsPage() { // init sound page
 	for (int i = 0; i< int(gfx::SoundCategory::vol_COUNT); i++)
 
 		// init MASTER slider
-	_sound_SliderMap[gfx::SoundCategory(i)] = std::make_unique<gui::SliderFloat>(
-		sf::Vector2f(bgpos.x, bgpos.y + offsetY*i + slider_size.y * i), slider_size, font,
+		_sound_SliderMap[gfx::SoundCategory(i)] = std::make_unique<gui::SliderFloat>(
+		sf::Vector2f(bgpos.x, bgpos.y + offsetY * i + slider_size.y * i), slider_size, font,
 		IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory(i)),
-		0.f, 100.f,  IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_MASTER);
+		0.f, 100.f, IstateData->sd_characterSize_game_medium, helperText::VolumeTexts::VOL_MASTER);
 
 }
 
 void SettingsState::initKeyboardPage() { // init keyboard page
-	sf::Vector2u window_size =  Iwindow.lock()->getSize();
+	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
 
 	sf::Vector2f button_size = sf::Vector2f(mmath::p2pX(16.f, wsf.x), mmath::p2pX(5.f, wsf.y));
-	sf::Text text( IstateData->sd_GameFont_basic, "", 24);
+	sf::Text text(IstateData->sd_GameFont_basic, "", 24);
 	sf::RectangleShape rectangle;
 	rectangle.setFillColor(sf::Color(200, 200, 200, 150));
 
 	int i = 0;
 	int i2 = 0.f;
-	for (const auto& keybind : * IstateData->sd_KeySupports.lock()) {
+	for (const auto& keybind : *IstateData->sd_KeySupports.lock()) {
 		text.setString(keybind.first + ": " + std::to_string(static_cast<int>(keybind.second)));
 
 		float posX = mmath::p2pX(12.f * (i % 3), wsf.x);
@@ -282,7 +282,7 @@ void SettingsState::resetGui() {
 	//	reset to new resolution, and other settings
 	//	with next saving
 	//	TEST: check for correcd accsess to sd_gfxSettings
-	gfx::myGFXStruct gfx = * IstateData->sd_gfxSettings.lock();
+	gfx::myGFXStruct gfx = *IstateData->sd_gfxSettings.lock();
 
 	gfx.resolution = _video_modes[_selectors["SELEC_VMODE"]->getActiveElementID()];
 	gfx.frameRateLimit = _gfxResource["GFX_FPS"][_selectors["SELEC_FPS"].get()->getActiveElementID()];
@@ -292,16 +292,16 @@ void SettingsState::resetGui() {
 
 	// reset window
 	if (gfx.fullscreen)
-		 Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Fullscreen, gfx.contextSettings);
+		Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Fullscreen, gfx.contextSettings);
 	else
-		 Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Windowed, gfx.contextSettings);
+		Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Windowed, gfx.contextSettings);
 
-	 Iwindow.lock()->setFramerateLimit(gfx.frameRateLimit);
+	Iwindow.lock()->setFramerateLimit(gfx.frameRateLimit);
 
 	// save all data settings to file
 	// add later
 	//  IstateData->sd_gfxSettings.lock()->saveToFile();
-	 IstateData->sd_reserGUI = true;
+	IstateData->sd_reserGUI = true;
 
 	_keybindBackground.clear();
 	_sound_SliderMap.clear();
@@ -317,7 +317,7 @@ void SettingsState::resetGui() {
 	// init variables
 	initVariables();
 
-		// init fonts
+	// init fonts
 	reCaclulateCharacterSize();
 	initGui();
 	resetView();
@@ -353,42 +353,42 @@ SettingsState::~SettingsState() {
 
 // Functions
 void SettingsState::updateInput(const float& delta_time) {
-  // if escape is pressed, end state
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) &&  getKeytime())
-		 endState();
-	  // if slash is pressed, swith debug mode
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Slash) &&  getKeytime())
-		 Idebud = ! Idebud;
+	// if escape is pressed, end state
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && getKeytime())
+		endState();
+	// if slash is pressed, swith debug mode
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Slash) && getKeytime())
+		Idebud = !Idebud;
 
-	  // if key Q is pressed, swith page to left (back)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) &&  getKeytime())
-		 page = static_cast<settingPage>((static_cast<int>( page) - 1 + static_cast<int>(settingPage::PAGE_COUNT)) % static_cast<int>(settingPage::PAGE_COUNT));
+	// if key Q is pressed, swith page to left (back)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && getKeytime())
+		page = static_cast<settingPage>((static_cast<int>(page) - 1 + static_cast<int>(settingPage::PAGE_COUNT)) % static_cast<int>(settingPage::PAGE_COUNT));
 
-	  // if key E is pressed, swith page to right (forward)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) &&  getKeytime())
-		 page = static_cast<settingPage>((static_cast<int>( page) + 1) % static_cast<int>(settingPage::PAGE_COUNT));
+	// if key E is pressed, swith page to right (forward)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && getKeytime())
+		page = static_cast<settingPage>((static_cast<int>(page) + 1) % static_cast<int>(settingPage::PAGE_COUNT));
 }
 
 // Update audio page
 void SettingsState::updateAudioPage(const float& delta_time) {
 	for (auto& it : _sound_SliderMap) {
-		it.second->update( ImousePosView);
+		it.second->update(ImousePosView);
 
 		if (it.second->isChangedValue()) {
 			IstateData->sd_VolumeCollector.lock()->setCategoryVolume(it.first, it.second->getValue());
-			 updateSounds(delta_time);
+			updateSounds(delta_time);
 		}
 	}
 }
 
 void SettingsState::updateSounds(const float& delta_time) {
- //   Isound.setVolume( IVolumeCollector->getCategoryVolume(gfx::SoundCategory::vol_MASTER) *  IVolumeCollector->getCategoryVolume(gfx::SoundCategory::vol_MUSIC) / 100);
+	//   Isound.setVolume( IVolumeCollector->getCategoryVolume(gfx::SoundCategory::vol_MASTER) *  IVolumeCollector->getCategoryVolume(gfx::SoundCategory::vol_MUSIC) / 100);
 }
 
-	// Update graphics page
+// Update graphics page
 void SettingsState::updateGraphicsPage(const float& delta_time) {
 	for (auto& it : _selectors)
-		it.second->update(delta_time,  ImousePosWindow);
+		it.second->update(delta_time, ImousePosWindow);
 }
 
 // Update controls page
@@ -400,16 +400,16 @@ void SettingsState::updateEctPage(const float& delta_time) {}
 void SettingsState::updateGui(const float& delta_time) {
 	switch (page) {
 	case settingPage::AUDIO:
-		 updateAudioPage(delta_time);
+		updateAudioPage(delta_time);
 		break;
 	case settingPage::GRAPHICS:
-		 updateGraphicsPage(delta_time);
+		updateGraphicsPage(delta_time);
 		break;
 	case settingPage::CONTROLS:
-		 updateControlsPage(delta_time);
+		updateControlsPage(delta_time);
 		break;
 	case settingPage::GAMEPLAY:
-		 updateEctPage(delta_time);
+		updateEctPage(delta_time);
 		break;
 	default:
 		break;
@@ -417,25 +417,25 @@ void SettingsState::updateGui(const float& delta_time) {
 
 	// update page buttons
 	for (auto& it : _pageButtons)
-		it.second->update( ImousePosWindow);
+		it.second->update(ImousePosWindow);
 
-	  // update current page when page button is pressed
-	if (_pageButtons["PGB_GRAPHICS"]->isPressed() &&  getKeytime())
-		 page = settingPage::GRAPHICS;
-	if (_pageButtons["PGB_CONTROLS"]->isPressed() &&  getKeytime())
-		 page = settingPage::CONTROLS;
-	if (_pageButtons["PGB_AUDIO"]->isPressed() &&  getKeytime())
-		 page = settingPage::AUDIO;
-	if (_pageButtons["PGB_GAMEPLAY"]->isPressed() &&  getKeytime())
-		 page = settingPage::GAMEPLAY;
+	// update current page when page button is pressed
+	if (_pageButtons["PGB_GRAPHICS"]->isPressed() && getKeytime())
+		page = settingPage::GRAPHICS;
+	if (_pageButtons["PGB_CONTROLS"]->isPressed() && getKeytime())
+		page = settingPage::CONTROLS;
+	if (_pageButtons["PGB_AUDIO"]->isPressed() && getKeytime())
+		page = settingPage::AUDIO;
+	if (_pageButtons["PGB_GAMEPLAY"]->isPressed() && getKeytime())
+		page = settingPage::GAMEPLAY;
 
-	if (_pageButtons["BACK_BTN"]->isPressed() &&  getKeytime())
-		 endState();
-	  // apply settings
-	if (_pageButtons["APPLY_BTN"]->isPressed() &&  getKeytime())
-		 resetGui();
+	if (_pageButtons["BACK_BTN"]->isPressed() && getKeytime())
+		endState();
+	// apply settings
+	if (_pageButtons["APPLY_BTN"]->isPressed() && getKeytime())
+		resetGui();
 
-	  // update pageName
+	// update pageName
 	std::map<settingPage, std::string> pageNames = {
 		{settingPage::GRAPHICS, helperText::SettingsTexts::TEXT_GRAPHICS},
 		{settingPage::CONTROLS, helperText::SettingsTexts::TEXT_CONTROLS},
@@ -444,12 +444,12 @@ void SettingsState::updateGui(const float& delta_time) {
 
 	pageName = pageNames.count(page) ? pageNames[page] : "ERR";
 
-	if ( Idebud) {
-		 IstringStream
+	if (Idebud) {
+		IstringStream
 			<< "Ver: " << CMAKE_PROJECT_VERSION << "\nFPS:\t" << 1 / delta_time
 			<< "\nCurrent memory usage:\t"
 			//<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-			<< "\nPage: " << pageName << " " << static_cast<int>( page)
+			<< "\nPage: " << pageName << " " << static_cast<int>(page)
 			<< "\nSliders: "
 			<< "\n\tMASTER: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MASTER))
 			<< "\n\tSFX: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_SFX))
@@ -462,20 +462,20 @@ void SettingsState::updateGui(const float& delta_time) {
 			<< "\n\tWEAPON: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_WEAPON))
 			<< "\n\tENVIRONMENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT))
 			<< "\nVideo modes: " << _video_modes.size() << "\nVideo mode: "
-			<< std::to_string( IstateData->sd_gfxSettings.lock()->resolution.size.x)
-			<< std::to_string( IstateData->sd_gfxSettings.lock()->resolution.size.y)
-			<< "\nFramerate limit: " + std::to_string( IstateData->sd_gfxSettings.lock()->frameRateLimit)
-			<< "\nResolution: " <<  IstateData->sd_Window.lock()->getSize().x
-			<< "x" <<  IstateData->sd_Window.lock()->getSize().y
+			<< std::to_string(IstateData->sd_gfxSettings.lock()->resolution.size.x)
+			<< std::to_string(IstateData->sd_gfxSettings.lock()->resolution.size.y)
+			<< "\nFramerate limit: " + std::to_string(IstateData->sd_gfxSettings.lock()->frameRateLimit)
+			<< "\nResolution: " << IstateData->sd_Window.lock()->getSize().x
+			<< "x" << IstateData->sd_Window.lock()->getSize().y
 			<< "\nAntialiasing: "
-			<<  IstateData->sd_gfxSettings.lock()->contextSettings.antiAliasingLevel
-			<< "\nvSync: " <<  IstateData->sd_gfxSettings.lock()->verticalSync
+			<< IstateData->sd_gfxSettings.lock()->contextSettings.antiAliasingLevel
+			<< "\nvSync: " << IstateData->sd_gfxSettings.lock()->verticalSync
 			<< "\nFullscreen: "
-			<<  IstateData->sd_gfxSettings.lock()->fullscreen
+			<< IstateData->sd_gfxSettings.lock()->fullscreen
 			<< "\nSize of state: " << sizeof(*this) << " bytes"
-			<< "\nkeytime: " <<  Ikeytime
-			<< "\nMouse pos: " <<  ImousePosWindow.x << " "
-			<<  ImousePosWindow.y << "\narrays LINFO:"
+			<< "\nkeytime: " << Ikeytime
+			<< "\nMouse pos: " << ImousePosWindow.x << " "
+			<< ImousePosWindow.y << "\narrays LINFO:"
 			<< "\n\tvideo_modes: " << _video_modes.size()
 			<< "\n\tgfxResource: " << _gfxResource.size()
 			<< "\n\tkeybindText: " << _keybindText.size()
@@ -486,38 +486,38 @@ void SettingsState::updateGui(const float& delta_time) {
 			<< "\n\tgraphic_list: " << _graphic_list.size()
 			<< "\n\tsound_SliderMap: " << _sound_SliderMap.size();
 
-		 Itext.setString( IstringStream.str());
-		 IstringStream.str("");
+		Itext.setString(IstringStream.str());
+		IstringStream.str("");
 	}
 }
 
 void SettingsState::update(const float& delta_time) {
 	//if (IstateData->sd_reserGUI) resetGUI();
 
-	 updateMousePositions();
-	 updateKeytime(delta_time);
-	 updateInput(delta_time);
-	 updateGui(delta_time);
+	updateMousePositions();
+	updateKeytime(delta_time);
+	updateInput(delta_time);
+	updateGui(delta_time);
 }
 
 void SettingsState::renderGui(sf::RenderTarget& target) {
 	for (auto& it : _pageButtons)
 		target.draw(*it.second);
 
-	switch ( page) {
+	switch (page) {
 	case settingPage::GRAPHICS:
-	  // draw text
+		// draw text
 		for (auto& it : _graphic_list)
 			target.draw(it.first);
-		  // draw selector
+		// draw selector
 		for (auto& it : _selectors)
 			it.second->render(target);
 		break;
 	case settingPage::CONTROLS:
-	  // draw _text_shapes
+		// draw _text_shapes
 
-	  // draw shapes for keybinds like background layer
-	  // FIXME: fix layering of keybinds
+		// draw shapes for keybinds like background layer
+		// FIXME: fix layering of keybinds
 		for (auto& it : _keybindBackground)
 			target.draw(it);
 
@@ -525,14 +525,14 @@ void SettingsState::renderGui(sf::RenderTarget& target) {
 			target.draw(text);
 		break;
 	case settingPage::AUDIO:
-	  // TODO: add content to settings audio
-	  // draw _sound_SliderMap
+		// TODO: add content to settings audio
+		// draw _sound_SliderMap
 		for (auto& it : _sound_SliderMap)
 			target.draw(*it.second.get());
 
 		break;
 	case settingPage::GAMEPLAY:
-	  // TODO add content
+		// TODO add content
 		break;
 	default:
 		break;
@@ -540,16 +540,16 @@ void SettingsState::renderGui(sf::RenderTarget& target) {
 }
 // Render page layout
 void SettingsState::renderPageLayout(sf::RenderTarget& target) {
-  // render page layout
+	// render page layout
 	target.draw(_pageBackground);
 }
 
 void SettingsState::render(sf::RenderWindow& target) {
-	target.draw( background);
+	target.draw(background);
 
-	 renderPageLayout(target);
-	 renderGui(target);
+	renderPageLayout(target);
+	renderGui(target);
 
-	if ( Idebud)
-		target.draw( Itext);
+	if (Idebud)
+		target.draw(Itext);
 }

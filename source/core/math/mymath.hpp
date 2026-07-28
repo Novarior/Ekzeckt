@@ -57,14 +57,12 @@ static double  HermiteInter(double t, double a, double b) {
 
 const double randZeroToOne();
 
-template <typename T>
-T randIntFromToNum(T _min, T _max) {
-	return _min + (rand() / (RAND_MAX / (_max - _min)));
-}
-
-template <typename T>
-inline T p2pX(T _percent, T _size) {
-	return (T)(floor(((_size) * (_percent / 100.f))));
+static inline uint64_t splitmix64(uint64_t x) {
+	// SplitMix64 — small, fast hash
+	x += 0x9e3779b97f4a7c15ULL;
+	x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ULL;
+	x = (x ^ (x >> 27)) * 0x94D049BB133111EBULL;
+	return x ^ (x >> 31);
 }
 
 const float normalize(float value);
@@ -82,8 +80,23 @@ double Gradient_v16(int hash, double x, double y);
 const double Rescale(double r_value, double minInput, double maxInput, double minOutput, double maxOutput);
 
 template <typename T>
-T  calcCharSize(T _rx, T _ry, T _m = 60) {
+inline T calcCharSize(T _rx, T _ry, T _m = 60) {
 	return static_cast<T>((_rx + _ry) / _m);
+}
+
+template<typename T>
+inline T clamp(const T& value, const T& lo, const T& hi) {
+	return (value < lo) ? lo : (value > hi ? hi : value);
+}
+
+template <typename T>
+T randIntFromToNum(T _min, T _max) {
+	return _min + (rand() / (RAND_MAX / (_max - _min)));
+}
+
+template <typename T>
+inline T p2pX(T _percent, T _size) {
+	return (T)(floor(((_size) * (_percent / 100.f))));
 }
 }; // namespace mmath
 

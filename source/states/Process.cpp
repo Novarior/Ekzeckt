@@ -63,7 +63,6 @@ void Process::initTileMapData() { // Defauld Init Data
 
 
 void Process::initTileMap() {
-
 	myGN = new ProcessGenerationNoice(noicedata);
 	mapTiles = new TileMap(noicedata, myGN);
 }
@@ -79,12 +78,11 @@ void Process::intGUI() { // init GUI
 }
 
 void Process::initPauseMenu(sf::Vector2f res) {
-	const sf::Vector2f vm = {(float)IstateData->sd_gfxSettings.lock()->resolution.size.x,
-							(float)IstateData->sd_gfxSettings.lock()->resolution.size.y};
+	auto charsize = mmath::calcCharSize(res.x, res.y);
 
-	pausemenu = std::make_unique<PauseMenu>(vm, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_PAUSE);
-	pausemenu->addButton("EXIT_BUTTON", mmath::p2pX(74.f, vm.x), mmath::p2pX(13.f, vm.x), mmath::p2pX(6.f, vm.x), mmath::calcCharSize(vm.x, vm.y), helperText::Button::BUTTON_PM_PAUSE);
-	pausemenu->addButton("GEN", mmath::p2pX(20.f, vm.x), mmath::p2pX(74.f, vm.x), mmath::p2pX(13.f, vm.x), mmath::calcCharSize(vm.x, vm.y), helperText::Button::BUTTON_PM_GENERATE);
+	pausemenu = std::make_unique<PauseMenu>(res, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_PAUSE);
+	pausemenu->addButton(75.f, {13.f,6.f}, charsize, "EXIT_BUTTON", helperText::Button::BUTTON_EXIT);
+	pausemenu->addButton(20.f, {75.f,6.f}, charsize, "GEN", helperText::Button::BUTTON_PM_GENERATE);
 }
 
 

@@ -1,193 +1,194 @@
 #include "NoiceViewer.hpp"
 #include "../../core/tools/LOGGER.hpp"
 
-void NoiceViewer::initvariables()
-{
-    this->noiceImage = sf::Image({this->m_noice_data.RenderWindowX, this->m_noice_data.RenderWindowY}, sf::Color::Black);
-    this->noiceTexture = sf::Texture(this->noiceImage);
-    this->noiceShape.setSize(sf::Vector2f(this->m_noice_data.RenderWindowX, this->m_noice_data.RenderWindowY));
+void NoiceViewer::initvariables() {
+	noiceImage = sf::Image({m_noice_data->RenderWindowX,  m_noice_data->RenderWindowY}, sf::Color::Black);
+	noiceTexture = sf::Texture(noiceImage);
+	noiceShape.setSize(sf::Vector2f(m_noice_data->RenderWindowX, m_noice_data->RenderWindowY));
 }
 
-NoiceViewer::NoiceViewer(mmath::noiceData &m_data) : m_noice_data(m_data)
-{
-    // logger
-    Logger::logStatic("NoiceViewer constructor", "NoiceViewer");
+NoiceViewer::NoiceViewer(NoiceData* m_data): m_noice_data(m_data) {
+	// logger
+	Logger::logStatic("NoiceViewer constructor", "NoiceViewer");
 
-    this->m_prn_noice = new ProcessGenerationNoice(this->m_noice_data);
-    this->m_perlin_noice = new PerlinNoise();
-    this->m_simplex_noice = new SimplexNoise();
-    this->current_Noice_Model = PERLIN_NOICE;
-    this->current_Color_Mode = FULL_COLOR;
+	m_prn_noice = new ProcessGenerationNoice(m_noice_data);
+	m_perlin_noice = new PerlinNoise(m_noice_data);
+	m_simplex_noice = new SimplexNoise();
+	current_Noice_Model = PERLIN_NOICE;
+	current_Color_Mode = FULL_COLOR;
 
-    // resize vector to map size
-    this->noiceMap.resize(this->m_noice_data.mapSizeX);
-    for (int i = 0; i < this->m_noice_data.mapSizeX; i++)
-        this->noiceMap[i].resize(this->m_noice_data.mapSizeY);
+	// resize vector to map size
+	noiceMap.resize(m_noice_data->mapSizeX);
+	for (int i = 0; i < m_noice_data->mapSizeX; i++)
+		noiceMap[i].resize(m_noice_data->mapSizeY);
 
-    this->initvariables();
+	initvariables();
 }
 
-NoiceViewer::~NoiceViewer()
-{
-    Logger::logStatic("NoiceViewer destructor", "NoiceViewer");
+NoiceViewer::~NoiceViewer() {
+	Logger::logStatic("NoiceViewer destructor", "NoiceViewer");
 
-    delete this->m_prn_noice;
-    delete this->m_perlin_noice;
-    delete this->m_simplex_noice;
+	delete  m_prn_noice;
+	delete  m_perlin_noice;
+	delete  m_simplex_noice;
 }
 
-void NoiceViewer::updateNoiceModels()
-{
-    this->m_prn_noice->setNoiceData(this->m_noice_data);
+void NoiceViewer::updateNoiceModels() {
+	m_prn_noice->setNoiceData(m_noice_data);
 }
 
-void NoiceViewer::generateNoice()
-{
-    double h_buffer = 0.f;
+void NoiceViewer::generateNoice() {
+	// clean noice map before generate
+	noiceMap.clear();
+	noiceMap.resize(m_noice_data->mapSizeX);
+	for (int i = 0; i < m_noice_data->mapSizeX; i++)
+		noiceMap[i].resize(m_noice_data->mapSizeY);
 
-    // clean noice map before generate
-    this->noiceMap.clear();
+	const int width = m_noice_data->mapSizeX;
+	const int height = m_noice_data->mapSizeY;
 
-    this->noiceMap.resize(this->m_noice_data.mapSizeX);
-    for (int i = 0; i < this->m_noice_data.mapSizeX; i++)
-        this->noiceMap[i].resize(this->m_noice_data.mapSizeY);
+	// determine thread count
+	unsigned int hw = std::thread::hardware_concurrency();
+	if (hw == 0) hw = 4; // fallback
+	unsigned int threadCount = std::min<unsigned int>(hw,  static_cast<unsigned int>(width));
+	std::vector<std::thread> workers;
+	workers.reserve(threadCount);
 
-    for (int x = 0; x < this->m_noice_data.mapSizeX; x++)
-        for (int y = 0; y < this->m_noice_data.mapSizeY; y++)
-            switch (noiceType(current_Noice_Model))
-            {
-            case PERLIN_NOICE:
-                h_buffer = this->m_perlin_noice->Noise(x, y, 0, 255, this->m_noice_data.fastMode);
-                this->noiceMap[x][y] = h_buffer;
-                break;
-            case PERLIN_NOICE_V2:
-                h_buffer = this->m_prn_noice->getNoice(x, y);
-                this->noiceMap[x][y] = mmath::normalize(h_buffer);
-                break;
-            case SIMPLEX_NOICE:
-                h_buffer = this->m_simplex_noice->noise(x / this->m_noice_data.amplifire / 10.f, y / this->m_noice_data.amplifire / 10.f);
-                this->noiceMap[x][y] = h_buffer;
-                break;
-            default:
-                break;
-            }
+	// chunk size along X axis
+	int chunk = (width + threadCount - 1) / threadCount;
 
-    // fill image using vector array
-    double vec_buffer = 0.f;
-    for (unsigned int x = 0; x < this->m_noice_data.mapSizeX; x++)
-        for (unsigned int y = 0; y < this->m_noice_data.mapSizeY; y++)
-        {
-            vec_buffer = this->noiceMap[x][y];
+	for (unsigned int t = 0; t < threadCount; ++t) {
+		int xStart = static_cast<int>(t * chunk);
+		int xEnd = std::min(width, xStart + chunk);
 
-            switch (colorMode(current_Color_Mode))
-            {
-            case FULL_COLOR:
-            {
-                if (vec_buffer < 45)
-                { // deep ocean
-                    double depth_intensity = 100 + vec_buffer * 1.2;
-                    this->noiceImage.setPixel({x, y}, sf::Color(0,
-                                                                std::max(0.0, 5 + vec_buffer * 0.4),
-                                                                std::min(255.0, depth_intensity), 255));
-                }
-                else if (vec_buffer < 66)
-                { // ocean
-                    double shore_intensity = 100 + vec_buffer * 2.0;
-                    this->noiceImage.setPixel({x, y}, sf::Color(0,
-                                                                std::min(255.0, 15 + vec_buffer * 0.8),
-                                                                std::min(255.0, shore_intensity), 255));
-                }
-                else if (vec_buffer < 85)
-                { // sand
-                    this->noiceImage.setPixel({x, y}, sf::Color(
-                                                          std::min(255.0, 200 + vec_buffer * 0.5),
-                                                          std::min(255.0, 180 + vec_buffer * 0.3),
-                                                          std::min(255.0, 100 + vec_buffer * 0.1), 255));
-                }
-                else if (vec_buffer < 120)
-                { // grass
-                    this->noiceImage.setPixel({x, y}, sf::Color(
-                                                          std::min(255.0, vec_buffer * 0.08),
-                                                          std::min(255.0, 40 + vec_buffer * 0.9),
-                                                          std::min(255.0, vec_buffer * 0.05), 255));
-                }
-                else if (vec_buffer < 165)
-                { // dirt
-                    this->noiceImage.setPixel({x, y}, sf::Color(
-                                                          90 - vec_buffer * 0.1,
-                                                          71 + vec_buffer * 0.15,
-                                                          55 + vec_buffer * 0.1, 255));
-                }
-                else if (vec_buffer < 200)
-                { // rock
-                    this->noiceImage.setPixel({x, y}, sf::Color(
-                                                          40 + vec_buffer * 0.1,
-                                                          71 - vec_buffer * 0.2,
-                                                          55 - vec_buffer * 0.2, 255));
-                }
-                else
-                { // snow
-                    double intensity = 200 + (vec_buffer - 200) * 0.275;
-                    this->noiceImage.setPixel({x, y}, sf::Color(std::min(255.0, intensity),
-                                                                std::min(255.0, intensity),
-                                                                std::min(255.0, intensity),
-                                                                255));
-                }
-                break;
-            }
-            case NOICE_COLOR:
-                this->noiceImage.setPixel({x, y}, sf::Color(vec_buffer, vec_buffer, vec_buffer, 255));
-                break;
-            case BIOME_COLOR:
-                break;
-            default:
-                break;
-            }
-        }
+		workers.emplace_back([this, xStart, xEnd, height]() {
+			// Each thread writes only to noiceMap[x][y] for x in [xStart,xEnd)
+			for (int x = xStart; x < xEnd; ++x) {
+				for (int y = 0; y < height; ++y) {
+					switch (noiceType(current_Noice_Model)) {
+					case PERLIN_NOICE:
+						noiceMap[x][y] = m_perlin_noice->Noise(x, y, 0, 255);
+						break;
+					case PERLIN_NOICE_V2:
+						noiceMap[x][y] = m_prn_noice->getNoice(x, y);
+						break;
+					case SIMPLEX_NOICE:
+						noiceMap[x][y] = m_simplex_noice->noise(x / m_noice_data->amplifire / 10.f, y / m_noice_data->amplifire / 10.f);
+						break;
+					default:
+						noiceMap[x][y] = 0.0;
+						break;
+					}
+				}
+			}
+		});
+	}
 
-    // access finale image
-    this->noiceTexture.update(this->noiceImage);
-    this->noiceShape.setTexture(&this->noiceTexture);
+	// join threads
+	for (auto& th : workers) {
+		if (th.joinable()) th.join();
+	}
+
+	// fill image using vector array
+	double vec_buffer = 0.f;
+	for (unsigned int x = 0; x < m_noice_data->mapSizeX; x++)
+		for (unsigned int y = 0; y < m_noice_data->mapSizeY; y++) {
+			vec_buffer = noiceMap[x][y];
+
+			switch (colorMode(current_Color_Mode)) {
+			case FULL_COLOR:
+			{
+				if (vec_buffer < 45) { // deep ocean
+					double depth_intensity = 100 + vec_buffer * 1.2;
+					noiceImage.setPixel({x, y}, sf::Color(0,
+										std::max(0.0, 5 + vec_buffer * 0.4),
+										std::min(255.0, depth_intensity), 255));
+				} else if (vec_buffer < 66) { // ocean
+					double shore_intensity = 100 + vec_buffer * 2.0;
+					noiceImage.setPixel({x, y}, sf::Color(0,
+										std::min(255.0, 15 + vec_buffer * 0.8),
+										std::min(255.0, shore_intensity), 255));
+				} else if (vec_buffer < 85) { // sand
+					noiceImage.setPixel({x, y}, sf::Color(std::min(255.0, 200 + vec_buffer * 0.5),
+										std::min(255.0, 180 + vec_buffer * 0.3),
+										std::min(255.0, 100 + vec_buffer * 0.1), 255));
+				} else if (vec_buffer < 120) { // grass
+					noiceImage.setPixel({x, y}, sf::Color(std::min(255.0, vec_buffer * 0.08),
+										std::min(255.0, 40 + vec_buffer * 0.9),
+										std::min(255.0, vec_buffer * 0.05), 255));
+				} else if (vec_buffer < 165) { // dirt
+					noiceImage.setPixel({x, y}, sf::Color(90 - vec_buffer * 0.1,
+										71 + vec_buffer * 0.15,
+										55 + vec_buffer * 0.1, 255));
+				} else if (vec_buffer < 200) { // rock
+					noiceImage.setPixel({x, y}, sf::Color(40 + vec_buffer * 0.1,
+										71 - vec_buffer * 0.2,
+										55 - vec_buffer * 0.2, 255));
+				} else { // snow
+					double intensity = 200 + (vec_buffer - 200) * 0.275;
+					noiceImage.setPixel({x, y}, sf::Color(std::min(255.0, intensity),
+										std::min(255.0, intensity),
+										std::min(255.0, intensity),
+										255));
+				}
+				break;
+			}
+			case NOICE_COLOR:
+				noiceImage.setPixel({x, y}, sf::Color(vec_buffer, vec_buffer, vec_buffer, 255));
+				break;
+			case BIOME_COLOR:
+				break;
+			default:
+				break;
+			}
+		}
+
+	// access finale image
+	noiceTexture.update(noiceImage);
+	noiceShape.setTexture(&noiceTexture);
 }
 
-void NoiceViewer::swithNoiceModel()
-{
-    // switch noice model to next
-    // if current model is last, switch to first
-    if (this->current_Noice_Model == SIMPLEX_NOICE)
-        this->current_Noice_Model = PERLIN_NOICE;
-    else
-        this->current_Noice_Model++;
-}
-const std::string NoiceViewer::getNoiceModelName()
-{
-    return this->noiceModels[this->current_Noice_Model];
+const NoiceData* NoiceViewer::getNoiceData() { return m_noice_data; }
+const uint16_t NoiceViewer::getNoiceModel() const { return current_Noice_Model; }
+const uint16_t NoiceViewer::getColorMode() const { return  current_Color_Mode; }
+const double NoiceViewer::getHeightMap(sf::Vector2i mousepos) {
+	if (mousepos.x > 0 && mousepos.x < m_noice_data->mapSizeX && mousepos.y > 0 && mousepos.y < m_noice_data->mapSizeY)
+		return noiceMap[mousepos.x][mousepos.y];
+	return 0.0;
 }
 
-const std::string NoiceViewer::getNoiceSmouthName()
-{
-    std::array<std::string, 7> smoothModes = {"Linear", "Cosine", "Cubic", "Quintic", "Quartic", "Quadratic", "Hermite"};
-
-    return smoothModes[this->m_noice_data.smoothMode];
+void NoiceViewer::swithNoiceModel() {
+	// switch noice model to next
+	// if current model is last, switch to first
+	if (current_Noice_Model == SIMPLEX_NOICE)
+		current_Noice_Model = PERLIN_NOICE;
+	else
+		current_Noice_Model++;
+}
+const std::string NoiceViewer::getNoiceModelName() {
+	return  noiceModels[current_Noice_Model];
 }
 
-void NoiceViewer::swithColorMode()
-{
-    // switch color mode to next
-    // if current mode is last, switch to first
-    if (this->current_Color_Mode == BIOME_COLOR)
-        this->current_Color_Mode = FULL_COLOR;
-    else
-        this->current_Color_Mode++;
-}
-const std::string NoiceViewer::getColorModeName()
-{
-    return this->colorModes[this->current_Color_Mode];
+const std::string NoiceViewer::getNoiceSmouthName() {
+	std::array<std::string, 7> smoothModes = {"Linear", "Cosine", "Cubic", "Quintic", "Quartic", "Quadratic", "Hermite"};
+
+	return smoothModes[m_noice_data->smoothMode];
 }
 
-void NoiceViewer::update(const float &dt) {}
+void NoiceViewer::swithColorMode() {
+	// switch color mode to next
+	// if current mode is last, switch to first
+	if (current_Color_Mode == BIOME_COLOR)
+		current_Color_Mode = FULL_COLOR;
+	else
+		current_Color_Mode++;
+}
+const std::string NoiceViewer::getColorModeName() {
+	return  colorModes[current_Color_Mode];
+}
 
-void NoiceViewer::render(sf::RenderTarget &target)
-{
-    target.draw(this->noiceShape);
+void NoiceViewer::update(const float& dt) {}
+
+void NoiceViewer::render(sf::RenderTarget& target) {
+	target.draw(noiceShape);
 }

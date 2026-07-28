@@ -45,10 +45,13 @@
     <ClCompile Include="source\entitys\properties\movement.cpp" />
     <ClCompile Include="source\GUI\components\button.cpp" />
     <ClCompile Include="source\GUI\components\selector.cpp" />
+    <ClCompile Include="source\GUI\components\staticSelector.cpp" />
     <ClCompile Include="source\GUI\GUI_Component.cpp" />
     <ClCompile Include="source\GUI\UI\inventoryGUI.cpp" />
     <ClCompile Include="source\GUI\UI\minimap.cpp" />
     <ClCompile Include="source\localisation\helperText.cpp" />
+    <ClCompile Include="source\states\editModes\NoiceViewer.cpp" />
+    <ClCompile Include="source\states\EditorState.cpp" />
     <ClCompile Include="source\states\MainMenu.cpp" />
     <ClCompile Include="source\states\PauseMenu.cpp" />
     <ClCompile Include="source\states\Process.cpp" />
@@ -112,10 +115,13 @@
     <ClInclude Include="source\GUI\components\checkbox.hpp" />
     <ClInclude Include="source\GUI\components\selector.hpp" />
     <ClInclude Include="source\GUI\components\slider.hpp" />
+    <ClInclude Include="source\GUI\components\staticSelector.hpp" />
     <ClInclude Include="source\GUI\GUI_Component.hpp" />
     <ClInclude Include="source\GUI\UI\inventoryGUI.hpp" />
     <ClInclude Include="source\GUI\UI\minimap.hpp" />
     <ClInclude Include="source\localisation\helperText.hpp" />
+    <ClInclude Include="source\states\editModes\NoiceViewer.hpp" />
+    <ClInclude Include="source\states\EditorState.hpp" />
     <ClInclude Include="source\states\MainMenu.hpp" />
     <ClInclude Include="source\states\PauseMenu.hpp" />
     <ClInclude Include="source\states\Process.hpp" />
@@ -231,7 +237,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)vs_temp\$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
@@ -287,7 +293,7 @@
       <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;flac.lib;harfbuzzd.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/VERBOSE %(AdditionalOptions)</AdditionalOptions>
       <LinkErrorReporting>SendErrorReport</LinkErrorReporting>
-      <UseDynamicDebugging>true</UseDynamicDebugging>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
     </Link>
     <PostBuildEvent>
       <Command>robocopy $(SolutionDir)resouces\ $(SolutionDir)build\$(Platform)\$(Configuration)\resouces /E /purge</Command>

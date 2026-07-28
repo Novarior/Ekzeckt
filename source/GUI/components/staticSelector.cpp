@@ -47,11 +47,11 @@ StaticSelector::~StaticSelector() {
 }
 
 // accessors
-const float StaticSelector::getCurrentValue() { return this->value; }
+const float StaticSelector::getCurrentValue() const { return this->value; }
 void StaticSelector::setCurrentValue(const float value) { this->value = value; }
 void StaticSelector::setSizeStep(const float size_step) { this->sizeStep = size_step; }
 
-const bool StaticSelector::isValueChanged() { return this->ValueIsChanged; }
+const bool StaticSelector::isValueChanged() const { return this->ValueIsChanged; }
 
 void StaticSelector::closeChangeValue() { this->ValueIsChanged = false; }
 

@@ -20,8 +20,8 @@ void Core::coreInitDirectories() {
 
 // coreInitialisations root data, window, fonts and etc
 void Core::coreInitVariabless() {
-  // coreInit basics shared structs
-  // cr_Keyboard = std::make_shared<keyboardOSX>();
+	// coreInit basics shared structs
+	// cr_Keyboard = std::make_shared<keyboardOSX>();
 	cr_gfxSettings = std::make_shared<gfx::myGFXStruct>();
 	cr_VolumeCollector = std::make_shared<gfx::VolumeCollector>();
 	cr_KeySuppors = std::make_shared<std::map<std::string, uint16_t>>();
@@ -40,7 +40,7 @@ void Core::coreInitVariabless() {
 	if (!result)
 		Logger::logStatic("Failed to load keybinds!", "Core::coreInitVariables()");
 
-	  // set zero in dt and restart clock
+	// set zero in dt and restart clock
 	cr_deltaTime = 0.0f;
 	cr_deltaClock.restart();
 
@@ -52,10 +52,10 @@ void Core::coreInitVariabless() {
 		Logger::logStatic("Debug font failed to load", "Core::coreInitVariables()");
 
 #if __MDEBUG__ == ENABLE
-  // print to console/Loggger all data for next debug
+	// print to console/Loggger all data for next debug
 	std::stringstream ss;
 	ss << "DEBUG LOG\ncurrent resouses used:\n"
-	   //<< "KeyboardOSX:" << (cr_Keyboard.get() ? "\t allive" : "\t is null")
+		//<< "KeyboardOSX:" << (cr_Keyboard.get() ? "\t allive" : "\t is null")
 		<< "GFX_DATA:\t" << (cr_gfxSettings.get() ? "\t allive" : "\t is null")
 		<< "Volume_Data:\t"
 		<< (cr_VolumeCollector.get() ? "\t allive" : "\t is null")
@@ -82,17 +82,17 @@ void Core::coreInitWindow() {
 
 	Logger::logStatic(s.str(), "CORE");
 #endif
-	if (cr_gfxSettings->fullscreen && cr_Window->isOpen()) {
-		cr_gfxSettings->_winResolutions = cr_Window->getSize();
+	if (cr_gfxSettings->fullscreen && cr_Window->isOpen()) { // init as fullscrean mode with fullwidth reso
 		cr_Window->create(sf::VideoMode({cr_gfxSettings->_winResolutions.x, cr_gfxSettings->_winResolutions.y}),
 						  cr_gfxSettings->title, sf::State::Fullscreen, cr_gfxSettings->contextSettings);
 	}
+	cr_gfxSettings->updateResolution(cr_Window->getSize());
 	cr_Window->setFramerateLimit(cr_gfxSettings->frameRateLimit);
 	cr_Window->setVerticalSyncEnabled(cr_gfxSettings->verticalSync);
 	cr_Window->setKeyRepeatEnabled(false);
 	cr_Window->setPosition({0,0});
 
-  ///  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
+	///  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
 }
 
 // load all textures
@@ -148,23 +148,23 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 	cr_Statedata.sd_reserGUI = false;
 
 #if __MDEBUG__ == 1
-  // logger moment
+	// logger moment
 
-  // check if window is not null
+	// check if window is not null
 	if (!cr_Statedata.sd_Window.lock())
 		Logger::logStatic("LERROR::WINDOW::NOT INITED", "Core::coreInitStateData()");
 
-	  // check if states is not empty or null idk
+	// check if states is not empty or null idk
 	if (!cr_Statedata.sd_States->empty())
 		Logger::logStatic("LERROR::STATES::NOT INITED", "Core::coreInitStateData()");
 #endif
 }
 
 void Core::coreInitState() {
-	 cr_State.push(new MainMenu(&cr_Statedata));
+	cr_State.push(new MainMenu(&cr_Statedata));
 
 #if __MDEBUG__ == 1
-  // logger moment with states
+	// logger moment with states
 	Logger::logStatic("State coreInited", "Core::coreInitState()");
 	Logger::logStatic("State size: " + std::to_string(cr_State.size()),
 					  "Core::coreInitState()");
@@ -172,13 +172,13 @@ void Core::coreInitState() {
 }
 
 void Core::coreInitLua() {
-  // Инициализация Srcipts Lua VM
-  // luaL_dofile(luaVM,myConst::scripts::lua_test);
+	// Инициализация Srcipts Lua VM
+	// luaL_dofile(luaVM,myConst::scripts::lua_test);
 }
 
 void Core::coreInitKeyBind() {
 #ifdef __APPLE__
-  // pull all keys
+	// pull all keys
 	cr_KeySuppors->emplace(ActionKeyBind::KEY_A, kVK_ANSI_A);
 	cr_KeySuppors->emplace(ActionKeyBind::KEY_C, kVK_ANSI_C);
 	cr_KeySuppors->emplace(ActionKeyBind::KEY_D, kVK_ANSI_D);
@@ -255,7 +255,7 @@ Core::~Core() {
 	cr_Window.reset();
 
 #if __MDEBUG__ == 1
-  // logger moment
+	// logger moment
 	Logger::logStatic("Core Delete...", "Core::~Core()");
 
 	if (cr_State.empty())
@@ -276,30 +276,30 @@ void Core::run() {
 	Logger::logStatic("Start main loop", "Core::run()");
 
 	while (cr_Window->isOpen()) {
-		 updateDeltaTime();
-		 update();
-		 updateSound();
-		 render();
+		updateDeltaTime();
+		update();
+		updateSound();
+		render();
 	}
 }
 
 void Core::update() {
-  // state update
-	 updateEventsWindow();
+	// state update
+	updateEventsWindow();
 
-	if (! cr_State.empty()) {
-		if ( cr_Window->hasFocus()) {
-			 cr_State.top()->update( cr_deltaTime);
+	if (!cr_State.empty()) {
+		if (cr_Window->hasFocus()) {
+			cr_State.top()->update(cr_deltaTime);
 
-			if ( cr_State.top()->getQuit()) {
+			if (cr_State.top()->getQuit()) {
 				delete  cr_State.top();
-				 cr_State.pop();
+				cr_State.pop();
 			}
 		}
 	}
 	// Application end
 	else {
-		 cr_Window->close();
+		cr_Window->close();
 	}
 }
 

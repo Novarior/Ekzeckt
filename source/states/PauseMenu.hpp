@@ -21,7 +21,9 @@ public:
 
 	// Functions
 	const bool isButtonPressed(const std::string key);
-	void addButton(std::string key, float y, float width, float height, unsigned char_size, std::string text);
+	// add button for additionall layout (auto centred by x-axis)
+	// pos and size should be 0-100
+	void addButton(float btnPosY, sf::Vector2f btnSize, unsigned char_size, std::string key, std::string text);
 
 	void update(const sf::Vector2i& mousePosWindow);
 	void render(sf::RenderTarget& target);

@@ -29,10 +29,10 @@ public:
 				   float change_step = 1.f, bool addritional_text = false, std::string add_text = "");
 	virtual ~StaticSelector();
 
-	const bool isValueChanged();
+	const bool isValueChanged() const;
 	void closeChangeValue();
 	// accessors
-	const float getCurrentValue();
+	const float getCurrentValue() const;
 	void setCurrentValue(const float value);
 	void setSizeStep(const float size_step);
 
