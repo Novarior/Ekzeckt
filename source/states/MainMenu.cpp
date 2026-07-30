@@ -1,6 +1,5 @@
 #include "MainMenu.hpp"
 
-
 void MainMenu::initBackground() {
 	auto ws = Iwindow.lock()->getSize();
 	sf::Texture tx;
@@ -63,7 +62,7 @@ void MainMenu::initButtons() {
 		{"SETTINGS_BTN", helperText::Button::BUTTON_OPTIONS},
 		{"EXIT_BTN", helperText::Button::BUTTON_EXIT}};
 
-  // Добавляем кнопку для отладки в режиме отладки
+	// Добавляем кнопку для отладки в режиме отладки
 #ifdef _DEBUG
 	buttonData.push_back({"DRS_BTN", helperText::Button::BUTTON_DEBUG_ROOM_STATE});
 
@@ -74,9 +73,7 @@ void MainMenu::initButtons() {
 	//Цикл для создания кнопок с данными из массива
 	for (size_t i = 0; i < buttonData.size(); ++i) {
 		const auto& button = buttonData[i];
-		buttons[button.key] = std::make_unique<gui::Button>(
-			buttonOffsets[i], sizebutton, button.text,
-			gui::styles::buttons::btn_default, gui::type::BUTTON);
+		IGUILayout[button.key] = std::make_unique<gui::Button>(buttonOffsets[i], sizebutton, button.text);
 	}
 }
 
@@ -87,8 +84,8 @@ void MainMenu::initGUI() {
 
 void MainMenu::resetGUI() {
 	// delete buttons
-	if (!buttons.empty())
-		buttons.clear();
+	if (!IGUILayout.empty())
+		IGUILayout.clear();
 	backgrond_shapes.clear();
 
 	//einitRenderDefines();
@@ -142,7 +139,7 @@ void MainMenu::initSounds() {
 
 MainMenu::MainMenu(StateData* statedata)
 	: State(statedata) {
-  // logger
+	// logger
 	Logger::logStatic("MainMenu constructor", "MainMenu");
 	initRenderDefines();
 	initGUI();
@@ -155,7 +152,7 @@ MainMenu::~MainMenu() {
 	Logger::logStatic("MainMenu destructor", "MainMenu");
 
 	// delete buttons
-	if (!buttons.empty()) buttons.clear();
+	if (!IGUILayout.empty()) IGUILayout.clear();
 
 	backgrond_shapes.clear();
 	IsoundsMap.clear();
@@ -181,38 +178,39 @@ void MainMenu::updateInput(const float& delta_time) {
 }
 
 void MainMenu::updateButtons() {
-	if (!buttons.empty()) {
-		auto& it = buttons;
+	if (!IGUILayout.empty()) {
+		sf::Vector2f pos = {float(ImousePosWindow.x), float(ImousePosWindow.y)};
+		auto& it = IGUILayout;
 		for (auto& q : it)
-			q.second.get()->update(ImousePosWindow);
+			q.second.get()->update(sf::Vector2f(ImousePosWindow));
 	}
 
-		//	if (it.second->isPressed())
-		//		if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
-		//	if (it.second->isHover())
-		//		if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
-		//}
+	//	if (it.second->isPressed())
+	//		if (IsoundsMap.find("PRESS_BUTTON")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("PRESS_BUTTON").play(); // play sound once
+	//	if (it.second->isHover())
+	//		if (IsoundsMap.find("SELECT_MENU")->second.getStatus() != sf::Sound::Status::Playing) IsoundsMap.at("SELECT_MENU").play(); // play sound once
+	//}
 
-	if (buttons["EXIT_BTN"]->isPressed() && getKeytime())
+	if (IGUILayout["EXIT_BTN"]->isPressed() && getKeytime())
 		endState();
 
-	  if (buttons["START_BTN"]->isPressed() && getKeytime())
-	    Istates->push(new Process(IstateData, false));
+	if (IGUILayout["START_BTN"]->isPressed() && getKeytime())
+		Istates->push(new Process(IstateData, false));
 
 	//  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
 	//    Istates->push(new Process(IstateData, true));
 	//    resetView();
 	//  }
-	if (buttons["SETTINGS_BTN"]->isPressed() && getKeytime())
+	if (IGUILayout["SETTINGS_BTN"]->isPressed() && getKeytime())
 		Istates->push(new SettingsState(IstateData));
 
-	  if (buttons["NOICE_BTN"]->isPressed() && getKeytime())
-	    Istates->push(new EditorState(IstateData));
+	if (IGUILayout["NOICE_BTN"]->isPressed() && getKeytime())
+		Istates->push(new EditorState(IstateData));
 
 }
 
 void MainMenu::updateGUI(const float& delta_time) {
-  // update debug text
+	// update debug text
 	if (Idebud) {
 		IstringStream
 			<< "\nver:\t" << CMAKE_PROJECT_VERSION << "\nCurrent memory usage:\t"
@@ -247,7 +245,7 @@ void MainMenu::updateGUI(const float& delta_time) {
 }
 
 void MainMenu::updateSounds(const float& delta_time) {
-  // update for music menu
+	// update for music menu
 	for (const auto& [key, category] :
 		 {std::pair{"MAIN_MENU", gfx::SoundCategory::vol_MUSIC},
 		  {"SELECT_MENU", gfx::SoundCategory::vol_UI},
@@ -262,9 +260,9 @@ void MainMenu::updateSounds(const float& delta_time) {
 	if (IsoundsMap.find("MAIN_MENU")->second.getStatus() != sf::Sound::Status::Playing)
 		IsoundsMap.find("MAIN_MENU")->second.play();
 
-	  // check for playing sound "select menu" when cursor on button
+	// check for playing sound "select menu" when cursor on button
 
-	  // stop if lost focus on window
+	// stop if lost focus on window
 	if (!Iwindow.lock()->hasFocus())
 		for (auto& it : IsoundsMap)
 			it.second.pause();
@@ -276,8 +274,8 @@ void MainMenu::render(sf::RenderWindow& target) {
 	for (auto& it : backgrond_shapes)
 		IRenderTexture.draw(it);
 
-	if (!buttons.empty())
-		for (auto& it : buttons)
+	if (!IGUILayout.empty())
+		for (auto& it : IGUILayout)
 			IRenderTexture.draw(*it.second.get());
 
 	//renderTexture.setView(target.getDefaultView());

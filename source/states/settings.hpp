@@ -3,15 +3,18 @@
 
 #include "State.hpp"
 
+#include "../localisation/helperText.hpp"
+
+#include "../core/cmakever.h"
+#include "../core/tools/LOGGER.hpp"
+#include "../core/tools/staticFPSMetter.hpp"
+
+#include "../GUI/GUI_Component.hpp"
 #include "../GUI/components/button.hpp"
 #include "../GUI/components/selector.hpp"
 #include "../GUI/components/slider.hpp"
 
-#include "../core/tools/LOGGER.hpp"
-#include "../localisation/helperText.hpp"
 //#include "../core//tools/MemoryUsageMonitor.hpp"
-#include "../core/cmakever.h"
-#include "../core/tools/staticFPSMetter.hpp"
 
 /// @brief  Class for the settings state
 /// @note   Inherited from the State class
@@ -30,8 +33,7 @@ private:
 	// Variables
 	sf::Texture backgroundTexture;                                    // Texture for the background
 	sf::RectangleShape background;                                    // Shape for the background
-	sf::Font font;                                                    // Font used in the settings state
-	std::map<std::string, std::unique_ptr<gui::Button>> _pageButtons; // Map of buttons, used for change current settings page
+	
 	std::string pageName;                                             // Name of the current page
 
 	// resources for page layout
@@ -59,7 +61,6 @@ private:
 
 	// Initializer functions
 	void initVariables();  // Initialize variables
-	void initFonts();      // Initialize fonts
 	void initGui();        // Initialize GUI
 	void initPageLayout(); // Initialize page layout
 	void resetGui();       // Reset GUI

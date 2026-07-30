@@ -79,15 +79,18 @@ void Process::intGUI() { // init GUI
 
 void Process::initPauseMenu(sf::Vector2f res) {
 	auto charsize = mmath::calcCharSize(res.x, res.y);
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
 
-	pausemenu = std::make_unique<PauseMenu>(res, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_PAUSE);
+	pausemenu = std::make_unique<PauseMenu>(res, font, helperText::GamePlayText::TEXT_PAUSE);
 	pausemenu->addButton(75.f, {13.f,6.f}, charsize, "EXIT_BUTTON", helperText::Button::BUTTON_EXIT);
 	pausemenu->addButton(20.f, {75.f,6.f}, charsize, "GEN", helperText::Button::BUTTON_PM_GENERATE);
 }
 
 
 void Process::initGUIInventory(sf::Vector2f res) {	// create GUI for inventory
-	inventoryGUI = new gui::InventoryGUI(res, IstateData->sd_GameFont_basic, player->e_getInventory());
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
+
+	inventoryGUI = new gui::InventoryGUI(res, font, player->e_getInventory());
 	//player->e_getInventory(), // get player inventory for watch for him
 	//sf::Vector2f(res),
 	//IstateData->sd_GameFont_basic, 64.0f,
@@ -106,14 +109,16 @@ void Process::initMiniMap(sf::Vector2f res) { // init minimap
 }
 
 void Process::initGUIBars(sf::Vector2f res) {
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
+
 	// init player HP bar on top right on screen math position using mmath::p2pX/X
 	playerBar["HP_BAR"] = std::make_unique<gui::ProgressBar>(
 		sf::Vector2f(mmath::p2pX(75.f, res.x), mmath::p2pX(3.f, res.y)), sf::Vector2f(mmath::p2pX(20.f, res.x), mmath::p2pX(3.f, res.y)),
-		IstateData->sd_characterSize_game_small, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_BAR_HP);
+		IstateData->sd_characterSize_game_small, font, helperText::GamePlayText::TEXT_BAR_HP);
 
 	playerBar["MP_BAR"] = std::make_unique<gui::ProgressBar>(
 		sf::Vector2f(mmath::p2pX(75.f, res.x), mmath::p2pX(7.f, res.y)), sf::Vector2f(mmath::p2pX(20.f, res.x), mmath::p2pX(3.f, res.y)),
-		IstateData->sd_characterSize_game_small, IstateData->sd_GameFont_basic, helperText::GamePlayText::TEXT_BAR_MP);
+		IstateData->sd_characterSize_game_small, font, helperText::GamePlayText::TEXT_BAR_MP);
 }
 
 void Process::initView() {
@@ -298,7 +303,7 @@ void Process::update(const float& delta_time) {
 		updateDebug(delta_time);
 
 	if (Ipaused) { // update pause
-		pausemenu->update(ImousePosWindow);
+		pausemenu->update(sf::Vector2f(ImousePosWindow));
 
 		if (pausemenu->isButtonPressed("EXIT_BUTTON") && getKeytime())
 			endState();

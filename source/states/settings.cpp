@@ -11,10 +11,6 @@ void SettingsState::initVariables() { // init variables
 	_gfxResource["GFX_FULLSCREEN"] = std::vector<int>{0, 1};
 }
 
-void SettingsState::initFonts() { // init sd_font
-	font = IstateData->sd_GameFont_basic;
-}
-
 void SettingsState::initGui() { // init gui with next call functions
 
 	sf::Vector2u window_size = Iwindow.lock()->getSize();
@@ -53,16 +49,14 @@ void SettingsState::initButtons() { // Navigaton buttons in settings
 
 	sf::Vector2f button_size = {mmath::p2pX(10.f, wsf.x), mmath::p2pX(5.f, wsf.y)};
 	// exit gui button
-	_pageButtons["BACK_BTN"] = std::make_unique<gui::Button>(
+	IGUILayout["BACK_BTN"] = std::make_unique<gui::Button>(
 		sf::Vector2f{wsf.x - 120.f, 0.f}, sf::Vector2f{120.f, 50.f},
-		helperText::Button::BUTTON_BACK, gui::styles::buttons::btn_default,
-		gui::type::BUTTON);
+		helperText::Button::BUTTON_BACK);
 	// apply gui button
 	// set "apply" button position litle bit left from "back" button
-	_pageButtons["APPLY_BTN"] = std::make_unique<gui::Button>(
+	IGUILayout["APPLY_BTN"] = std::make_unique<gui::Button>(
 		sf::Vector2f(wsf.x - 240, 0.f), sf::Vector2f(120.f, 50.f),
-		helperText::Button::BUTTON_APPLY, gui::styles::buttons::btn_default,
-		gui::type::BUTTON);
+		helperText::Button::BUTTON_APPLY);
 
 	//============================================================================
 	//==========================    PAGE BUTTONS    ==============================
@@ -72,30 +66,29 @@ void SettingsState::initButtons() { // Navigaton buttons in settings
 	// five buttons for five pages in one row
 	// have to be in the same order as settingPage enum
 
-	_pageButtons["PGB_AUDIO"] = std::make_unique<gui::Button>(
+	IGUILayout["PGB_AUDIO"] = std::make_unique<gui::Button>(
 		sf::Vector2f(background_layer_pos.x, background_layer_pos.y - button_size.y),
-		button_size, helperText::SettingsTexts::TEXT_AUDIO,
-		gui::styles::buttons::btn_default, gui::type::BUTTON);
+		button_size, helperText::SettingsTexts::TEXT_AUDIO);
 
-	_pageButtons["PGB_GRAPHICS"] = std::make_unique<gui::Button>(
+	IGUILayout["PGB_GRAPHICS"] = std::make_unique<gui::Button>(
 		sf::Vector2f(background_layer_pos.x + button_size.x, background_layer_pos.y - button_size.y),
-		button_size, helperText::SettingsTexts::TEXT_GRAPHICS,
-		gui::styles::buttons::btn_default, gui::type::BUTTON);
+		button_size, helperText::SettingsTexts::TEXT_GRAPHICS);
 
-	_pageButtons["PGB_CONTROLS"] = std::make_unique<gui::Button>(
+	IGUILayout["PGB_CONTROLS"] = std::make_unique<gui::Button>(
 		sf::Vector2f(background_layer_pos.x + button_size.x * 2, background_layer_pos.y - button_size.y),
-		button_size, helperText::SettingsTexts::TEXT_CONTROLS,
-		gui::styles::buttons::btn_default, gui::type::BUTTON);
+		button_size, helperText::SettingsTexts::TEXT_CONTROLS);
 
-	_pageButtons["PGB_GAMEPLAY"] = std::make_unique<gui::Button>(
+	IGUILayout["PGB_GAMEPLAY"] = std::make_unique<gui::Button>(
 		sf::Vector2f(background_layer_pos.x + button_size.x * 3, background_layer_pos.y - button_size.y),
-		button_size, helperText::SettingsTexts::TEXT_GAMEPLAY,
-		gui::styles::buttons::btn_default, gui::type::BUTTON);
+		button_size, helperText::SettingsTexts::TEXT_GAMEPLAY);
 }
 
 void SettingsState::initGraphicsPage() {
+
 	//=======================================   GRAPHICS
 	//===============================================
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
+
 	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
 	sf::Vector2f background_layer_pos = {mmath::p2pX(50.f, wsf.x) - _pageBackground.getSize().x / 2.f,	mmath::p2pX(50.f, wsf.y) - _pageBackground.getSize().y / 2.f};
@@ -229,6 +222,7 @@ void SettingsState::initSounsPage() { // init sound page
 	//============================================================================================
 	//================================		AUDIO SETTINGS		================================
 	//============================================================================================
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
 
 	// init sound sliders basic _pageBackground position and size
 	sf::Vector2f slider_size = {mmath::p2pX(60.f, _pageBackground.getSize().x), 20.f};
@@ -250,9 +244,10 @@ void SettingsState::initSounsPage() { // init sound page
 void SettingsState::initKeyboardPage() { // init keyboard page
 	sf::Vector2u window_size = Iwindow.lock()->getSize();
 	sf::Vector2f wsf = {(float)(window_size.x), (float)(window_size.y)};
+	auto font = *FontManager::getFont(FontID::FONT_GAMEF_01);
 
 	sf::Vector2f button_size = sf::Vector2f(mmath::p2pX(16.f, wsf.x), mmath::p2pX(5.f, wsf.y));
-	sf::Text text(IstateData->sd_GameFont_basic, "", 24);
+	sf::Text text(font, "", 24);
 	sf::RectangleShape rectangle;
 	rectangle.setFillColor(sf::Color(200, 200, 200, 150));
 
@@ -306,9 +301,8 @@ void SettingsState::resetGui() {
 	_keybindBackground.clear();
 	_sound_SliderMap.clear();
 	_graphic_list.clear();
-	_pageButtons.clear();
+	IGUILayout.clear();
 	_keybindText.clear();
-	_pageButtons.clear();
 	_video_modes.clear();
 	_gfxResource.clear();
 	_keybindText.clear();
@@ -332,7 +326,6 @@ SettingsState::SettingsState(StateData* state_data)
 
 	initPageLayout();
 	initVariables();
-	initFonts();
 	initGui();
 
 	Logger::logStatic("End initilization settings state", "SettingsState::SettingsState()", logType::LINFO);
@@ -342,7 +335,7 @@ SettingsState::~SettingsState() {
 	Logger::logStatic("SettingsState destructor", "SettingsState::~SettingsState()", logType::LINFO);
 
 	_selectors.clear();
-	_pageButtons.clear();
+	IGUILayout.clear();
 	_keybindText.clear();
 	_keybindBackground.clear();
 	_video_modes.clear();
@@ -388,7 +381,7 @@ void SettingsState::updateSounds(const float& delta_time) {
 // Update graphics page
 void SettingsState::updateGraphicsPage(const float& delta_time) {
 	for (auto& it : _selectors)
-		it.second->update(delta_time, ImousePosWindow);
+		it.second->update(delta_time, ImousePosView);
 }
 
 // Update controls page
@@ -416,23 +409,23 @@ void SettingsState::updateGui(const float& delta_time) {
 	}
 
 	// update page buttons
-	for (auto& it : _pageButtons)
-		it.second->update(ImousePosWindow);
+	for (auto& it : IGUILayout)
+		it.second->update(ImousePosView);
 
 	// update current page when page button is pressed
-	if (_pageButtons["PGB_GRAPHICS"]->isPressed() && getKeytime())
+	if (IGUILayout["PGB_GRAPHICS"]->isPressed() && getKeytime())
 		page = settingPage::GRAPHICS;
-	if (_pageButtons["PGB_CONTROLS"]->isPressed() && getKeytime())
+	if (IGUILayout["PGB_CONTROLS"]->isPressed() && getKeytime())
 		page = settingPage::CONTROLS;
-	if (_pageButtons["PGB_AUDIO"]->isPressed() && getKeytime())
+	if (IGUILayout["PGB_AUDIO"]->isPressed() && getKeytime())
 		page = settingPage::AUDIO;
-	if (_pageButtons["PGB_GAMEPLAY"]->isPressed() && getKeytime())
+	if (IGUILayout["PGB_GAMEPLAY"]->isPressed() && getKeytime())
 		page = settingPage::GAMEPLAY;
 
-	if (_pageButtons["BACK_BTN"]->isPressed() && getKeytime())
+	if (IGUILayout["BACK_BTN"]->isPressed() && getKeytime())
 		endState();
 	// apply settings
-	if (_pageButtons["APPLY_BTN"]->isPressed() && getKeytime())
+	if (IGUILayout["APPLY_BTN"]->isPressed() && getKeytime())
 		resetGui();
 
 	// update pageName
@@ -480,7 +473,7 @@ void SettingsState::updateGui(const float& delta_time) {
 			<< "\n\tgfxResource: " << _gfxResource.size()
 			<< "\n\tkeybindText: " << _keybindText.size()
 			<< "\n\tkeybindBackground: " << _keybindBackground.size()
-			<< "\n\tpageButtons: " << _pageButtons.size()
+			<< "\n\tpageButtons: " << IGUILayout.size()
 			<< "\n\tkeybindText: " << _keybindText.size()
 			<< "\n\tselectors: " << _selectors.size()
 			<< "\n\tgraphic_list: " << _graphic_list.size()
@@ -501,7 +494,7 @@ void SettingsState::update(const float& delta_time) {
 }
 
 void SettingsState::renderGui(sf::RenderTarget& target) {
-	for (auto& it : _pageButtons)
+	for (auto& it : IGUILayout)
 		target.draw(*it.second);
 
 	switch (page) {

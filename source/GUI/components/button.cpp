@@ -1,33 +1,85 @@
 #include "button.hpp"
 
-gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string _text, std::string style, std::string _type, unsigned id) {
+gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text, unsigned int id)
+	:mText (*FontManager::getFont(FontID::FONT_GAMEF_01), text, 30U), mID(id) {
+	mState = ComponentState::CS_IDLE;
 
-	mData.state = ComponentState::IDLE;
 	mData.isActive = true;
-	mData.id = id;
-	mData.textString = _text;
+	mData.textString = text;
 	mData.position = position;
 	mData.size = size;
 
-	if (!loadStyle(style, _type))
-		loadDefaultStyle();
 
-	mDraw.shape.setPosition(sf::Vector2f(position.x, position.y));
-	mDraw.shape.setSize(sf::Vector2f(size.x, size.y));
-	mDraw.shape.setFillColor(mColors.shapeIdleColor);
-	mDraw.shape.setOutlineThickness(-1.f);
-	mDraw.shape.setOutlineColor(mColors.outlineIdleColor);
+	mShape.setPosition(sf::Vector2f(position.x, position.y));
+	mShape.setSize(sf::Vector2f(size.x, size.y));
+	mShape.setFillColor(mColors.shapeIdleColor);
+	mShape.setOutlineThickness(-1.f);
+	mShape.setOutlineColor(mColors.outlineIdleColor);
 
-	mDraw.text.setFont(mData.font);
-	mDraw.text.setFillColor(mColors.textIdleColor);
-	mDraw.text.setCharacterSize(mData.characterSize);
-	mDraw.text.setString(mData.textString);
-	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f,		mData.position.y + mData.size.y / 2 - mDraw.text.getGlobalBounds().size.y });
+	mText.setFont(*FontManager::getFont(FontID::FONT_GAMEF_01));
+	mText.setFillColor(mColors.textIdleColor);
+	mText.setCharacterSize(mData.characterSize);
+	mText.setString(mData.textString);
+	mText.setPosition({mData.position.x + (mData.size.x / 2.f) - mText.getGlobalBounds().size.x / 2.f,
+					  mData.position.y + mData.size.y / 2 - mText.getGlobalBounds().size.y});
 }
 
+void gui::Button::update(const sf::Vector2f& mousePosWindow) {
+	if (!mData.isActive) {
+		mState = ComponentState::CS_DISABLED;
+		return;
+	}
 
-// Accessors
+	mState = ComponentState::CS_IDLE;
+	if (mShape.getGlobalBounds().contains(mousePosWindow)) {
+		mState = ComponentState::CS_HOVER;
 
-// Modifiers
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			mState = ComponentState::CS_ACTIVE;
+	}
 
-// Functions
+	updateColor();
+}
+
+void gui::Button::setPosition(const sf::Vector2f pos) {
+	mShape.move(pos);
+	mText.move(pos);
+}
+
+void gui::Button::updateColor() {
+	switch (mState) {
+	case ComponentState::CS_IDLE:
+		mShape.setFillColor(mColors.shapeIdleColor);
+		mShape.setOutlineColor(mColors.outlineIdleColor);
+		mText.setFillColor(mColors.textIdleColor);
+		break;
+
+	case ComponentState::CS_HOVER:
+		mShape.setFillColor(mColors.shapeHoverColor);
+		mShape.setOutlineColor(mColors.outlineHoverColor);
+		mText.setFillColor(mColors.textHoverColor);
+		break;
+
+	case ComponentState::CS_ACTIVE:
+		mShape.setFillColor(mColors.shapeActiveColor);
+		mShape.setOutlineColor(mColors.outlineActiveColor);
+		mText.setFillColor(mColors.textActiveColor);
+		break;
+
+	case ComponentState::CS_DISABLED:
+		mShape.setFillColor(mColors.shapeDisableColor);
+		mShape.setOutlineColor(mColors.outlineDisableColor);
+		mText.setFillColor(mColors.textDisableColor);
+		break;
+	}
+}
+
+void gui::Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	target.draw(mShape, states);
+	target.draw(mText, states);
+}
+
+const unsigned int gui::Button::getID() const { return mID; }
+void gui::Button::setID(const unsigned int val) { mID = val; }
+void gui::Button::setText(const std::string val) { mText.setString(val); }
+const std::string gui::Button::getText() const { return mText.getString().toAnsiString(); }

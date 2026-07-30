@@ -7,7 +7,7 @@
  */
 State::State(StateData* state_data)
 	: IstateData(state_data),
-	Itext(IstateData->sd_debugFont, "",
+	Itext(*FontManager::getFont(FontID::FONT_DEBUG), "",
 		  IstateData->sd_characterSize_debug),
 	IRenderSprite(TextureManager::getTexture(TextureID::TEXTURE_NULL)) {
   // write log message what im here doing something
@@ -28,7 +28,9 @@ State::State(StateData* state_data)
 
 	IstringStream.str("");
 	Idebud = __MDEBUG__;
-
+	auto& font = *FontManager::getFont(FontID::FONT_DEBUG);
+	
+	Itext.setFont(font);
 	Itext.setOutlineThickness(1);
 	Itext.setOutlineColor(sf::Color::Black);
 

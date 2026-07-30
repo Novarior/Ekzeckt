@@ -1,6 +1,4 @@
 #include "PauseMenu.hpp"
-#include "../core/tools/LOGGER.hpp"
-#include "../core/math/mymath.hpp"
 
 PauseMenu::PauseMenu(sf::Vector2f resolution, sf::Font& font, std::string& text):menuText(sf::Text(font)) {
 	menuText = sf::Text(font, text, mmath::calcCharSize(resolution.x, resolution.y));
@@ -30,8 +28,6 @@ PauseMenu::~PauseMenu() {
 	buttons.clear();
 }
 
-
-
 // Functions
 const bool PauseMenu::isButtonPressed(const std::string key) {
 	return  buttons[key]->isPressed();
@@ -45,14 +41,14 @@ void PauseMenu::addButton(float btnPosY, sf::Vector2f btnSize, unsigned char_siz
 	sf::Vector2f Pos(posx, mmath::p2pX(btnPosY, contsize.y));
 
 
-	buttons[key] = std::make_shared<gui::Button>(Pos, Size, text, gui::styles::buttons::btn_pause, gui::type::BUTTON);
+	buttons[key] = std::make_shared<gui::Button>(Pos, Size, text);
 
 #ifdef __MDEBUG__
 	Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
 #endif
 }
 
-void PauseMenu::update(const sf::Vector2i& mousePosWindow) {
+void PauseMenu::update(const sf::Vector2f& mousePosWindow) {
 	for (auto& i : buttons)
 		i.second->update(mousePosWindow);
 }

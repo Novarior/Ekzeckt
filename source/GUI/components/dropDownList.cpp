@@ -2,10 +2,10 @@
 
 gui::DropDownList::DropDownList(sf::Vector2f _pos, sf::Vector2f _size, sf::Font& _font, unsigned _charsize, std::string _list[], unsigned _nrOfElements, unsigned _default_index)
 	: font(_font), showList(false), keytimeMax(1.f), keytime(0.f) {
-	this->activeElement = new gui::Button(_pos, _size, _list[_default_index], gui::styles::buttons::btn_dropdown, gui::type::BUTTON);
+	this->activeElement = new gui::Button(_pos, _size, _list[_default_index]);
 
 	for (unsigned i = 0; i < _nrOfElements; i++)
-		this->list.push_back(new gui::Button(sf::Vector2f(_pos.x, _pos.y + ((i + 1) * _size.y)), _size, _list[i], gui::styles::buttons::btn_dropdown, gui::type::BUTTON, i));
+		this->list.push_back(new gui::Button(sf::Vector2f(_pos.x, _pos.y + ((i + 1) * _size.y)), _size, _list[i], i));
 }
 
 gui::DropDownList::~DropDownList() {
@@ -33,7 +33,7 @@ void gui::DropDownList::updateKeytime(const float& dt) {
 		this->keytime += dt;
 }
 
-void gui::DropDownList::update(const sf::Vector2i& mousePosWindow,
+void gui::DropDownList::update(const sf::Vector2f& mousePosWindow,
 							   const float& dt) {
 	this->updateKeytime(dt);
 

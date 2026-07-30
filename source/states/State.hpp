@@ -2,13 +2,15 @@
 #define STATE
 
 #include "../core/header.h"
+#include "../core/math/mymath.hpp"
 
 #include "../core/dataCollector/_keybind_enum.h"
 #include "../core/dataCollector/_man_Volume.hpp"
 #include "../core/dataCollector/_man_graphics.hpp"
 #include "../core/dataCollector/_man_Texture.hpp"
+#include "../core/dataCollector/_man_Fonts.hpp"
 
-#include "../core/math/mymath.hpp"
+#include "../GUI/GUI_Component.hpp"
 
 // Forward declaration of State class
 class State;
@@ -29,9 +31,6 @@ public:
 	}
 
 	std::weak_ptr<sf::RenderWindow> sd_Window; // Pointer to the SFML window
-	// Font used in the game
-	sf::Font sd_GameFont_basic;
-	sf::Font sd_debugFont; // Font used for debugging
 	// Pointer to the graphics settings
 	std::weak_ptr<gfx::myGFXStruct> sd_gfxSettings;
 	// pointer to volume manager
@@ -70,6 +69,7 @@ protected:
 	// Map of Binds keys
 	std::weak_ptr<std::map<std::string, uint16_t>> IKeySupports;
 	//   std::weak_ptr<keyboardOSX> IKeyboard; // Pointer to keyboard
+	std::map<std::string, std::unique_ptr<gui::GuiComponent>> IGUILayout;
 
 	// Resources
 	bool Iquit;        // Flag to quit the state
@@ -103,11 +103,10 @@ protected:
 		// for calling sf::Sound from map using category layer
 	virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path, std::string _typename);
 
-   // void playSound(gfx::SoundCategory _soundcategory, std::string _typename); // Play sound from category[_typename]
+	// void playSound(gfx::SoundCategory _soundcategory, std::string _typename); // Play sound from category[_typename]
 
 	// functions accses
 	void setVolume(gfx::SoundCategory _category, const float _newVal); // Set volume for all categories
-
 
 public:
   // Constructor
@@ -119,13 +118,11 @@ public:
 	const bool& getQuit() const { return  Iquit; } // Get quit flag
 	const bool getKeytime();                            // Get key time
 
-
 	// Functions
 	void endState() {  Iquit = true; }        // End the state
 	void pauseState() {  Ipaused = true; }    // Pause the state
 	void unpauseState() {  Ipaused = false; } // Unpause the state
 	void wasUpdateWindon() { IstateData->sd_reserGUI = true; }
-
 
 	// update sounds (virtual function)
 	virtual void updateSounds(const float& delta_time) = 0;

@@ -23,7 +23,7 @@ public:
 	std::string getActiveElement() const;
 	void setActiveElement(unsigned int id);
 
-	void update(const float& delta_time, const sf::Vector2i& mousePos);
+	void update(const float& delta_time, const sf::Vector2f& mousePos);
 	void updateKeyTime(const float& delta_time);
 	const bool getKeytime();
 	// render

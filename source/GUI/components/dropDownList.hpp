@@ -32,7 +32,7 @@ public:
 	// Functions
 	const bool getKeytime();
 	void updateKeytime(const float& dt);
-	void update(const sf::Vector2i& mousePosWindow, const float& dt);
+	void update(const sf::Vector2f& mousePosWindow, const float& dt);
 
 }; // namespace gui
 } // namespace gui

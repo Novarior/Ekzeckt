@@ -45,6 +45,7 @@
     <ClCompile Include="source\entitys\properties\movement.cpp" />
     <ClCompile Include="source\GUI\components\button.cpp" />
     <ClCompile Include="source\GUI\components\selector.cpp" />
+    <ClCompile Include="source\GUI\components\checkbox.cpp" />
     <ClCompile Include="source\GUI\components\staticSelector.cpp" />
     <ClCompile Include="source\GUI\GUI_Component.cpp" />
     <ClCompile Include="source\GUI\UI\inventoryGUI.cpp" />
@@ -57,6 +58,7 @@
     <ClCompile Include="source\states\Process.cpp" />
     <ClCompile Include="source\states\settings.cpp" />
     <ClCompile Include="source\states\State.cpp" />
+    <ClCompile Include="source\core\dataCollector\_man_Fonts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Content\ItemsStuff\Coins.hpp" />
@@ -117,6 +119,8 @@
     <ClInclude Include="source\GUI\components\slider.hpp" />
     <ClInclude Include="source\GUI\components\staticSelector.hpp" />
     <ClInclude Include="source\GUI\GUI_Component.hpp" />
+    <ClInclude Include="source\GUI\ComponentData.hpp" />
+    <ClInclude Include="source\GUI\ComponentColors.hpp" />
     <ClInclude Include="source\GUI\UI\inventoryGUI.hpp" />
     <ClInclude Include="source\GUI\UI\minimap.hpp" />
     <ClInclude Include="source\localisation\helperText.hpp" />
@@ -127,6 +131,7 @@
     <ClInclude Include="source\states\Process.hpp" />
     <ClInclude Include="source\states\settings.hpp" />
     <ClInclude Include="source\states\State.hpp" />
+    <ClInclude Include="source\core\dataCollector\_man_Fonts.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -277,7 +282,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBAL</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\CppLib\SFML-3.1.0\include;C:\CppLib\nlohmann\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>header.h</PrecompiledHeaderFile>

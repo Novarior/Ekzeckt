@@ -1,11 +1,13 @@
 #ifndef GUI_SIMPLE_SLIDER_HPP
 #define GUI_SIMPLE_SLIDER_HPP
 
+#include "../GUI_Component.hpp"
+
 #include "../../core/header.h"
 
 namespace gui {
 template <typename T>
-class Slider:public sf::Drawable {
+class Slider:public GuiComponent {
 private:
 	sf::RectangleShape _sliderBox, _sliderFillBox;
 	sf::CircleShape  _leftCircleShape, _rightCircleShape, _sliderFillCircle;
@@ -72,7 +74,7 @@ public:
 		_sliderFillCircle.setOutlineColor(sf::Color::Black);
 
 		// text fields
-		_textValue.setString(std::to_string((int)(_value)));
+		_textValue.setString(std::to_string((T)(base_value)));
 		_textValue.setPosition({position.x + size.x - size3Y / 2.f, position.y + size.y - size3Y - character_size / 4.f});
 		_textValue.setFillColor(sf::Color::White);
 		_textValue.setLineAlignment(sf::Text::LineAlignment::Right);
@@ -114,8 +116,11 @@ public:
 
 			float ratio = (centerX - minX) / _sliderBox.getSize().x;
 			ratio = std::fmax(0.f, std::fmin(1.f, ratio));
+			ratio = std::round(ratio * 1000.0f) / 1000.0f;
+
 
 			_value = T(_min) + ratio * (T(_max) - T(_min));
+			_value= std::round(_value * 1000.0f) / 1000.0f;
 
 			if (_value != _newValue) {
 				isChanged = true;

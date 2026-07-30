@@ -1,14 +1,18 @@
 #ifndef PROCESS
 #define PROCESS
 
-#include "../Content/Map/TileMap.hpp"
-#include "../GUI/UI/inventoryGUI.hpp"
-#include "../GUI/UI/minimap.hpp"
-#include "../GUI/components/progressBar.hpp"
-#include "../entitys/player.hpp"
-#include "../core/math/models noice/Noice_PGN.hpp"
 #include "PauseMenu.hpp"
 #include "State.hpp"
+
+#include "../core/math/models noice/Noice_PGN.hpp"
+
+#include "../GUI/GUI_Component.hpp"
+#include "../GUI/components/progressBar.hpp"
+#include "../GUI/UI/inventoryGUI.hpp"
+#include "../GUI/UI/minimap.hpp"
+
+#include "../entitys/player.hpp"
+#include "../Content/Map/TileMap.hpp"
 
 // The Process class represents the main game state
 class Process: public State {

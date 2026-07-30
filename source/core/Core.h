@@ -8,6 +8,8 @@
 #include "dataCollector/_man_Volume.hpp"
 #include "dataCollector/_man_graphics.hpp"
 #include "dataCollector/_man_Texture.hpp"
+#include "dataCollector/_man_Fonts.hpp"
+
 #include "../localisation/helperText.hpp"
 
 #include "../states/State.hpp"
@@ -17,7 +19,7 @@
 #include "tools/LOGGER.hpp"
 #include "tools/staticFPSMetter.hpp"
 
- 
+
 
 // class LuaVM{
 //     public:
@@ -38,72 +40,68 @@
 ///
 class Core {
 private:
-  // window <3
-  std::shared_ptr<sf::RenderWindow> cr_Window;
+	// window <3
+	std::shared_ptr<sf::RenderWindow> cr_Window;
 
-  // Clock and time
-  float cr_deltaTime;
-  sf::Clock cr_deltaClock;
+	// Clock and time
+	float cr_deltaTime;
+	sf::Clock cr_deltaClock;
 
-  // Data (keyboard, Graph)
-  // std::shared_ptr<keyboardOSX> cr_Keyboard;
-  std::shared_ptr<std::map<std::string, uint16_t>> cr_KeySuppors;
+	// Data (keyboard, Graph)
+	// std::shared_ptr<keyboardOSX> cr_Keyboard;
+	std::shared_ptr<std::map<std::string, uint16_t>> cr_KeySuppors;
 
-  // VolCollector, sound buffer and sound map
-  std::shared_ptr<gfx::VolumeCollector> cr_VolumeCollector;
-  std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundMap;
-  std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundBufferMap;
+	// VolCollector, sound buffer and sound map
+	std::shared_ptr<gfx::VolumeCollector> cr_VolumeCollector;
+	std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundMap;
+	std::shared_ptr<std::map<std::string, sf::Sound>> cr_SoundBufferMap;
 
-  // fonts
-  sf::Font cr_GameFont_basic; // Font used in the game
-  sf::Font cr_debugFont;      // Font used for debugging
+	// graphics settings
+	std::shared_ptr<gfx::myGFXStruct> cr_gfxSettings;
 
-  // graphics settings
-  std::shared_ptr<gfx::myGFXStruct> cr_gfxSettings;
+	// just const float (no, actually very important item)))
+	const float cr_gridSize = 16.f;
 
-  // just const float (no, actually very important item)))
-  const float cr_gridSize = 16.f;
+	// states styff
+	StateData cr_Statedata;
+	std::stack<State*> cr_State;
 
-  // states styff
-  StateData cr_Statedata;
-  std::stack<State *> cr_State;
+	// json data buffer
+	nlohmann::json jsonBuffer;
 
-  // json data buffer
-  nlohmann::json jsonBuffer;
+	bool is_data_loaded = false;
+	bool is_data_corrupted = false;
+	// lua state
+	// LuaVM luaVM;
 
-  bool is_data_loaded = false;
-  bool is_data_corrupted = false;
-  // lua state
-  // LuaVM luaVM;
+	// initilization functions
+	void coreInitDirectories();
+	void coreInitVariabless();
+	void coreInitLocations();
+	void coreInitKeyboard();
+	void coreInitTextures();
+	void coreInitWindow();
+	void coreInitLua();
+	void coreInitKeyBind();
 
-  // initilization functions
-  void coreInitDirectories();
-  void coreInitVariabless();
-  void coreInitLocations();
-  void coreInitKeyboard();
-  void coreInitTextures();
-  void coreInitWindow();
-  void coreInitLua();
-  void coreInitKeyBind();
-
-  void coreInitStateData();
-  void coreInitState();
+	void coreInitStateData();
+	void coreInitState();
 
 protected:
-  // core functions
-  bool cr_LoadData();
-  bool cr_SaveData();
+	// core functions
+	bool cr_LoadData();
+	bool cr_SaveData();
 
 public:
-  Core();
-  virtual ~Core();
-  void run();
+	Core();
+	virtual ~Core();
+	void run();
 
-  void updateEventsWindow();
-  void updateDeltaTime();
-  void updateSound();
-  void update();
-  void render();
+	void updateEventsWindow();
+	void updateDeltaTime();
+	void updateSound();
+	void update();
+	void render();
 };
 
 #endif /* CORE */

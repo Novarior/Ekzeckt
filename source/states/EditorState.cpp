@@ -15,50 +15,51 @@ void EditorState::initTabMenu() { // tab menu
 }
 
 void EditorState::initButtons() { // init buttons
-	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x / 2, mmath::p2pX(10U, IstateData->sd_Window.lock()->getSize().y));
+	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x / 2, mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y));
 
-	buttons["G_NOICE"] = new gui::Button(
+	IGUILayout["G_NOICE"] = std::make_unique<gui::Button>(
 		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(90U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Gen Noice", gui::styles::buttons::btn_editor, gui::type::BUTTON);
+		btnSize, "Gen Noice");
 
-	buttons["G_TREE"] = new gui::Button(
+	IGUILayout["G_TREE"] = std::make_unique<gui::Button>(
 		sf::Vector2f(tabShape.getPosition().x + tabShape.getSize().x / 2, tabShape.getPosition().y + mmath::p2pX(90U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Gen Tree", gui::styles::buttons::btn_editor, gui::type::BUTTON);
+		btnSize, "Gen Tree");
 
-	buttons["SAVE_GENDATA"] = new gui::Button(
+	IGUILayout["SAVE_GENDATA"] = std::make_unique<gui::Button>(
 		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(80U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Save", gui::styles::buttons::btn_editor, gui::type::BUTTON);
+		btnSize, "Save");
 
-	buttons["LOAD_GENDATA"] = new gui::Button(
+	IGUILayout["LOAD_GENDATA"] = std::make_unique<gui::Button>(
 		sf::Vector2f(tabShape.getPosition().x + tabShape.getSize().x / 2, tabShape.getPosition().y + mmath::p2pX(80U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Load", gui::styles::buttons::btn_editor, gui::type::BUTTON);
+		btnSize, "Load");
 }
 
 void EditorState::initSelectors() { // init static selector in tab menu
+	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
 	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x, mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y));
 	//gui::SliderFloat sl(pos, size, font, charsize,baseVal, min, max,  name);
 	sf::Vector2f tbPos = tabShape.getPosition();
-
+	auto& ndata = m_noiceData;
 	staticSelectorUInt["OCTAVES"] = new gui::SliderUInt(
-		tbPos, btnSize, IstateData->sd_GameFont_basic, IstateData->sd_characterSize_game_small, 4U, 1U, 10U, "Octaves: ");
+		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, ndata->octaves, 1U, 10U, "Octaves: ");
 
 	staticSelector["FREQUENCY"] = new gui::SliderFloat(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, IstateData->sd_GameFont_basic, IstateData->sd_characterSize_game_small, 1.5f, 0.f, 10.f, "Frequency: ");
+		btnSize, font, IstateData->sd_characterSize_game_small, ndata->frequency, 0.f, 15.f, "Frequency: ");
 
 	staticSelector["PERSISTENCE"] = new gui::SliderFloat(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(14U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, IstateData->sd_GameFont_basic, IstateData->sd_characterSize_game_small, 1.5f, 0.f, 5.0f, "Persistence: ");
+		btnSize, font, IstateData->sd_characterSize_game_small, ndata->persistence, 0.f, 2.0f, "Persistence: ");
 
 	staticSelector["AMPLIFIRE"] = new gui::SliderFloat(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(21U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, IstateData->sd_GameFont_basic, IstateData->sd_characterSize_game_small, 1.5f, 0.f, 10.f, "Amplifire: ");
+		btnSize, font, IstateData->sd_characterSize_game_small, ndata->amplifire, 0.f, 3.f, "Amplifire: ");
 
 	std::vector<std::string> list = {"Linear", "Cosine", "Cubic", "Quintic", "Quartic", "Quadratic", "Hermite"};
 
 	selector = new gui::Selector(
 		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(28U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, IstateData->sd_GameFont_basic, IstateData->sd_characterSize_game_small, list.data(), list.size(), 0);
+		btnSize, font, IstateData->sd_characterSize_game_small, list.data(), list.size(), 0);
 
 	// set default value for static selector
 	staticSelectorUInt["OCTAVES"]->setCurrentValue(m_NoiceViewer->getNoiceData()->octaves);
@@ -69,19 +70,21 @@ void EditorState::initSelectors() { // init static selector in tab menu
 
 void EditorState::initNoice() {
 	m_noiceData = new NoiceData();
-	m_noiceData->octaves = 8;
 	std::srand(std::time(nullptr));
-	m_noiceData->seed = std::rand();
-	m_noiceData->frequency = 8;
-	m_noiceData->amplifire = 1;
+
+
+	m_noiceData->seed = mmath::splitmix64(std::rand());
+	m_noiceData->smoothMode = 0;
+	m_noiceData->octaves = 6;
+	m_noiceData->frequency = 6.0f;
 	m_noiceData->persistence = 0.6f;
+	m_noiceData->amplifire = 1.f;
 
 	m_noiceData->gridSize = IstateData->sd_gridSize;
 	m_noiceData->RenderWindowX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
 	m_noiceData->RenderWindowY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
 	m_noiceData->mapSizeX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
 	m_noiceData->mapSizeY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
-	m_noiceData->smoothMode = 0;
 
 	// init data for noice viewer
 	m_NoiceViewer = new NoiceViewer(m_noiceData);
@@ -89,7 +92,7 @@ void EditorState::initNoice() {
 }
 
 void EditorState::initDebugText() { // init debug text
-	Itext.setFont(IstateData->sd_debugFont);
+	//Itext.setFont(*FontManager::getFont(FontID::FONT_GAMEF_01));
 	Itext.setCharacterSize(IstateData->sd_characterSize_debug);
 	Itext.setPosition(sf::Vector2f(0, 0));
 	Itext.setFillColor(sf::Color::White);
@@ -125,8 +128,7 @@ EditorState::~EditorState() {
 	// FIXME: add save noice data to file
 	// ParserJson::saveNoiceData( m_NoiceViewer->getNoiceData());
 
-	for (auto& it : buttons)
-		delete it.second;
+	IGUILayout.clear();
 
 	for (auto& it : staticSelector)
 		delete it.second;
@@ -248,7 +250,7 @@ void EditorState::updateDebugText(const float& delta_time) {
 		<< "\n\tPersistence: " << m_noiceData->persistence
 		<< "\n\tAmplifire: " << m_noiceData->amplifire
 		<< "\n\tOffSet: " << m_noiceData->offsetSeed
-		<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName() 
+		<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName()
 		<< ":\t" << m_NoiceViewer->getNoiceData()->smoothMode
 		<< "\nFastMode" << m_NoiceViewer->getNoiceData()->fastMode
 		<< "\nHeigth on Cursor: " << m_NoiceViewer->getHeightMap(ImousePosWindow);
@@ -263,8 +265,8 @@ void EditorState::updateDebugText(const float& delta_time) {
 }
 
 void EditorState::updateButtons(const float& delta_time) {
-	for (auto& it : buttons)
-		it.second->update(ImousePosWindow);
+	for (auto& it : IGUILayout)
+		it.second->update(ImousePosView);
 
 	for (auto& it : staticSelectorUInt)
 		it.second->update(ImousePosView);
@@ -272,7 +274,7 @@ void EditorState::updateButtons(const float& delta_time) {
 	for (auto& it : staticSelector)
 		it.second->update(ImousePosView);
 
-	selector->update(delta_time, ImousePosWindow);
+	selector->update(delta_time, ImousePosView);
 
 	// update buttons using switch case for each button
 	switch (current_View_Generator) {
@@ -293,13 +295,13 @@ void EditorState::updateButtons(const float& delta_time) {
 			m_noiceData->amplifire = staticSelector["AMPLIFIRE"]->getValue();
 			staticSelector["AMPLIFIRE"]->closeChangeValue();
 		}
-		if (buttons["G_NOICE"]->isPressed() && getKeytime()) {
+		if (IGUILayout["G_NOICE"]->isPressed() && getKeytime()) {
 			m_NoiceViewer->generateNoice();
 		}
-		if (buttons["SAVE_GENDATA"]->isPressed()) {
+		if (IGUILayout["SAVE_GENDATA"]->isPressed()) {
 			// fixme: add save noice data to file
 		}
-		if (buttons["LOAD_GENDATA"]->isPressed()) {
+		if (IGUILayout["LOAD_GENDATA"]->isPressed()) {
 			// fixme: add load noice data from file
 			staticSelectorUInt["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
 			staticSelector["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
@@ -310,7 +312,7 @@ void EditorState::updateButtons(const float& delta_time) {
 		m_NoiceViewer->setNoiceData(m_noiceData);
 		break;
 	case 1: // tree case
-		if (buttons["G_TREE"]->isPressed()) {
+		if (IGUILayout["G_TREE"]->isPressed()) {
 			myLS->generate();
 			saveTreeAsImage(*IstateData->sd_Window.lock());
 		}
@@ -318,7 +320,7 @@ void EditorState::updateButtons(const float& delta_time) {
 	default: // default case
 		break;
 	}
-	selector->update(delta_time, ImousePosWindow);
+	selector->update(delta_time, ImousePosView);
 	m_noiceData->smoothMode = selector->getActiveElementID();
 }
 
@@ -349,7 +351,7 @@ void EditorState::renderTabMenu(sf::RenderTarget& target) {
 	for (auto& it : staticSelectorUInt)
 		target.draw(*it.second);
 
-	for (auto& it : buttons)
+	for (auto& it : IGUILayout)
 		target.draw(*it.second);
 
 	selector->render(target);

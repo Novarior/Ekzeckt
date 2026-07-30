@@ -45,11 +45,9 @@ void Core::coreInitVariabless() {
 	cr_deltaClock.restart();
 
 	// coreInit fonts
-	if (!cr_GameFont_basic.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path)))
-		Logger::logStatic("Debug font failed to load", "Core::coreInitVariables()");
-
-	if (!cr_debugFont.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_debugfont_path)))
-		Logger::logStatic("Debug font failed to load", "Core::coreInitVariables()");
+	FontManager::initialise();
+	FontManager::loadFont(FontID::FONT_GAMEF_01, AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path));
+	FontManager::loadFont(FontID::FONT_DEBUG, AppFn::getPathResourcesDir().append(myConst::fonts::data_debugfont_path));
 
 #if __MDEBUG__ == ENABLE
 	// print to console/Loggger all data for next debug
@@ -128,8 +126,6 @@ void Core::coreInitTextures() {
 void Core::coreInitStateData() { // send window state stack and fonts to state data
 	cr_Statedata.sd_Window = cr_Window;
 	cr_Statedata.sd_States = &cr_State;
-	cr_Statedata.sd_GameFont_basic = cr_GameFont_basic;
-	cr_Statedata.sd_debugFont = cr_debugFont;
 	// keyboard and theyr stuff
 	// cr_Statedata.sd_keyboard_prt = cr_Keyboard;
 	cr_Statedata.sd_KeySupports = cr_KeySuppors;

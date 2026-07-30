@@ -9,16 +9,16 @@
 
 #include "../core/cmakever.h"
 #include "../core/tools/staticFPSMetter.hpp"
+
 #include "../localisation/helperText.hpp"
+
 #include "../GUI/GUI_Component.hpp"
 #include "../GUI/components/button.hpp"
+
 
 // The MainMenu class represents the game's main menu
 class MainMenu: public State {
 private:
-	// Menu buttons
-	std::map<std::string, std::unique_ptr<gui::Button>> buttons;
-
 	// Background textures and shapes
 	std::vector<sf::Texture> background_textures;
 	std::vector<sf::RectangleShape> backgrond_shapes;

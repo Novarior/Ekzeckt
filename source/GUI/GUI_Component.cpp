@@ -1,199 +1,30 @@
 #include "GUI_Component.hpp"
 
 gui::GuiComponent::GuiComponent():
-	mData({0, 0}, {0, 0}, sf::Font(), 0, " ", false, ComponentState::ACTIVE, "default", 0),
-	mDraw(sf::RectangleShape(), sf::Font(), " ", 1),
-	mColors(sf::Color::Black) {}
+	mData({0, 0}, {0, 0}, FontManager::getFont(FontID::FONT_GAMEF_01), 16U, false),
+	mState(ComponentState::CS_IDLE),
+	mColors() {}
 
 gui::GuiComponent::~GuiComponent() {}
-
-void gui::GuiComponent::loadDefaultStyle() {
-	mData.styleName = "_DefaultStyle";
-
-	sf::Color c = {220U,220U,220U,225U};
-
-	sf::Color b = sf::Color::Black;
-
-	mColors.textIdleColor = c;
-	mColors.textHoverColor = c;
-	mColors.textActiveColor = c;
-	mColors.textDisableColor = c;
-
-	mColors.shapeIdleColor = {74U,83U,91U};
-	mColors.shapeHoverColor = {116U, 131U,142U};
-	mColors.shapeActiveColor = {60U,65U,70U};
-	mColors.shapeDisableColor = {23U,27U,28U};
-
-	mColors.outlineIdleColor = b;
-	mColors.outlineHoverColor = b;
-	mColors.outlineActiveColor = b;
-	mColors.outlineDisableColor = b;
-
-	mDraw.shape.setOutlineThickness(-1.f);
-	if (mData.font.openFromFile(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path_3)));
-
-	mDraw.text.setCharacterSize(16U);
-	mData.characterSize = 20U;
-	updateAfterLoadStyle();
-}
-
-bool gui::GuiComponent::loadStyle(std::string _namestyle, std::string _type) {
-	// Load the style from a JSON file (multi-component loader)
-
-	std::filesystem::path fpath(AppFn::getPathResourcesDir().append("/styles").append(appfiles::config_style));
-	std::fstream fs;
-
-	fs.open(fpath);
-	if (!fs.is_open())
-		return false;
-	json js;
-	fs >> js;
-
-	// check if "components" section exists
-	//if (!js.contains("components"))
-	//	throw std::runtime_error("Missing 'components' section in style file");
-
-	// get seection
-	const auto& componentStyles = js["components"][_type];
-	if (componentStyles.is_null())
-		throw std::runtime_error("Component type '" + _type + "' not found");
-
-	// get current style from _namestyle
-	// Получаем конкретный стиль (default, cancel и т.д.)
-	const auto& style = componentStyles[_namestyle];
-	if (style.is_null())
-		throw std::runtime_error("Style '" + _namestyle + "' not found for " + _type);
-
-	// upload shit
-	auto& buttonStyles = js["components"]["button_style"];
-
-	mData.styleName = style["name"].get<std::string>();
-
-	// forall styles have same color loader
-	// load fucked colors
-	auto& textColors = style["colors"]["text"];
-	mColors.textIdleColor = parceColor(textColors["idle"]);
-	mColors.textHoverColor = parceColor(textColors["hover"]);
-	mColors.textActiveColor = parceColor(textColors["active"]);
-	mColors.textDisableColor = parceColor(textColors["disabled"]);
-
-	auto& bgColors = style["colors"]["background"];
-	mColors.shapeIdleColor = parceColor(bgColors["idle"]);
-	mColors.shapeHoverColor = parceColor(bgColors["hover"]);
-	mColors.shapeActiveColor = parceColor(bgColors["active"]);
-	mColors.shapeDisableColor = parceColor(bgColors["disabled"]);
-
-	auto& outlineColors = style["colors"]["outline"];
-	mColors.outlineIdleColor = parceColor(outlineColors["idle"]);
-	mColors.outlineHoverColor = parceColor(outlineColors["hover"]);
-	mColors.outlineActiveColor = parceColor(outlineColors["active"]);
-	mColors.outlineDisableColor = parceColor(outlineColors["disabled"]);
-
-	auto& trinc = style["outline_thickness"];
-	mDraw.shape.setOutlineThickness(trinc.get<float>());
-
-	auto& txt = style["text"];
-	if (txt["font"] == "default")
-		mData.font = sf::Font(AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path_3));
-	else {
-		std::filesystem::path fpath(AppFn::getPathResourcesDir().append("/fonts").append(txt["font"].get<std::string>()));
-		if (!std::filesystem::exists(fpath))
-			throw std::runtime_error("Font file not found: " + fpath.string());
-
-		mData.font = sf::Font(fpath);
-	}
-
-	updateAfterLoadStyle();
-	return true;
-}
-
-void gui::GuiComponent::setPosition(sf::Vector2f _newPos) {
-	mData.position = _newPos;
-	mDraw.shape.setPosition(_newPos);
-	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f, mData.position.y + mDraw.text.getGlobalBounds().size.y / 2.f});
-}
-
-void gui::GuiComponent::update(const sf::Vector2i& mousePosWindow) {
-	if (!mData.isActive)
-		mData.state = ComponentState::DISABLED;
-	else {
-		mData.state = ComponentState::IDLE;
-
-		if (mDraw.shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosWindow))) {
-			mData.state = ComponentState::HOVER;
-
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				mData.state = ComponentState::ACTIVE;
-		}
-	}
-
-	switch (mData.state) {
-	case ComponentState::IDLE:
-		mDraw.shape.setFillColor(mColors.shapeIdleColor);
-		mDraw.shape.setOutlineColor(mColors.outlineIdleColor);
-		mDraw.text.setFillColor(mColors.textIdleColor);
-		break;
-
-	case ComponentState::HOVER:
-		mDraw.shape.setFillColor(mColors.shapeHoverColor);
-		mDraw.shape.setOutlineColor(mColors.outlineHoverColor);
-		mDraw.text.setFillColor(mColors.textHoverColor);
-		break;
-
-	case ComponentState::ACTIVE:
-		mDraw.shape.setFillColor(mColors.shapeActiveColor);
-		mDraw.shape.setOutlineColor(mColors.outlineActiveColor);
-		mDraw.text.setFillColor(mColors.textActiveColor);
-		break;
-
-	case ComponentState::DISABLED:
-		mDraw.shape.setFillColor(mColors.shapeDisableColor);
-		mDraw.shape.setOutlineColor(mColors.outlineDisableColor);
-		mDraw.text.setFillColor(mColors.textDisableColor);
-		break;
-
-	default:
-		mDraw.shape.setFillColor(sf::Color::Red);
-		mDraw.shape.setOutlineColor(sf::Color::Green);
-		mDraw.text.setFillColor(sf::Color::Blue);
-		break;
-	}
-}
-
-void gui::GuiComponent::updateAfterLoadStyle() {
-	mDraw.text.setFont(mData.font);
-	mDraw.text.setFillColor(mColors.textIdleColor);
-	mDraw.text.setPosition({mData.position.x + (mData.size.x / 2.f) - mDraw.text.getGlobalBounds().size.x / 2.f, mData.position.y + mDraw.text.getGlobalBounds().size.y / 2.f});
-	mDraw.text.setString(mData.textString);
-	auto ch = mmath::p2pX((float)(mData.characterSize), mData.size.y);
-	//mDraw.text.setCharacterSize(20);
-}
 
 void gui::GuiComponent::togleActive() {
 	mData.isActive = !mData.isActive;
 	if (mData.isActive)
-		mData.state = ComponentState::IDLE;
+		mState = ComponentState::CS_IDLE;
 	else
-		mData.state = ComponentState::DISABLED;
+		mState = ComponentState::CS_DISABLED;
 }
 void gui::GuiComponent::changeActivity(const bool _value) {
 	mData.isActive = _value;
 	if (_value)
-		mData.state = ComponentState::IDLE;
+		mState = ComponentState::CS_IDLE;
 	else
-		mData.state = ComponentState::DISABLED;
+		mState = ComponentState::CS_DISABLED;
 }
-void gui::GuiComponent::setText(std::string _text) {
-	mData.textString = _text;
-	mDraw.text.setString(mData.textString);
-}
-void gui::GuiComponent::setID(unsigned _id) { mData.id = _id; }
-const unsigned& gui::GuiComponent::getID() const { return mData.id; }
-const std::string gui::GuiComponent::getStyle() const { return mData.styleName; }
-const std::string gui::GuiComponent::getText() const { return mData.textString; }
+
 const sf::Vector2f gui::GuiComponent::getPosition() const { return mData.position; }
-const sf::Vector2f gui::GuiComponent::getSize() const { return mData.size; }
 const bool gui::GuiComponent::isDisabled() const { return !mData.isActive; }
-const bool gui::GuiComponent::isActive() const { return mData.isActive; }
-const bool gui::GuiComponent::isPressed() const { return (mData.state == ComponentState::ACTIVE && mData.isActive) ? true : false; }
-const bool gui::GuiComponent::isHover() const { return (mData.state == ComponentState::HOVER && mData.isActive) ? true : false; }
+const bool gui::GuiComponent::isActived() const { return mData.isActive; }
+const bool gui::GuiComponent::isPressed() const { return (mState == ComponentState::CS_ACTIVE && mData.isActive) ? true : false; }
+const bool gui::GuiComponent::isHover() const { return (mState == ComponentState::CS_HOVER && mData.isActive) ? true : false; }
+

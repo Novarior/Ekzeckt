@@ -8,10 +8,14 @@
 #include "../core/math/models fractal/LSystem.hpp"
 
 #include "../Content/Map/TileMap.hpp"
+
+#include "../GUI/GUI_Component.hpp"
 #include "../GUI/components/button.hpp"
 #include "../GUI/components/selector.hpp"
 #include "../GUI/components/staticSelector.hpp"
 #include "../GUI/components/slider.hpp"
+
+
 
 // The EditorState class represents the state of the game editor
 class EditorState: public State {
@@ -26,7 +30,6 @@ private:
 
 	// GUI elements (buttons, selectors, etc)
 	bool showTabmenu;                             // Flag to show or hide the tab menu
-	std::map<std::string, gui::Button*> buttons; // Map of buttons
 	sf::RectangleShape tabShape;                  // Shape of the tab
 	// Map of static selectors
 	std::map<std::string, gui::SliderFloat*> staticSelector;

@@ -32,9 +32,9 @@ StaticSelector::StaticSelector(sf::Vector2f pos, sf::Vector2f size, sf::Font& fo
 	// init value's
 
 	// init buttons
-	this->buttons["left"] = new gui::Button(sf::Vector2f(pos.x, pos.y), sf::Vector2f(mmath::p2pX(10.f, size.x), size.y), "-", gui::styles::buttons::btn_selector, gui::type::BUTTON);
+	this->buttons["left"] = new gui::Button(sf::Vector2f(pos.x, pos.y), sf::Vector2f(mmath::p2pX(10.f, size.x), size.y), "-");
 
-	this->buttons["right"] = new gui::Button(sf::Vector2f(this->box.getPosition().x + this->box.getSize().x, pos.y), sf::Vector2f(mmath::p2pX(10.f, size.x), size.y), "+", gui::styles::buttons::btn_selector, gui::type::BUTTON);
+	this->buttons["right"] = new gui::Button(sf::Vector2f(this->box.getPosition().x + this->box.getSize().x, pos.y), sf::Vector2f(mmath::p2pX(10.f, size.x), size.y), "+");
 
 	this->addritionalText_flag = addritional_text;
 	if (this->addritionalText_flag)
@@ -55,7 +55,7 @@ const bool StaticSelector::isValueChanged() const { return this->ValueIsChanged;
 
 void StaticSelector::closeChangeValue() { this->ValueIsChanged = false; }
 
-void StaticSelector::update(const float& delta_time, const sf::Vector2i& mousePos) {
+void StaticSelector::update(const float& delta_time, const sf::Vector2f& mousePos) {
 	this->updateKeyTime(delta_time);
 	for (auto& it : this->buttons)
 		it.second->update(mousePos);

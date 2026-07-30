@@ -50,7 +50,7 @@ void NoiceViewer::generateNoice() {
 	// determine thread count
 	unsigned int hw = std::thread::hardware_concurrency();
 	if (hw == 0) hw = 4; // fallback
-	unsigned int threadCount = std::min<unsigned int>(hw,  static_cast<unsigned int>(width));
+	unsigned int threadCount = std::min<unsigned int>(hw, static_cast<unsigned int>(width));
 	std::vector<std::thread> workers;
 	workers.reserve(threadCount);
 
@@ -73,7 +73,7 @@ void NoiceViewer::generateNoice() {
 						noiceMap[x][y] = m_prn_noice->getNoice(x, y);
 						break;
 					case SIMPLEX_NOICE:
-						noiceMap[x][y] = m_simplex_noice->noise(x / m_noice_data->amplifire / 10.f, y / m_noice_data->amplifire / 10.f);
+						noiceMap[x][y] = m_simplex_noice->noise(x / m_noice_data->frequency / 10.f, y / m_noice_data->frequency / 10.f);
 						break;
 					default:
 						noiceMap[x][y] = 0.0;

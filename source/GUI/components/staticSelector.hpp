@@ -36,7 +36,7 @@ public:
 	void setCurrentValue(const float value);
 	void setSizeStep(const float size_step);
 
-	void update(const float& delta_time, const sf::Vector2i& mousePos);
+	void update(const float& delta_time, const sf::Vector2f& mousePos);
 
 	// render
 	void render(sf::RenderTarget& target);
