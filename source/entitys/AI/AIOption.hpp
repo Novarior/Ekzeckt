@@ -5,14 +5,14 @@
 #include "../../core/math/mymath.hpp"
 
 enum class FollowTargetEnum {
-	Point,  // Следовать за точкой
+	Point, // Следовать за точкой
 	Target, // Следовать за объектом
 	COUNT
 };
 
 enum class StateTODO {
-	Idle,   // Ничего не делать
-	Wait,   // Ожидание следующего действия
+	Idle,  // Ничего не делать
+	Wait,  // Ожидание следующего действия
 	Moving, // Движение к цели или точке
 	Patrol, // Патрулирование
 	Attack, // Атака цели

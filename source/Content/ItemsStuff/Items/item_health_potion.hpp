@@ -9,10 +9,7 @@ public:
 	virtual ~HealthPotion() {}
 
 	void useItem() override {
-		std::cout << "You drank a " << iData.m_name << std::endl;
-		Logger::logStatic("You drank a " + iData.m_name + " and restored 50 health", "CORE->ITEM", logType::LINFO);
 
-		// Remove one potion from stack
 		removeAmount(1);
 	}
 

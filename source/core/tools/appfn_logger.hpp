@@ -1,5 +1,5 @@
-#ifndef LOGGER
-#define LOGGER
+#ifndef CORE_APPFN_LOGGER_H
+#define CORE_APPFN_LOGGER_H
 
 #include <filesystem>
 #include <fstream>
@@ -8,29 +8,30 @@
 #include <sstream>
 #include <array>
 
-#include "../_myFiles.h"
-#include "../tools/path.hpp"
+#include "appfn_consts.h"
+#include "appfn_pathtool.hpp"
 
 // Типы логов
-enum  logType {
+enum logType {
 	LINFO = 0,
 	LWARNING = 1,
 	LERROR = 2
 };
 
+namespace appfn {
 class Logger {
 private:
-  // Singleton instance
+	// Singleton instance
 	inline static Logger* s_Instance = nullptr;
 	inline static std::mutex s_Mutex;
 
-	std::ofstream m_OutFile;    // ofs - create ofstream object for file manipulation
+	std::ofstream m_OutFile;  // ofs - create ofstream object for file manipulation
 	std::stringstream m_Buffer; // buffer for log entries
-	std::string timestamp;      // timestamp for log file name
+	std::string timestamp;   // timestamp for log file name
 
 	std::filesystem::path m_File_Path_Name; // path
-	int m_BufferCount = 0;                  // counter for entries in buffer
-	static const int BUFFER_LIMIT = 1000;     // flush buffer after N entries
+	int m_BufferCount = 0;         // counter for entries in buffer
+	static const int BUFFER_LIMIT = 1000;   // flush buffer after N entries
 
 	static const std::string& logTypeToString(logType level) {
 		static const std::array<std::string, 3> logTypes = {"LINFO", "LWARNING", "LERROR"};
@@ -63,12 +64,12 @@ private:
 
 	// Private constructor for singleton
 	Logger() {
-		timestamp = AppFn::getCurrentTime();
+		timestamp = appfn::PathTool::getCurrentTime();
 		auto wstr = std::wstring(timestamp.begin(), timestamp.end());
 		const wchar_t* widecstr = wstr.c_str();
 		std::filesystem::path p = "logs_" + timestamp + ".log";
 
-		m_File_Path_Name = AppFn::getPathDocumentsDirectory() += p.generic_string();
+		m_File_Path_Name = appfn::PathTool::getPathDocumentsDirectory() += p.generic_string();
 
 		createLogFileWithTimestamp();
 	}
@@ -91,7 +92,7 @@ private:
 	// method for logging messages
 	void log(const std::string& message, const std::string& source, logType level = logType::LINFO) {
 		std::lock_guard<std::mutex> lock(s_Mutex);
-		std::string logEntry = "[" + AppFn::getCurrentTime() + "] " + logTypeToString(level) + "\t_src: " + source + " _msg: " + message + "\n";
+		std::string logEntry = "[" + appfn::PathTool::getCurrentTime() + "] " + logTypeToString(level) + "\t_src: " + source + " _msg: " + message + "\n";
 
 		// write log entry to buffer
 		m_Buffer << logEntry;
@@ -127,5 +128,5 @@ public:
 		}
 	}
 };
-
-#endif /* LOGGER */
+};
+#endif /* CORE_APPFN_LOGGER_H */

@@ -1,13 +1,14 @@
 #ifndef ENTITY
 #define ENTITY
 
-#include "../Content/ItemsStuff/Inventory.hpp"
+#include <memory>
+
 #include "entityEnum.hpp"
 #include "properties/attributes.hpp"
 #include "properties/hitbox.hpp"
 #include "properties/movement.hpp"
-#include <memory>
 
+#include "../Content/ItemsStuff/Inventory.hpp"
 /**
  * @class Entity
  * @brief This class represents a general game entity.
@@ -41,9 +42,9 @@ protected:
 	// basic slot for item for entity
 	std::shared_ptr<Item> e_item;
 
-	bool isCollision;       // A flag indicating whether the entity is currently in a
+	bool isCollision;    // A flag indicating whether the entity is currently in a
 	// state of collision with another entity or not.
-	float gridSizeF;        // The size of a single grid cell in the game world. Used for
+	float gridSizeF;    // The size of a single grid cell in the game world. Used for
 	// positioning and movement calculations.
 	unsigned int ID_entity; // A unique identifier for each entity instance.
 	// Useful for entity management and referencing.
@@ -82,9 +83,9 @@ public:
 
 	// Default constructor for the Entity class
 	Entity(entityEnum::entityBehaviorClass enumBehavior = entityEnum::entityBehaviorClass::ebc_VOID,
-		   entityEnum::entityMovementState enumMovementState = entityEnum::entityMovementState::ems_VOID,
-		   entityEnum::entityState enumState = entityEnum::entityState::es_VOID,
-		   entityEnum::entityDirection enumDirection = entityEnum::entityDirection::ed_VOID);
+		  entityEnum::entityMovementState enumMovementState = entityEnum::entityMovementState::ems_VOID,
+		  entityEnum::entityState enumState = entityEnum::entityState::es_VOID,
+		  entityEnum::entityDirection enumDirection = entityEnum::entityDirection::ed_VOID);
 
 	// Virtual destructor for the Entity class
 	virtual ~Entity();
@@ -161,7 +162,7 @@ public:
 
 	/// @brief Sets the collision state of the entity.
 	/// @param isCollision A boolean value indicating the collision state.
-	inline virtual void e_setCollision(const bool isCollision) { this->isCollision = isCollision; }  
+	inline virtual void e_setCollision(const bool isCollision) { this->isCollision = isCollision; } 
 
 	/// @brief Loads a texture from a file and applies it to the entity's sprite.
 	/// @param file_path The path to the texture file.

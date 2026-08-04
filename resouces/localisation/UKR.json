@@ -1,48 +1,48 @@
 {
-  "BUTTONS": {
-    "LOCAL_PLAY": "Грати",
-    "LOCAL_OPTIONS": "Налаштування",
-    "LOCAL_EXIT": "Вихід",
-    "LOCAL_BACK": "Назад",
-    "LOCAL_APPLY": "Прийняти",
-    "LOCAL_CANCEL": "Відміна",
-    "LOCAL_SAVE": "Зберегти",
-    "LOCAL_LOAD": "Загрузити",
-    "LOCAL_NEW_GAME": "Нова гра",
-    "LOCAL_CONTINUE": "Продовжити",
-    "LOCAL_NOICE_EDITOR": "Редактор",
-    "LOCAL_DRS": "Debug ROOM",
-    "LOCAL_PM_PAUSE": "Пауза",
-    "LOCAL_PM_GENERATE": "Перестворити"
-  },
+ "BUTTONS": {
+  "LOCAL_PLAY": "Грати",
+  "LOCAL_OPTIONS": "Налаштування",
+  "LOCAL_EXIT": "Вихід",
+  "LOCAL_BACK": "Назад",
+  "LOCAL_APPLY": "Прийняти",
+  "LOCAL_CANCEL": "Відміна",
+  "LOCAL_SAVE": "Зберегти",
+  "LOCAL_LOAD": "Загрузити",
+  "LOCAL_NEW_GAME": "Нова гра",
+  "LOCAL_CONTINUE": "Продовжити",
+  "LOCAL_NOICE_EDITOR": "Редактор",
+  "LOCAL_DRS": "Debug ROOM",
+  "LOCAL_PM_PAUSE": "Пауза",
+  "LOCAL_PM_GENERATE": "Перестворити"
+ },
 
-  "AUDIO_OPTIONS": {
-    "LOCAL_MASTER": "Загальна Гучність",
-    "LOCAL_SFX": "Ефекти",
-    "LOCAL_MUSIC": "Музика",
-    "LOCAL_AMBIENT": "Оточення",
-    "LOCAL_ENTITYSFX": "Ворожі Створіння",
-    "LOCAL_UI_VOL": "Интерфейс",
-    "LOCAL_DIALOGUE_VOL": "Громкость диалогов",
-    "LOCAL_FOLEYVOL": "IDK",
-    "LOCAL_WEAPONVOL": "оружие",
-    "LOCAL_ENVIRONMENTVOL": "Чтототам"
-  },
+ "AUDIO_OPTIONS": {
+  "LOCAL_MASTER": "Загальна Гучність",
+  "LOCAL_SFX": "Ефекти",
+  "LOCAL_MUSIC": "Музика",
+  "LOCAL_AMBIENT": "Оточення",
+  "LOCAL_ENTITYSFX": "Ворожі Створіння",
+  "LOCAL_UI_VOL": "Интерфейс",
+  "LOCAL_DIALOGUE_VOL": "Громкость диалогов",
+  "LOCAL_FOLEYVOL": "IDK",
+  "LOCAL_WEAPONVOL": "оружие",
+  "LOCAL_ENVIRONMENTVOL": "Чтототам"
+ },
 
-  "SETTING_OPTIONS": {
-    "LOCAL_RESOLUTION": "Оконный режим",
-    "LOCAL_FULLSCREEN": "Полноэкраный режим",
-    "LOCAL_VSYNC": "Вертикальная синхронизация",
-    "LOCAL_CONTROLS": "Клавиши",
-    "LOCAL_AUDIO": "Звук",
-    "LOCAL_ANTIALIASING": "Анти-Алиасинг",
-    "LOCAL_FRAMERATE_LIMIT": "Ограничение кадров",
-    "LOCAL_GRAPHICS": "Графика",
-    "LOCAL_GAMEPLAY": "Игровой проццес",
-    "LOCAL_LANGUAGE": "Язык",
-    "LOCAL_CREDITS": "Об игре",
-    "LOCAL_SAVE": "Сохранить",
-    "LOCAL_LOAD": "Загрузить",
-    "LOCAL_EXIT": "Выйти"
-  }
+ "SETTING_OPTIONS": {
+  "LOCAL_RESOLUTION": "Оконный режим",
+  "LOCAL_FULLSCREEN": "Полноэкраный режим",
+  "LOCAL_VSYNC": "Вертикальная синхронизация",
+  "LOCAL_CONTROLS": "Клавиши",
+  "LOCAL_AUDIO": "Звук",
+  "LOCAL_ANTIALIASING": "Анти-Алиасинг",
+  "LOCAL_FRAMERATE_LIMIT": "Ограничение кадров",
+  "LOCAL_GRAPHICS": "Графика",
+  "LOCAL_GAMEPLAY": "Игровой проццес",
+  "LOCAL_LANGUAGE": "Язык",
+  "LOCAL_CREDITS": "Об игре",
+  "LOCAL_SAVE": "Сохранить",
+  "LOCAL_LOAD": "Загрузить",
+  "LOCAL_EXIT": "Выйти"
+ }
 }

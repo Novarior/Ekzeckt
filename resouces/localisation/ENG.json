@@ -1,50 +1,50 @@
 {
-  "BUTTONS": {
-    "LOCAL_PLAY": "Play",
-    "LOCAL_OPTIONS": "Options",
-    "LOCAL_EXIT": "Exit",
-    "LOCAL_BACK": "Back",
-    "LOCAL_APPLY": "Apply",
-    "LOCAL_CANCEL": "Cancel",
-    "LOCAL_SAVE": "Save",
-    "LOCAL_LOAD": "Load",
-    "LOCAL_NEW_GAME": "New Game",
-    "LOCAL_CONTINUE": "Continue",
-    "LOCAL_NOICE_EDITOR": "Noice Editor",
-    "LOCAL_DRS": "Debug ROOM",
-    "LOCAL_PM_PAUSE": "Pause",
-    "LOCAL_PM_GENERATE": "Generate"
-  },
+ "BUTTONS": {
+  "LOCAL_PLAY": "Play",
+  "LOCAL_OPTIONS": "Options",
+  "LOCAL_EXIT": "Exit",
+  "LOCAL_BACK": "Back",
+  "LOCAL_APPLY": "Apply",
+  "LOCAL_CANCEL": "Cancel",
+  "LOCAL_SAVE": "Save",
+  "LOCAL_LOAD": "Load",
+  "LOCAL_NEW_GAME": "New Game",
+  "LOCAL_CONTINUE": "Continue",
+  "LOCAL_NOICE_EDITOR": "Noice Editor",
+  "LOCAL_DRS": "Debug ROOM",
+  "LOCAL_PM_PAUSE": "Pause",
+  "LOCAL_PM_GENERATE": "Generate"
+ },
 
-  "AUDIO_OPTIONS": {
-    "LOCAL_MASTER": "Gener Volume",
-    "LOCAL_SFX": "Effects Volume",
-    "LOCAL_MUSIC": "Music Volume",
-    "LOCAL_AMBIENT": "Ambient Volume",
-    "LOCAL_ENTITYSFX": "Entity Volume",
-    "LOCAL_UI_VOL": "UI Volume",
-    "LOCAL_DIALOGUE_VOL": "Dialogue Volume",
-    "LOCAL_FOLEYVOL": "Foley Volume",
-    "LOCAL_WEAPONVOL": "Weapon Volume",
-    "LOCAL_ENVIRONMENTVOL": "Environment Volume"
-  },
+ "AUDIO_OPTIONS": {
+  "LOCAL_MASTER": "Gener Volume",
+  "LOCAL_SFX": "Effects Volume",
+  "LOCAL_MUSIC": "Music Volume",
+  "LOCAL_AMBIENT": "Ambient Volume",
+  "LOCAL_ENTITYSFX": "Entity Volume",
+  "LOCAL_UI_VOL": "UI Volume",
+  "LOCAL_DIALOGUE_VOL": "Dialogue Volume",
+  "LOCAL_FOLEYVOL": "Foley Volume",
+  "LOCAL_WEAPONVOL": "Weapon Volume",
+  "LOCAL_ENVIRONMENTVOL": "Environment Volume"
+ },
 
-  "SETTING_OPTIONS": {
-    "LOCAL_RESOLUTION": "Resolution",
-    "LOCAL_FULLSCREEN": "Fullscreen",
-    "LOCAL_ANTIALIASING": "Antialiasing",
-    "LOCAL_FRAMERATE_LIMIT": "FPS Limit",
-    "LOCAL_VAR_OFF": "Off",
-    "LOCAL_VAR_ON": "On",
-    "LOCAL_VSYNC": "VSync",
-    "LOCAL_LANGUAGE": "English",
-    "LOCAL_CONTROLS": "Keybinds",
-    "LOCAL_AUDIO": "Sounds",
-    "LOCAL_GRAPHICS": "Graphics",
-    "LOCAL_GAMEPLAY": "Gameplay",
-    "LOCAL_CREDITS": "About",
-    "LOCAL_SAVE": "Save",
-    "LOCAL_LOAD": "Load",
-    "LOCAL_EXIT": "Exit"
-  }
+ "SETTING_OPTIONS": {
+  "LOCAL_RESOLUTION": "Resolution",
+  "LOCAL_FULLSCREEN": "Fullscreen",
+  "LOCAL_ANTIALIASING": "Antialiasing",
+  "LOCAL_FRAMERATE_LIMIT": "FPS Limit",
+  "LOCAL_VAR_OFF": "Off",
+  "LOCAL_VAR_ON": "On",
+  "LOCAL_VSYNC": "VSync",
+  "LOCAL_LANGUAGE": "English",
+  "LOCAL_CONTROLS": "Keybinds",
+  "LOCAL_AUDIO": "Sounds",
+  "LOCAL_GRAPHICS": "Graphics",
+  "LOCAL_GAMEPLAY": "Gameplay",
+  "LOCAL_CREDITS": "About",
+  "LOCAL_SAVE": "Save",
+  "LOCAL_LOAD": "Load",
+  "LOCAL_EXIT": "Exit"
+ }
 }

@@ -25,23 +25,23 @@ struct ComponentColors {
 	// one color for all
 	ComponentColors() {
 		// idle color (base)
-		shapeIdleColor = sf::Color(30, 40, 65);         
-		outlineIdleColor = sf::Color(20, 28, 45);        
-		textIdleColor = sf::Color(180, 200, 220);       
+		shapeIdleColor = sf::Color(30, 40, 65);     
+		outlineIdleColor = sf::Color(20, 28, 45);    
+		textIdleColor = sf::Color(180, 200, 220);    
 
 		// hover color (lighter, more saturated)
-		shapeHoverColor = sf::Color(50, 65, 95);        
-		outlineHoverColor = sf::Color(30, 40, 65);       
-		textHoverColor = sf::Color(210, 230, 255);      
+		shapeHoverColor = sf::Color(50, 65, 95);    
+		outlineHoverColor = sf::Color(30, 40, 65);    
+		textHoverColor = sf::Color(210, 230, 255);   
 
 		// active color (most saturated, brightest)
-		shapeActiveColor = sf::Color(70, 90, 130);       
-		outlineActiveColor = sf::Color(50, 65, 95);       
-		textActiveColor = sf::Color(255, 255, 255);      
+		shapeActiveColor = sf::Color(70, 90, 130);    
+		outlineActiveColor = sf::Color(50, 65, 95);    
+		textActiveColor = sf::Color(255, 255, 255);   
 
 		// disable color (more gray, less saturated)
-		shapeDisableColor = sf::Color(60, 65, 75);        
-		outlineDisableColor = sf::Color(40, 45, 55);      
+		shapeDisableColor = sf::Color(60, 65, 75);    
+		outlineDisableColor = sf::Color(40, 45, 55);   
 		textDisableColor = sf::Color(100, 110, 125);
 	}
 

@@ -21,7 +21,7 @@ Selector::Selector(sf::Vector2f pos, sf::Vector2f size, sf::Font& font,
 
 	// init text
 	text.setString(list[0]);
-	text.setPosition({box.getPosition().x + (box.getSize().x / 2.f - text.getGlobalBounds().size.x / 2.f),  box.getPosition().y + text.getGlobalBounds().size.y / 2.f});
+	text.setPosition({pos.x + size.x / 2.f - text.getGlobalBounds().size.x / 2.f, pos.y + size.y / 2.f - text.getGlobalBounds().size.y / 2.f});
 	text.setFillColor(sf::Color(255, 255, 255, 200));
 
 	// init list
@@ -38,10 +38,10 @@ Selector::~Selector() {
 		delete it.second;
 }
 
-unsigned Selector::getActiveElementID() const { return  activeElement; }
+unsigned Selector::getActiveElementID() const { return activeElement; }
 
 std::string Selector::getActiveElement() const {
-	return  list[activeElement];
+	return list[activeElement];
 }
 
 void Selector::setActiveElement(unsigned int id) {
@@ -70,7 +70,7 @@ void Selector::update(const float& delta_time, const sf::Vector2f& mousePos) {
 	}
 	text.setPosition(
 		{box.getPosition().x + (box.getSize().x / 2.f - text.getGlobalBounds().size.x / 2.f),
-		  box.getPosition().y + -text.getGlobalBounds().size.y / 2.f});
+		 box.getPosition().y + -text.getGlobalBounds().size.y / 2.f});
 }
 
 void Selector::updateKeyTime(const float& delta_time) {

@@ -54,9 +54,9 @@ public:
 	void add_CopperCoinCount(const int value) { m_copper += value; }
 
 	// Геттеры
-	inline int get_GoldCointCount() const { return  m_gold; }
-	inline int get_SilverCointCount() const { return  m_silver; }
-	inline int get_CopperCointCount() const { return  m_copper; }
+	inline int get_GoldCointCount() const { return m_gold; }
+	inline int get_SilverCointCount() const { return m_silver; }
+	inline int get_CopperCointCount() const { return m_copper; }
 
 	// Обновление монет
 	void updateCoins() {

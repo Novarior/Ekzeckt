@@ -1,20 +1,20 @@
 #ifndef AUDIO_MANAGER_HPP
 #define AUDIO_MANAGER_HPP
 
-#include "../tools/LOGGER.hpp"
+#include "../tools/appfn_logger.hpp"
 #include <map>
 
 namespace gfx {
 enum class SoundCategory {
 	vol_MASTER,
-	vol_SFX,         // Звуковые эффекты
-	vol_MUSIC,       // Музыка
-	vol_AMBIENT,     // Фоновые звуки
-	vol_ENTITY,      // Звуки, связанные с другими сущностями в игре
-	vol_UI,          // Звуки пользовательского интерфейса
-	vol_DIALOGUE,    // Диалоги или голосовые звуки
-	vol_FOLEY,       // Звуки движения персонажей или предметов
-	vol_WEAPON,      // Звуки оружия
+	vol_SFX,     // Звуковые эффекты
+	vol_MUSIC,    // Музыка
+	vol_AMBIENT,   // Фоновые звуки
+	vol_ENTITY,   // Звуки, связанные с другими сущностями в игре
+	vol_UI,     // Звуки пользовательского интерфейса
+	vol_DIALOGUE,  // Диалоги или голосовые звуки
+	vol_FOLEY,    // Звуки движения персонажей или предметов
+	vol_WEAPON,   // Звуки оружия
 	vol_ENVIRONMENT, // Звуки окружающей среды
 	vol_COUNT
 };
@@ -37,7 +37,7 @@ private:
 public:
 	VolumeCollector() {
 		// write log message what im here doing something
-		Logger::logStatic("Start initilization VolumeCollector", "VolumeCollector::VolumeCollector()");
+		appfn::Logger::logStatic("Start initilization VolumeCollector", "VolumeCollector::VolumeCollector()");
 	}
 	// set value Volume by category
 	void setCategoryVolume(SoundCategory category, float volume) {

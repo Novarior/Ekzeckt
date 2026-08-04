@@ -1,45 +1,72 @@
 #include "EditorState.hpp"
-#include "../core/tools/MemoryUsageMonitor.hpp"
-#include "../core/tools/staticFPSMetter.hpp"
-#include "../localisation/helperText.hpp"
+
 #include "../core/math/mymath.hpp"
+
+#include "../localisation/helperText.hpp"
+
+
+void EditorState::initGUI() {
+	initTabMenu();
+	initButtons();
+	initSelectors();
+	initDebugText();
+}
 
 void EditorState::initTabMenu() { // tab menu
 	tabShape.setPosition(sf::Vector2f(mmath::p2pX(70U, IstateData->sd_Window.lock()->getSize().x), 0));
 	tabShape.setSize(sf::Vector2f(mmath::p2pX(30U, IstateData->sd_Window.lock()->getSize().x), IstateData->sd_Window.lock()->getSize().y));
 	// half transparent gray
-	tabShape.setFillColor(sf::Color(150, 150, 150, 200));
+	tabShape.setFillColor(sf::Color(30, 40, 65, 150));
 	tabShape.setOutlineThickness(5.f);
-	tabShape.setOutlineColor(sf::Color(100, 100, 100, 192));
+	tabShape.setOutlineColor(sf::Color(100, 100, 100, 150));
 	showTabmenu = false;
 }
 
 void EditorState::initButtons() { // init buttons
-	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x / 2, mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y));
+	sf::Vector2f tabSize = tabShape.getSize();
+	sf::Vector2f tabPos = tabShape.getPosition();
+	sf::Vector2f btnSize2 = sf::Vector2f(tabSize.x / 2.f, mmath::p2pX(6.F, tabSize.y));
+	sf::Vector2f btnSize3 = sf::Vector2f(tabSize.x / 3.f, mmath::p2pX(6.F, tabSize.y));
+	float btnOffsetY = mmath::p2pX(6.F, tabSize.y);
 
-	IGUILayout["G_NOICE"] = std::make_unique<gui::Button>(
-		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(90U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Gen Noice");
-
-	IGUILayout["G_TREE"] = std::make_unique<gui::Button>(
-		sf::Vector2f(tabShape.getPosition().x + tabShape.getSize().x / 2, tabShape.getPosition().y + mmath::p2pX(90U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Gen Tree");
+	//////////////////////////////////////////////////
+	// btn layout
+	//	 ________________________
+	//	|			|			|
+	//	|___________|___________|
+	//	|		|		|		|
+	//	|_______|_______|_______|
 
 	IGUILayout["SAVE_GENDATA"] = std::make_unique<gui::Button>(
-		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(80U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Save");
+		sf::Vector2f(tabPos.x, tabPos.y + tabSize.y - btnOffsetY * 2.f),
+		btnSize2, "Save");
 
 	IGUILayout["LOAD_GENDATA"] = std::make_unique<gui::Button>(
-		sf::Vector2f(tabShape.getPosition().x + tabShape.getSize().x / 2, tabShape.getPosition().y + mmath::p2pX(80U, IstateData->sd_Window.lock()->getSize().y)),
-		btnSize, "Load");
+		sf::Vector2f(tabPos.x + btnSize2.x, tabPos.y + tabSize.y - btnOffsetY * 2.f),
+		btnSize2, "Load");
+
+	IGUILayout["G_SEED"] = std::make_unique<gui::Button>(
+		sf::Vector2f(tabPos.x, tabPos.y + tabSize.y - btnOffsetY),
+		btnSize3, "New Seed");
+
+	IGUILayout["G_NOICE"] = std::make_unique<gui::Button>(
+		sf::Vector2f(tabPos.x + btnSize3.x, tabPos.y + tabSize.y - btnOffsetY),
+		btnSize3, "Gen Noice");
+
+	IGUILayout["G_TREE"] = std::make_unique<gui::Button>(
+		sf::Vector2f(tabPos.x + btnSize3.x * 2.f, tabPos.y + tabSize.y - btnOffsetY),
+		btnSize3, "Gen Tree");
+
 }
 
 void EditorState::initSelectors() { // init static selector in tab menu
 	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
 	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x, mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y));
-	//gui::SliderFloat sl(pos, size, font, charsize,baseVal, min, max,  name);
+	//gui::SliderFloat sl(pos, size, font, charsize,baseVal, min, max, name);
 	sf::Vector2f tbPos = tabShape.getPosition();
+	sf::Vector2f tbSize = tabShape.getSize();
 	auto& ndata = m_noiceData;
+
 	staticSelectorUInt["OCTAVES"] = new gui::SliderUInt(
 		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, ndata->octaves, 1U, 10U, "Octaves: ");
 
@@ -58,14 +85,14 @@ void EditorState::initSelectors() { // init static selector in tab menu
 	std::vector<std::string> list = {"Linear", "Cosine", "Cubic", "Quintic", "Quartic", "Quadratic", "Hermite"};
 
 	selector = new gui::Selector(
-		sf::Vector2f(tabShape.getPosition().x, tabShape.getPosition().y + mmath::p2pX(28U, IstateData->sd_Window.lock()->getSize().y)),
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(28.f, tbSize.y)),
 		btnSize, font, IstateData->sd_characterSize_game_small, list.data(), list.size(), 0);
 
 	// set default value for static selector
-	staticSelectorUInt["OCTAVES"]->setCurrentValue(m_NoiceViewer->getNoiceData()->octaves);
-	staticSelector["FREQUENCY"]->setCurrentValue(m_NoiceViewer->getNoiceData()->frequency);
-	staticSelector["AMPLIFIRE"]->setCurrentValue(m_NoiceViewer->getNoiceData()->amplifire);
-	staticSelector["PERSISTENCE"]->setCurrentValue(m_NoiceViewer->getNoiceData()->persistence);
+	staticSelectorUInt["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
+	staticSelector["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
+	staticSelector["AMPLIFIRE"]->setCurrentValue(m_noiceData->amplifire);
+	staticSelector["PERSISTENCE"]->setCurrentValue(m_noiceData->persistence);
 }
 
 void EditorState::initNoice() {
@@ -102,13 +129,11 @@ void EditorState::initDebugText() { // init debug text
 
 EditorState::EditorState(StateData* statedata): State(statedata) {
 	// init logger
-	Logger::logStatic("Start initilization EditorState", "EditorState::EditorState()");
+	appfn::Logger::logStatic("Start initilization EditorState", "EditorState::EditorState()");
 	// init keybinds
-	initTabMenu();
-	initButtons();
+
 	initNoice();
-	initSelectors();
-	initDebugText();
+	initGUI();
 
 	current_View_Generator = 0;
 
@@ -119,11 +144,11 @@ EditorState::EditorState(StateData* statedata): State(statedata) {
 	myLS->setOffsetPos(sf::Vector2f(IstateData->sd_Window.lock()->getSize().x / 2, IstateData->sd_Window.lock()->getSize().y * 0.90));
 	myLS->generate();
 
-	Logger::logStatic("End initilization EditorState", "EditorState::EditorState()");
+	appfn::Logger::logStatic("End initilization EditorState", "EditorState::EditorState()");
 }
 
 EditorState::~EditorState() {
-	Logger::logStatic("Start destruction EditorState", "EditorState::~EditorState()");
+	appfn::Logger::logStatic("Start destruction EditorState", "EditorState::~EditorState()");
 
 	// FIXME: add save noice data to file
 	// ParserJson::saveNoiceData( m_NoiceViewer->getNoiceData());
@@ -140,6 +165,58 @@ EditorState::~EditorState() {
 	delete selector;
 	delete myLS;
 	delete m_noiceData;
+}
+
+void EditorState::updateDebugTextState(const float& delta_time) {
+	IstringStream
+		<< "\nNavigation:\n\t\t['/'] Togle LINFO menu"
+		<< "\n\t\t['Q'] Switch Noice generator"
+		<< "\n\t\t['W'] Switch color mode"
+		<< "\n\t\t['E'] Change current viewport of generators"
+		<< "\n\t\t['R'] switch fast mode noices (not simplex)"
+		<< "\nCurent view generator:\t" << current_View_Generator
+		<< "\nCurent noice view mode:\t" << m_NoiceViewer->getNoiceModelName() << ":\t" << m_NoiceViewer->getNoiceModel()
+		<< "\nCurent noice color mode:\t" << m_NoiceViewer->getColorModeName() << ":\t" << m_NoiceViewer->getColorMode()
+		<< "\nNoiceData:\nSeed:\t" << m_NoiceViewer->getNoiceData()->seed
+		<< "\n\tOctaaves: " << m_noiceData->octaves
+		<< "\n\tFrequency: " << m_noiceData->frequency
+		<< "\n\tPersistence: " << m_noiceData->persistence
+		<< "\n\tAmplifire: " << m_noiceData->amplifire
+		<< "\n\tOffSet: " << m_noiceData->offsetSeed
+		<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName() << ":\t" << m_NoiceViewer->getNoiceData()->smoothMode
+		<< "\nFastMode" << m_NoiceViewer->getNoiceData()->fastMode
+		<< "\nHeigth on Cursor: " << m_NoiceViewer->getHeightMap(ImousePosWindow)
+		<< "\nTree Data:\n\tTreeSize:\t" << myLS->getSizeTree()
+		<< "\n\tTreeAxiom\t" << myLS->getAxiomSize();
+}
+
+void EditorState::resetGUI() {
+	IGUILayout.clear();
+	for (auto& it : staticSelector)	delete it.second;
+	for (auto& it : staticSelectorUInt) delete it.second;
+	delete m_NoiceViewer;
+	delete selector;
+
+	auto& gfx = *IstateData->sd_gfxSettings.lock();
+	if (gfx.fullscreen)
+		Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Fullscreen, gfx.contextSettings);
+	else
+		Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Windowed, gfx.contextSettings);
+
+	Iwindow.lock()->setFramerateLimit(gfx.frameRateLimit);
+
+	initNoice();
+	initGUI();
+	//	initRenderDefines();
+	//	resetView();
+
+	m_noiceData->gridSize = IstateData->sd_gridSize;
+	m_noiceData->RenderWindowX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	m_noiceData->RenderWindowY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
+	m_noiceData->mapSizeX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	m_noiceData->mapSizeY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
+	myLS->setOffsetPos(sf::Vector2f(IstateData->sd_Window.lock()->getSize().x / 2, IstateData->sd_Window.lock()->getSize().y * 0.90));
+
 }
 
 sf::IntRect EditorState::findNonTransparentRect(const sf::Image& image) {
@@ -196,7 +273,7 @@ void EditorState::saveTreeAsImage(sf::RenderWindow& window) {
 
 	// save image
 	if (!simg.saveToFile(ss.str()))
-		Logger::logStatic("Image" + ss.str() + " has be corrupt and dosent saved!", "EditorState::saveTreeAsImage()", logType::LERROR);
+		appfn::Logger::logStatic("Image" + ss.str() + " has be corrupt and dosent saved!", "EditorState::saveTreeAsImage()", logType::LERROR);
 }
 
 void EditorState::updateInput(const float& delta_time) {
@@ -230,39 +307,7 @@ void EditorState::updateInput(const float& delta_time) {
 		m_noiceData->fastMode = !m_noiceData->fastMode;
 }
 
-void EditorState::updateDebugText(const float& delta_time) {
-	// collect all data for debug text and update it
-	double fps = 1.0f / delta_time;
-	IstringStream << "FPS:\t" << fps << "\nCurrent memory usage:\t"
-		<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-		<< "Navigation:\n\t\t['/'] Togle LINFO menu"
-		<< "\n\t\t['Q'] Switch Noice generator"
-		<< "\n\t\t['W'] Switch color mode"
-		<< "\n\t\t['E'] Change current viewport of generators"
-		<< "\n\t\t['R'] switch fast mode noices (not simplex)"
-		<< "\nCurent view generator:\t" << current_View_Generator
-		<< "\nCurent noice view mode:\t" << m_NoiceViewer->getNoiceModelName() << ":\t" << m_NoiceViewer->getNoiceModel()
-		<< "\nCurent noice color mode:\t" << m_NoiceViewer->getColorModeName() << ":\t" << m_NoiceViewer->getColorMode()
-		<< "\nNoiceData:"
-		<< "\nSeed:\t" << m_NoiceViewer->getNoiceData()->seed
-		<< "\n\tOctaaves: " << m_noiceData->octaves
-		<< "\n\tFrequency: " << m_noiceData->frequency
-		<< "\n\tPersistence: " << m_noiceData->persistence
-		<< "\n\tAmplifire: " << m_noiceData->amplifire
-		<< "\n\tOffSet: " << m_noiceData->offsetSeed
-		<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName()
-		<< ":\t" << m_NoiceViewer->getNoiceData()->smoothMode
-		<< "\nFastMode" << m_NoiceViewer->getNoiceData()->fastMode
-		<< "\nHeigth on Cursor: " << m_NoiceViewer->getHeightMap(ImousePosWindow);
-	IstringStream << "\nTree Data:"
-		<< "\n\tTreeSize:\t" << myLS->getSizeTree()
-		<< "\n\tTreeAxiom\t" << myLS->getAxiomSize();
 
-	// update debug text
-	Itext.setString(IstringStream.str());
-	// clear string stream
-	IstringStream.str("");
-}
 
 void EditorState::updateButtons(const float& delta_time) {
 	for (auto& it : IGUILayout)
@@ -294,6 +339,9 @@ void EditorState::updateButtons(const float& delta_time) {
 		if (staticSelector["AMPLIFIRE"]->isValueChanged()) {
 			m_noiceData->amplifire = staticSelector["AMPLIFIRE"]->getValue();
 			staticSelector["AMPLIFIRE"]->closeChangeValue();
+		}
+		if (IGUILayout["G_SEED"]->isPressed() && getKeytime()) {
+			m_noiceData->seed = mmath::splitmix64(std::rand());
 		}
 		if (IGUILayout["G_NOICE"]->isPressed() && getKeytime()) {
 			m_NoiceViewer->generateNoice();
@@ -337,9 +385,11 @@ void EditorState::update(const float& delta_time) {
 	if (showTabmenu)
 		updateButtons(delta_time);
 
-	// update debug text
-	if (Idebud)
-		updateDebugText(delta_time);
+	if (Idebud) {
+		updateDebugTextBase(delta_time);
+		updateDebugTextState(delta_time);
+		updateDebugText();
+	}
 }
 
 void EditorState::renderTabMenu(sf::RenderTarget& target) {

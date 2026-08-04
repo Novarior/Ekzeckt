@@ -9,10 +9,9 @@ public:
 	virtual ~Wood() {}
 
 	void useItem() override {
-		std::cout <<  iData.m_name << " is not usable" << std::endl;
 	}
 
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}
 };
-};     // namespace Items
+};   // namespace Items
 #endif /* ITEM_WOOD */

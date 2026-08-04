@@ -1,8 +1,4 @@
-#include "header.h"
-
 #include "Core.h"
-#include "dataCollector/_man_Volume.hpp"
-#include "dataCollector/_man_graphics.hpp"
 
 // mega load stuff here
 // read the object with data and paste it to structs
@@ -12,10 +8,10 @@ bool Core::cr_LoadData() {
 
 	try {
 #ifdef __MDEBUG__
-		Logger::logStatic("Loading config data...", "Core::cr_LoadData()");
+		appfn::Logger::logStatic("Loading config data...", "Core::cr_LoadData()");
 #endif // __MDEBUG__
 		if (!jsonBuffer.contains("cr_window")) {
-			Logger::logStatic("Missing cr_window section", "Core::cr_LoadData()");
+			appfn::Logger::logStatic("Missing cr_window section", "Core::cr_LoadData()");
 			return false;
 		}
 		// bind &window
@@ -47,7 +43,7 @@ bool Core::cr_LoadData() {
 		a_vol->setCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT, sounds["environment"].get<float>());
 
 	} catch (json::type_error& e) { // catch json type errors
-		Logger::logStatic("JSON::TYPE_LERROR: " + std::string(e.what()), "Core::cr_LoadData()");
+		appfn::Logger::logStatic("JSON::TYPE_LERROR: " + std::string(e.what()), "Core::cr_LoadData()");
 		return false;
 	}
 	return true; // parse and past success
@@ -58,10 +54,10 @@ bool Core::cr_SaveData() {
 	auto a_gfx = cr_gfxSettings.get();
 	auto a_vol = cr_VolumeCollector.get();
 
-	std::filesystem::path filePath = AppFn::getPathConfigDirectory().append("save").append(appfiles::config_window);
+	std::filesystem::path filePath = appfn::PathTool::getPathConfigDirectory().append("save").append(appfn::path::sfile::config_window);
 	std::ofstream ofs(filePath);
 	if (!ofs.is_open()) {
-		Logger::logStatic("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()");
+		appfn::Logger::logStatic("CANNOT OPEN FILE", "l:96 -> GFX::loadFromFile()");
 		return false;
 	}
 
@@ -79,7 +75,7 @@ bool Core::cr_SaveData() {
 		}
 
 	} catch (json::type_error& e) { // catch json type errors
-		Logger::logStatic("GFX::JSON::TYPE_LERROR: " + std::string(e.what()), "l:113 -> GFX::loadFromFile()");
+		appfn::Logger::logStatic("GFX::JSON::TYPE_LERROR: " + std::string(e.what()), "l:113 -> GFX::loadFromFile()");
 		return false; // some arror in loading data from json
 	}
 	return true; // load success

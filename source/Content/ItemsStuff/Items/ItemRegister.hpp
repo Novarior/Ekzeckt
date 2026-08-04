@@ -1,7 +1,7 @@
 #ifndef ITEMREGISTER
 #define ITEMREGISTER
 
-#include "../../../core/tools/LOGGER.hpp"
+#include "../../../core/tools/appfn_logger.hpp"
 #include "../Item.hpp"
 
 class ItemRegistry {
@@ -14,16 +14,16 @@ public:
 		if (items.find(id) == items.end()) {
 			for (const auto& pair : items) {
 				if (pair.second->getID() == itemID && id != itemID) {
-					Logger::logStatic("Collision detected: Item with ID " + std::to_string(itemID) + " already exists with a different registry key: " + std::to_string(pair.first), "ItemRegistry", logType::LWARNING);
+					appfn::Logger::logStatic("Collision detected: Item with ID " + std::to_string(itemID) + " already exists with a different registry key: " + std::to_string(pair.first), "ItemRegistry", logType::LWARNING);
 					return false;
 				}
 			}
 
 			items[id] = std::make_shared<Item>(item);
-			Logger::logStatic("Item with id: " + std::to_string(id) + " has been registered", "ItemRegistry", logType::LINFO);
+			appfn::Logger::logStatic("Item with id: " + std::to_string(id) + " has been registered", "ItemRegistry", logType::LINFO);
 			return true;
 		} else {
-			Logger::logStatic("Item with id: " + std::to_string(id) + " alredy was bew registered", "ItemRegistry", logType::LWARNING);
+			appfn::Logger::logStatic("Item with id: " + std::to_string(id) + " alredy was bew registered", "ItemRegistry", logType::LWARNING);
 			return false; // Item with this ID already exists
 		}
 	}

@@ -7,9 +7,9 @@
 #include "../core/header.h"
 
 #include "../core/_myFiles.h"
-#include "../core/_myConst.h"
-#include "../core/tools/path.hpp"
-#include "../core/tools/LOGGER.hpp"
+#include "../core/tools/appfn_consts.h"
+#include "../core/tools/appfn_pathtool.hpp"
+#include "../core/tools/appfn_logger.hpp"
 #include "../core/math/mymath.hpp"
 #include "../core/dataCollector/_man_Fonts.hpp"
 
@@ -39,17 +39,13 @@ public:
 	virtual const bool isDisabled() const;
 	virtual const bool isPressed() const;
 	virtual const bool isHover() const;
-	virtual const ComponentState getState() const { return mState; }
+	virtual const ComponentState& getState() const { return mState; }
 
 	virtual const sf::Vector2f getPosition() const;
-	virtual void setPosition(const sf::Vector2f pos) {
-		Logger::logStatic("Method not supported", "GuiComponent::setPosition", logType::LWARNING);
-	};
+	virtual void setPosition(const sf::Vector2f pos);
+	virtual void updateColor();
 
 	virtual void update(const sf::Vector2f& mousePosWindow) = 0;
-	virtual void updateColor() {
-		Logger::logStatic("Method not overrided", "GuiComponent::updateColor", logType::LWARNING);
-	};
 	virtual	void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };
 } // namespace gui

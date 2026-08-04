@@ -8,8 +8,6 @@
 #include "settings.hpp"
 
 #include "../core/cmakever.h"
-#include "../core/tools/staticFPSMetter.hpp"
-
 #include "../localisation/helperText.hpp"
 
 #include "../GUI/GUI_Component.hpp"
@@ -24,25 +22,29 @@ private:
 	std::vector<sf::RectangleShape> backgrond_shapes;
 
 	// Initialization methods
-	void initButtons();    // Initialize buttons
+	void initButtons();  // Initialize buttons
 	void initBackground(); // Initialize background
-	void initGUI();        // Initialize GUI
-	void resetGUI();       // Reset GUI
-	void initSounds();     // Initialize sounds
+	void initGUI();    // Initialize GUI
+	void initSounds();   // Initialize sounds
 
 	// Elements for start
 
 public:
 	MainMenu(StateData* sDate); // Constructor
-	virtual ~MainMenu();        // Destructor
+	virtual ~MainMenu();    // Destructor
+
+	void updateDebugTextState(const float& delta_time) override;
+
+	void resetGUI() override;    // Reset GUI
 
 	// Update methods
-	void updateInput(const float& delta_time);  // Update input
-	void updateButtons();                       // Update buttons
+	void update(const float& delta_time);    // Update state
+	void updateInput(const float& delta_time); // Update input
 	void updateSounds(const float& delta_time); // Update sounds
-	void updateGUI(const float& delta_time);    // Update GUI
-	void update(const float& delta_time);       // Update state
-	void render(sf::RenderWindow& target);      // Render
+	void updateButtons();            // Update buttons
+
+	void updateGUI(const float& delta_time);  // Update GUI
+	void render(sf::RenderWindow& target);   // Render
 
 	//virtual size_t getMemoryUsage() const { return sizeof(*this); }
 };

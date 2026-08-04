@@ -57,13 +57,13 @@ public:
 
 	/// item is stackable?
 	inline const bool isStackable() const noexcept { return iData.m_stackable; }
-	///  get ID of item
+	/// get ID of item
 	inline const int32_t getID() const noexcept { return iData.m_itemID; }
 	/// get amount of item
 	inline const int16_t getAmount() const noexcept { return iData.m_amount; }
 	/// get max amount of item
 	inline const int16_t getMaxAmount() const noexcept { return iData.m_maxAmount; }
-	///  get name of item
+	/// get name of item
 	inline const std::string getName() const noexcept { return iData.m_name; }
 	/// item is usable?
 	bool isUsable() const noexcept { return iData.m_usable; }

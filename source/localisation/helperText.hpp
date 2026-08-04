@@ -9,10 +9,10 @@
 // и было легко их заменить на другой язык
 
 #include <string>
-#include "../core/_myConst.h"
 #include "../core/header.h"
-#include "../core/tools/path.hpp"
-#include "../core/tools/LOGGER.hpp"
+#include "../core/tools/appfn_consts.h"
+#include "../core/tools/appfn_pathtool.hpp"
+#include "../core/tools/appfn_logger.hpp"
 
 
 
@@ -60,7 +60,7 @@ struct Button {
 		Localization localization;
 		if (localization.initializeLocalization(language)) {
 			BUTTON_PLAY = localization.getLocalizedString("BUTTONS", "LOCAL_PLAY",
-														  "@Play Text");
+														 "@Play Text");
 			BUTTON_PM_PAUSE = localization.getLocalizedString("BUTTONS", "LOCAL_PM_PAUSE", "@Pause");
 			BUTTON_PM_GENERATE = localization.getLocalizedString("BUTTONS", "LOCAL_PM_GENERATE", "@Generate");
 			BUTTON_OPTIONS = localization.getLocalizedString("BUTTONS", "LOCAL_OPTIONS", "@Options Text");

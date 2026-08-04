@@ -9,11 +9,8 @@ public:
 	virtual ~IronSword() {}
 
 	void useItem() override {
-		std::cout << "You swing your " << iData.m_name << std::endl;
-		// Reduce durability by 1 
 		iData.durability = std::max(0, iData.durability - 1);
 
-		Logger::logStatic("You used " + iData.m_name, "CORE->ITEM", logType::LINFO);
 	}
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}
 };

@@ -2,7 +2,6 @@
 
 #include "../Content/ItemsStuff/ItemEntity/entity_item.hpp"
 #include "../Content/ItemsStuff/Items/all_items.hpp"
-#include "../core/tools/MemoryUsageMonitor.hpp"
 #include "../entitys/Enemys/slime.hpp"
 #include "../localisation/helperText.hpp"
 
@@ -11,16 +10,16 @@ std::map<int, std::shared_ptr<Item>> ItemRegistry::items = {};
 const bool Process::loadGameData() {
 	// load noice config
 	// if (ParserJson::loadNoiceData( noicedata))
-	//   printf("LERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n   %s\n",
-	//          AppFiles::config_noicedata);
+	//  printf("LERROR::PROCESS::LOAD::NOICEDATA::COULD_NOT_LOAD\n  %s\n",
+	//     AppFiles::config_noicedata);
 	// else {
-	//    noicedata.mapSizeX = 1000;
-	//    noicedata.mapSizeY = 1000;
-	//    noicedata.RenderWindowX =
-	//        IstateData->sd_gfxSettings.lock()->resolution.size.x;
-	//    noicedata.RenderWindowY =
-	//        IstateData->sd_gfxSettings.lock()->resolution.size.y;
-	//    noicedata.gridSize =  IstateData->sd_gridSize;
+	//  noicedata.mapSizeX = 1000;
+	//  noicedata.mapSizeY = 1000;
+	//  noicedata.RenderWindowX =
+	//    IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	//  noicedata.RenderWindowY =
+	//    IstateData->sd_gfxSettings.lock()->resolution.size.y;
+	//  noicedata.gridSize = IstateData->sd_gridSize;
 	// }
 	return true;
 }
@@ -28,16 +27,16 @@ const bool Process::loadGameData() {
 const bool Process::saveGameData() {
 	// save player to JSON file
 	// if (ParserJson::savePlayer( player.get()))
-	//   Logger::logStatic("Parser::savePlayer()::LERROR::",
-	//                     "Process::saveGameData()", logType::LERROR);
+	//  Logger::logStatic("Parser::savePlayer()::LERROR::",
+	//           "Process::saveGameData()", logType::LERROR);
 	// // save inventory to JSON file
 	// // if (ParserJson::saveInventory(t_inventory))
-	// //   Logger::logStatic("Parser::saveInventory()::LERROR::",
-	// //                     "Process::saveGameData()", logType::LERROR);
+	// //  Logger::logStatic("Parser::saveInventory()::LERROR::",
+	// //           "Process::saveGameData()", logType::LERROR);
 	// // save entitys pos and other data
 	// if (ParserJson::saveEntitys( entitys))
-	//   Logger::logStatic("Parser::saveEntitys()::LERROR::",
-	//                     "Process::saveGameData()", logType::LERROR);
+	//  Logger::logStatic("Parser::saveEntitys()::LERROR::",
+	//           "Process::saveGameData()", logType::LERROR);
 
 	return true;
 }
@@ -71,6 +70,9 @@ void Process::intGUI() { // init GUI
 	const sf::Vector2f res = {(float)IstateData->sd_gfxSettings.lock()->resolution.size.x,
 							(float)IstateData->sd_gfxSettings.lock()->resolution.size.y};
 
+	noicedata->RenderWindowX = IstateData->sd_gfxSettings.lock()->resolution.size.x;
+	noicedata->RenderWindowY = IstateData->sd_gfxSettings.lock()->resolution.size.y;
+
 	initPauseMenu(res);
 	initMiniMap(res);
 	initGUIInventory(res);
@@ -96,7 +98,7 @@ void Process::initGUIInventory(sf::Vector2f res) {	// create GUI for inventory
 	//IstateData->sd_GameFont_basic, 64.0f,
 	//IstateData->sd_characterSize_game_small);
 
-	Logger::logStatic("Inventory GUI initialized", "Process::initInventoryGUI()");
+	appfn::Logger::logStatic("Inventory GUI initialized", "Process::initInventoryGUI()");
 }
 
 void Process::initMiniMap(sf::Vector2f res) { // init minimap
@@ -129,8 +131,8 @@ void Process::initView() {
 	playerView.setSize(halfSize);
 	playerView.setCenter(halfSize);
 
-	if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x,  IstateData->sd_Window.lock()->getSize().y}))
-		sf::RenderTexture _buffRenderTexture({IstateData->sd_Window.lock()->getSize().x,  IstateData->sd_Window.lock()->getSize().y});
+	if (!renderTexture.resize({IstateData->sd_Window.lock()->getSize().x, IstateData->sd_Window.lock()->getSize().y}))
+		sf::RenderTexture _buffRenderTexture({IstateData->sd_Window.lock()->getSize().x, IstateData->sd_Window.lock()->getSize().y});
 
 	renderSprite.setTexture(renderTexture.getTexture());
 	renderSprite.setTextureRect(sf::IntRect(
@@ -182,8 +184,8 @@ void Process::registerItems() { // register items to registry
 	ItemRegistry::registerItem(8, Items::GoldCoin());
 	ItemRegistry::registerItem(99, Items::TestItem()); // Регистрация тестового предмета
 
-	Logger::logStatic("Items has been registered", "Process::registerItems()");
-	Logger::logStatic("Items count: " + std::to_string(ItemRegistry::getAllItems().size()), "Process::registerItems()");
+	appfn::Logger::logStatic("Items has been registered", "Process::registerItems()");
+	appfn::Logger::logStatic("Items count: " + std::to_string(ItemRegistry::getAllItems().size()), "Process::registerItems()");
 }
 
 Process::Process(StateData* state_data, const bool defaultLoad)
@@ -203,14 +205,14 @@ Process::Process(StateData* state_data, const bool defaultLoad)
 
 	intGUI();
 
-	Logger::logStatic("End initilization process", "Process::Process()");
+	appfn::Logger::logStatic("End initilization process", "Process::Process()");
 }
 
 Process::~Process() {
 	if (saveGameData())
-		Logger::logStatic("Game Data has be saved", "Process::~Process()::saveGameData()");
+		appfn::Logger::logStatic("Game Data has be saved", "Process::~Process()::saveGameData()");
 	else
-		Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::LERROR);
+		appfn::Logger::logStatic("Game Data has not be saved", "Process::~Process()::saveGameData()", logType::LERROR);
 
 	delete myGN;
 	delete mapTiles;
@@ -220,14 +222,20 @@ Process::~Process() {
 
 	pausemenu.reset();
 	minimap.reset();
-
-	// clear bar
 	playerBar.clear();
 
-	// clear vector entitys
 	for (auto& it : entitys)
 		delete it;
 	entitys.clear();
+}
+
+void Process::resetGUI() {
+	pausemenu.reset();
+	minimap.reset();
+	playerBar.clear();
+
+	initView();
+	intGUI();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -244,14 +252,10 @@ void Process::updateInput(const float& delta_time) {
 }
 
 void Process::updatePlayerInputs(const float& delta_time) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) // left
-		player->e_move(-1.f, 0.f, delta_time);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) // right
-		player->e_move(1.f, 0.f, delta_time);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) // down
-		player->e_move(0.f, 1.f, delta_time);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) // up
-		player->e_move(0.f, -1.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) player->e_move(-1.f, 0.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) player->e_move(1.f, 0.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) player->e_move(0.f, 1.f, delta_time);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) player->e_move(0.f, -1.f, delta_time);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && getKeytime()) {
 		for (auto& it : entitys)
@@ -298,9 +302,6 @@ void Process::update(const float& delta_time) {
 	updateKeytime(delta_time);
 	updateInput(delta_time);
 
-	// one more update
-	if (Idebud)
-		updateDebug(delta_time);
 
 	if (Ipaused) { // update pause
 		pausemenu->update(sf::Vector2f(ImousePosWindow));
@@ -317,9 +318,6 @@ void Process::update(const float& delta_time) {
 			minimap->setImage(mapTiles->getMinimapImage());
 		}
 	} else {
-		// Обработка событий GUI инвентаря
-		// Обновляем интерфейс инвентаря напрямую без событий
-		// Поскольку события уже обрабатываются в State::updateKeyTime
 		if (inventoryGUI->isVisible())
 			inventoryGUI->update(ImousePosScreen);
 
@@ -332,47 +330,36 @@ void Process::update(const float& delta_time) {
 		updateGUI(delta_time);
 	}
 	updateTileMap(delta_time);
+
+	if (Idebud) {
+		updateDebugTextBase(delta_time);
+		updateDebugTextState(delta_time);
+		updateDebugText();
+	}
 }
 
-void Process::updateDebug(const float& delta_time) {
-	double fps = 1.0f / delta_time;
-	IstringStream << "FPS:\t" << fps << "\nCurrent memory usage:\t"
-		<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-		<< "\nResolution: " << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
-		<< "\nPlayer:"
-		<< "\nComponents: " << "\n\tvelX: " << player->e_getVelocity().x << "\n\tvelY: " << player->e_getVelocity().y
-		<< "\nPosition:" << "\n\tx: " << player->e_getPosition().x << "\n\ty: " << player->e_getPosition().y
-		<< "\n\tgrid x: "
-		<< player->e_getGridPositionFloat(IgridSize).x
-		<< "\n\tgrid y: "
-		<< player->e_getGridPositionFloat(IgridSize).y
-		<< "\nMap Size: " << mapTiles->getMapSizeOnTiles().x << 'x'
-		<< mapTiles->getMapSizeOnTiles().y
-		<< "\nMap Area Render: " << mapTiles->getRenderArea().fromX << ' '
-		<< mapTiles->getRenderArea().fromY << ' '
-		<< mapTiles->getRenderArea().toX << ' '
-		<< mapTiles->getRenderArea().toY << '\n'
-		<< "Pause:\t" << Ipaused
+void Process::updateDebugTextState(const float& delta_time) {
+
+	IstringStream
+		<< "\nPlayer:\nComponents:\n\tvelX: " << player->e_getVelocity().x << "\n\tvelY: " << player->e_getVelocity().y
+		<< "\nPosition:\n\tx: " << player->e_getPosition().x << "\n\ty: " << player->e_getPosition().y
+		<< "\n\tgrid x: " << player->e_getGridPositionFloat(IgridSize).x
+		<< "\n\tgrid y: " << player->e_getGridPositionFloat(IgridSize).y
+		<< "\nMap Size: " << mapTiles->getMapSizeOnTiles().x << ' x ' << mapTiles->getMapSizeOnTiles().y
+		<< "\nMap Area Render: "
+		<< mapTiles->getRenderArea().fromX << ' ' << mapTiles->getRenderArea().fromY << ' '
+		<< mapTiles->getRenderArea().toX << ' ' << mapTiles->getRenderArea().toY
+		<< "\nPause:\t" << Ipaused
 		<< "\nMemory Usage: "
-		// get memory usage enemys on bytes
-		<< "\n\tPlayer: " << sizeof(*player) << " = " << sizeof(Player)
-		<< " bytes"
-		<< "\n\tEntitys: " << entitys.size() << " x " << sizeof(Entity)
-		<< " = " << entitys.size() * sizeof(Entity) << " bytes"
+		<< "\n\tPlayer: " << sizeof(*player) << " = " << sizeof(Player) << " bytes"
+		<< "\n\tEntitys: " << entitys.size() << " x " << sizeof(Entity) << " = " << entitys.size() * sizeof(Entity) << " bytes"
 		<< "\n\tTotal Entitys: " << Entity::count_entitys << "\n\tEntity[0] Data:"
-		<< "\n\t\tmovDir: "
-		<< entitys[0]->getMovement()->getDirectionVec().x << ' '
-		<< entitys[0]->getMovement()->getDirectionVec().y
-		<< "\n\t\tmovVel: " << entitys[0]->getMovement()->getVelocity().x
-		<< ' ' << entitys[0]->getMovement()->getVelocity().y
+		<< "\n\t\tmovDir: " << entitys[0]->getMovement()->getDirectionVec().x << ' ' << entitys[0]->getMovement()->getDirectionVec().y
+		<< "\n\t\tmovVel: " << entitys[0]->getMovement()->getVelocity().x << ' ' << entitys[0]->getMovement()->getVelocity().y
 		<< "\n\tTileMap: " << sizeof(*mapTiles) << " bytes"
 		<< "\n\tPauseMenu: " << sizeof(*pausemenu) << " bytes"
-		<< "\n\tTotal usage: "
-		<< sizeof(*player) + (entitys.size() * sizeof(Entity)) +
-		sizeof(mapTiles) + sizeof(*pausemenu)
-		<< " bytes"
-		<< "\nGenerator data:"
-		<< "\n\tSeed:\t"
+		<< "\n\tTotal usage: "		<< sizeof(*player) + (entitys.size() * sizeof(Entity)) +	sizeof(mapTiles) + sizeof(*pausemenu)
+		<< " bytes\nGenerator data:\n\tSeed:\t"
 		<< noicedata->seed << "\n\tOctaves:\t"
 		<< noicedata->octaves << "\n\tFrequency:\t"
 		<< noicedata->frequency << "\n\tAmplifire:\t"
@@ -382,9 +369,6 @@ void Process::updateDebug(const float& delta_time) {
 		<< noicedata->RenderWindowY << "\n\tNoiceSizeMapX:\t"
 		<< noicedata->mapSizeX << "\n\tNoiceSizeMapY:\t"
 		<< noicedata->mapSizeY;
-
-	Itext.setString(IstringStream.str());
-	IstringStream.str("");
 }
 
 void Process::updateSounds(const float& delta_time) {}

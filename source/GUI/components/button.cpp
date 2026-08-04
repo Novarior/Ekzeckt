@@ -1,13 +1,14 @@
 #include "button.hpp"
 
 gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text, unsigned int id)
-	:mText (*FontManager::getFont(FontID::FONT_GAMEF_01), text, 30U), mID(id) {
+	:mText(*FontManager::getFont(FontID::FONT_GAMEF_01), text, 32U), mID(id) {
 	mState = ComponentState::CS_IDLE;
 
-	mData.isActive = true;
-	mData.textString = text;
 	mData.position = position;
 	mData.size = size;
+	//mData.font = FontManager::getFont(FontID::FONT_GAMEF_01);
+	mData.characterSize = 32U;
+	mData.isActive = true;
 
 
 	mShape.setPosition(sf::Vector2f(position.x, position.y));
@@ -15,13 +16,10 @@ gui::Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text, 
 	mShape.setFillColor(mColors.shapeIdleColor);
 	mShape.setOutlineThickness(-1.f);
 	mShape.setOutlineColor(mColors.outlineIdleColor);
-
-	mText.setFont(*FontManager::getFont(FontID::FONT_GAMEF_01));
+	
 	mText.setFillColor(mColors.textIdleColor);
-	mText.setCharacterSize(mData.characterSize);
-	mText.setString(mData.textString);
 	mText.setPosition({mData.position.x + (mData.size.x / 2.f) - mText.getGlobalBounds().size.x / 2.f,
-					  mData.position.y + mData.size.y / 2 - mText.getGlobalBounds().size.y});
+					 mData.position.y + mData.size.y / 2 - mText.getGlobalBounds().size.y});
 }
 
 void gui::Button::update(const sf::Vector2f& mousePosWindow) {

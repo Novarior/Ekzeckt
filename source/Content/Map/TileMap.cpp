@@ -90,7 +90,7 @@ void TileMap::initTrees() {
 		}
 		should_break = false;
 		// 2. search first non-Transparent row from 0, size.y
-		for (unsigned int y = size.y-1; y > 0 && !should_break; y--) {
+		for (unsigned int y = size.y - 1; y > 0 && !should_break; y--) {
 			for (unsigned int x = 0; x < size.x; x++) {
 				if (image.getPixel({x, y}) == sf::Color::Transparent) {
 					mrect.size.y = y;
@@ -113,8 +113,8 @@ void TileMap::initTrees() {
 			}
 		}
 		should_break = false;
-		// 4.  search first non-Transparent column from size.x, mrect.position.y 
-		for (unsigned int x = size.x-1; x > 0 && !should_break; x--) {
+		// 4. search first non-Transparent column from size.x, mrect.position.y 
+		for (unsigned int x = size.x - 1; x > 0 && !should_break; x--) {
 			for (unsigned int y = mrect.position.y; y < mrect.size.y; y++) {
 				if (image.getPixel({x, y}) == sf::Color::Transparent) {
 					mrect.size.x = x;
@@ -156,9 +156,9 @@ void TileMap::pushTree(int x, int y) {
 }
 
 void TileMap::generateMap() {
-	this->worldSizeGrid = sf::Vector2i(_map_dataNoice->mapSizeX, _map_dataNoice->mapSizeY);
+	this->worldSizeGrid = sf::Vector2u(_map_dataNoice->mapSizeX, _map_dataNoice->mapSizeY);
 	this->worldSizeInt = sf::Vector2i(_map_dataNoice->mapSizeX * _map_dataNoice->gridSize, _map_dataNoice->mapSizeY * _map_dataNoice->gridSize);
-	this->worldSizeFloat = sf::Vector2f(_map_dataNoice->mapSizeX * _map_dataNoice->gridSize, _map_dataNoice->mapSizeY * _map_dataNoice->gridSize);
+	this->worldSizeFloat = sf::Vector2f(float(_map_dataNoice->mapSizeX) * _map_dataNoice->gridSize, _map_dataNoice->mapSizeY * _map_dataNoice->gridSize);
 
 	float buff_height;
 	sf::Color buff;
@@ -175,7 +175,7 @@ void TileMap::generateMap() {
 		for (int y = 0; y < _map_dataNoice->mapSizeY; y++) {
 			buff_height = mmath::normalize(mGen_noice->getNoice(x, y));
 
-			if (buff_height < 45) {                                                  // Ocean
+			if (buff_height < 45) {                         // Ocean
 				double depth_intensity = 100 + buff_height * 1.2; // Интенсивность синего
 				buff = sf::Color(0, std::max(0.0, 5 + buff_height * 0.4), std::min(255.0, depth_intensity), 255);
 
@@ -326,12 +326,13 @@ void TileMap::updateWorldBoundsCollision(Entity& entity) { // WORLD BOUNDS
 }
 
 void TileMap::updateTileCollision(Entity& entity, const float& delta_time) {
-	auto entityGridPos = entity.e_getGridPositionInt(_map_dataNoice->gridSize);
+	auto entityGridPos = entity.e_getGridPositionFloat(_map_dataNoice->gridSize);
+	sf::Vector2f ws = {float(worldSizeGrid.x),float(worldSizeGrid.y)};
 
-	this->m_colisionArea.fromX = std::max(0, entityGridPos.x - 1);
-	this->m_colisionArea.toX = std::min(this->worldSizeGrid.x, entityGridPos.x + 3);
-	this->m_colisionArea.fromY = std::max(0, entityGridPos.y - 1);
-	this->m_colisionArea.toY = std::min(this->worldSizeGrid.y, entityGridPos.y + 3);
+	this->m_colisionArea.fromX = std::max(0.f, entityGridPos.x - 1);
+	this->m_colisionArea.toX = std::min(ws.x, entityGridPos.x + 3);
+	this->m_colisionArea.fromY = std::max(0.f, entityGridPos.y - 1.f);
+	this->m_colisionArea.toY = std::min(ws.y, entityGridPos.y + 3.f);
 
 	sf::FloatRect playerBounds = entity.getGlobalBounds();
 	sf::FloatRect nextPositionBounds = entity.getNextPositionBounds(delta_time);

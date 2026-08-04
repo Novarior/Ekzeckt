@@ -135,6 +135,9 @@
     <ClCompile Include="source\core\dataCollector\_man_Fonts.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\tools\appfn_pathtool.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\dataCollector\_keybind_enum.h">
@@ -149,16 +152,16 @@
     <ClInclude Include="source\core\dataCollector\_man_Volume.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\tools\LOGGER.hpp">
+    <ClInclude Include="source\core\tools\appfn_logger.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\tools\MemoryUsageMonitor.hpp">
+    <ClInclude Include="source\core\tools\appfn_memory.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\tools\staticFPSMetter.hpp">
+    <ClInclude Include="source\core\tools\appfn_fpsClock.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\_myConst.h">
+    <ClInclude Include="source\core\tools\appfn_consts.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="source\core\_myFiles.h">
@@ -170,7 +173,7 @@
     <ClInclude Include="source\core\Core.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\tools\path.hpp">
+    <ClInclude Include="source\core\tools\appfn_pathtool.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="source\core\pch.h">

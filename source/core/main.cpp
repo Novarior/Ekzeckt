@@ -2,13 +2,16 @@
 
 #include "Core.h"
 
-int main() {
+int main(int argc, char** argv) {
+	auto path = argv[0];
+
 //	tst::tfn::test();
-	AppFn::initPathHomeDirectory();
-	AppFn::initPathResourcesDir();
-	Logger::logStatic("\n=====================\n=====================\n=====================", "main.cpp");
+	appfn::PathTool::initialise(path);
+	appfn::PathTool::initPathHomeDirectory();
+	appfn::PathTool::initPathResourcesDir();
+	appfn::Logger::logStatic("\n=====================\n=====================\n=====================", "main.cpp");
 	Core mc;
 	mc.run();
-	Logger::destroy(); // Flush all remaining logs and cleanup
+	appfn::Logger::destroy(); // Flush all remaining logs and cleanup
 	std::exit(EXIT_SUCCESS);
 }

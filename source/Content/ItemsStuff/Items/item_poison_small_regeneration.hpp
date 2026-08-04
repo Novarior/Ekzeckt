@@ -11,12 +11,6 @@ public:
 	virtual ~PoisonSmallRegeneration() {}
 
 	void useItem() override {
-		// print to console that you used this item
-		std::cout << "You used " << iData.m_name << std::endl;
-		// add regeneration to player
-		// remove item from inventory
-		// if quantity == 0 remove item from inventory
-
 		removeAmount(1);
 	}
 

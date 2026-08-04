@@ -1,9 +1,8 @@
 #include "GUI_Component.hpp"
 
 gui::GuiComponent::GuiComponent():
-	mData({0, 0}, {0, 0}, FontManager::getFont(FontID::FONT_GAMEF_01), 16U, false),
-	mState(ComponentState::CS_IDLE),
-	mColors() {}
+	mData(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f), FontManager::getFont(FontID::FONT_GAMEF_01), 18U, true),
+	mState(ComponentState::CS_IDLE), mColors() {}
 
 gui::GuiComponent::~GuiComponent() {}
 
@@ -21,7 +20,8 @@ void gui::GuiComponent::changeActivity(const bool _value) {
 	else
 		mState = ComponentState::CS_DISABLED;
 }
-
+void gui::GuiComponent::setPosition(const sf::Vector2f pos) {}
+void gui::GuiComponent::updateColor() {}
 const sf::Vector2f gui::GuiComponent::getPosition() const { return mData.position; }
 const bool gui::GuiComponent::isDisabled() const { return !mData.isActive; }
 const bool gui::GuiComponent::isActived() const { return mData.isActive; }

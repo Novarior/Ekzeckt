@@ -9,8 +9,6 @@ public:
 	virtual ~GoldCoin() {}
 
 	void useItem() override {
-		std::cout << iData.m_name << " is not usable directly" << std::endl;
-		Logger::logStatic("You can use " +  iData.m_name + " for trading", "CORE->ITEM", logType::LINFO);
 	}
 
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}

@@ -2,7 +2,7 @@
 #define CORE
 
 #include "header.h"
-#include "_myConst.h"
+#include "tools/appfn_consts.h"
 
 #include "dataCollector/_keybind_enum.h"
 #include "dataCollector/_man_Volume.hpp"
@@ -15,25 +15,25 @@
 #include "../states/State.hpp"
 #include "../states/MainMenu.hpp"
 
-#include "tools/path.hpp"
-#include "tools/LOGGER.hpp"
-#include "tools/staticFPSMetter.hpp"
+#include "tools/appfn_pathtool.hpp"
+#include "tools/appfn_logger.hpp"
+#include "tools/appfn_fpsClock.hpp"
 
 
 
 // class LuaVM{
-//     public:
-//     lua_State* L;
+//   public:
+//   lua_State* L;
 
-//     LuaVM() {
-//         L = luaL_newstate();
-//         luaL_openlibs(L);
-//     };
-//     ~LuaVM(){ if (L) { lua_close(L); }}
+//   LuaVM() {
+//     L = luaL_newstate();
+//     luaL_openlibs(L);
+//   };
+//   ~LuaVM(){ if (L) { lua_close(L); }}
 
-//     operator lua_State*() const { return L; }
+//   operator lua_State*() const { return L; }
 
-//     lua_State* operator->() const { return L;}
+//   lua_State* operator->() const { return L;}
 // };
 ///
 /// @brief The "Core" class is responsible for managing the main game loop, handling events, updating game state, and rendering. It also manages resources such as textures, sounds, and fonts, and handles the loading and saving of game data. The Core class serves as the central hub for the game's functionality, coordinating various subsystems and ensuring smooth gameplay.

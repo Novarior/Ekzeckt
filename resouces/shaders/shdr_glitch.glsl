@@ -20,39 +20,39 @@ uniform sampler2D u_texture_1;
 #define duv vec2(gl_FragCoord.xy/u_resolution.xy)
 
 float rand(){
-    return fract(sin(u_time)*1e4);
+  return fract(sin(u_time)*1e4);
 }
 
 vec4 mainImage(vec4 fragColor,vec4 fragCoord){
-    vec2 uv=duv;
-    vec2 uvR=uv;
-    vec2 uvB=uv;
-    
-    uvR.x=uv.x*1.-rand()*.02*.8;
-    uvB.y=uv.y*1.+rand()*.02*.8;
-    
-    //
-    if(uv.y<rand()&&uv.y>rand()-.1&&sin(u_time)<0.){
-        uv.x=(uv+.02*rand()).x;
-    }
-    //
-    vec4 c;
-    vec2 zero=vec2(1.1,1.1);
-    c.r=texture2D(u_texture_0,uvR).r;
-    c.g=texture2D(u_texture_0,uv).g;
-    c.b=texture2D(u_texture_0,uvB).b;
-    c.a=texture2D(u_texture_0,uv).a;
-    //
-    float scanline=sin(uv.y*800.*rand())/30.;
-    c*=1.-scanline;
-    
-    //vignette
-    float vegDist=length((.5,.5)-uv);
-    c*=1.-vegDist*.6;
-    
-    return c;
+  vec2 uv=duv;
+  vec2 uvR=uv;
+  vec2 uvB=uv;
+  
+  uvR.x=uv.x*1.-rand()*.02*.8;
+  uvB.y=uv.y*1.+rand()*.02*.8;
+  
+  //
+  if(uv.y<rand()&&uv.y>rand()-.1&&sin(u_time)<0.){
+    uv.x=(uv+.02*rand()).x;
+  }
+  //
+  vec4 c;
+  vec2 zero=vec2(1.1,1.1);
+  c.r=texture2D(u_texture_0,uvR).r;
+  c.g=texture2D(u_texture_0,uv).g;
+  c.b=texture2D(u_texture_0,uvB).b;
+  c.a=texture2D(u_texture_0,uv).a;
+  //
+  float scanline=sin(uv.y*800.*rand())/30.;
+  c*=1.-scanline;
+  
+  //vignette
+  float vegDist=length((.5,.5)-uv);
+  c*=1.-vegDist*.6;
+  
+  return c;
 }
 
 void main(){
-    gl_FragColor=mainImage(gl_FragColor,gl_FragCoord);
+  gl_FragColor=mainImage(gl_FragColor,gl_FragCoord);
 }

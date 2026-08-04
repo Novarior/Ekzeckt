@@ -46,7 +46,7 @@ void gui::InventoryGUI::initSlots(sf::Vector2<uint16_t> _size) {
 	}
 }
 
-gui::InventoryGUI::InventoryGUI(sf::Vector2f screenSize,  sf::Font& font, std::shared_ptr<Inventory> inv, unsigned int characterSize) {
+gui::InventoryGUI::InventoryGUI(sf::Vector2f screenSize, sf::Font& font, std::shared_ptr<Inventory> inv, unsigned int characterSize) {
 	isOpen = true;
 	sf::Vector2<uint16_t> size(INV_SIZE_ROW, INV_SIZE_COL);
 	initBackground(screenSize,size);

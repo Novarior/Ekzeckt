@@ -4,7 +4,7 @@ PauseMenu::PauseMenu(sf::Vector2f resolution, sf::Font& font, std::string& text)
 	menuText = sf::Text(font, text, mmath::calcCharSize(resolution.x, resolution.y));
 
 	// logger
-	Logger::logStatic("PauseMenu constructor", "PauseMenu");
+	appfn::Logger::logStatic("PauseMenu constructor", "PauseMenu");
 	// Init background
 
 	background.setSize(resolution);
@@ -20,17 +20,17 @@ PauseMenu::PauseMenu(sf::Vector2f resolution, sf::Font& font, std::string& text)
 
 	// Init text
 	menuText.setFillColor(sf::Color(200, 200, 200, 255));
-	menuText.setPosition({container.getPosition().x + container.getSize().x / 2.f - menuText.getGlobalBounds().size.x / 2.f,  container.getPosition().y + mmath::p2pX(4.f, constSizeX)});
+	menuText.setPosition({container.getPosition().x + container.getSize().x / 2.f - menuText.getGlobalBounds().size.x / 2.f, container.getPosition().y + mmath::p2pX(4.f, constSizeX)});
 }
 
 PauseMenu::~PauseMenu() {
-	Logger::logStatic("PauseMenu destructor", "PauseMenu");
+	appfn::Logger::logStatic("PauseMenu destructor", "PauseMenu");
 	buttons.clear();
 }
 
 // Functions
 const bool PauseMenu::isButtonPressed(const std::string key) {
-	return  buttons[key]->isPressed();
+	return buttons[key]->isPressed();
 }
 
 void PauseMenu::addButton(float btnPosY, sf::Vector2f btnSize, unsigned char_size, std::string key, std::string text) {
@@ -44,7 +44,7 @@ void PauseMenu::addButton(float btnPosY, sf::Vector2f btnSize, unsigned char_siz
 	buttons[key] = std::make_shared<gui::Button>(Pos, Size, text);
 
 #ifdef __MDEBUG__
-	Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
+	appfn::Logger::logStatic("PauseMenu::addButton: " + key, "PauseMenu");
 #endif
 }
 

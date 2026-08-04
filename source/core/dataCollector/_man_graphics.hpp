@@ -1,6 +1,6 @@
 #ifndef GFX
 #define GFX
-#include "../_myConst.h"
+#include "../tools/appfn_consts.h"
 #include "../header.h"
 
 namespace gfx {
@@ -16,7 +16,7 @@ struct myGFXStruct {
 	std::vector<sf::VideoMode> videoModes;
 
 	myGFXStruct() {
-		title = myConst::app_name;
+		title = appfn::path::sfile::app_name;
 		verticalSync = false;
 		resolution = sf::VideoMode::getDesktopMode();
 		videoModes = sf::VideoMode::getFullscreenModes();

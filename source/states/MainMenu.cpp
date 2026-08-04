@@ -47,11 +47,11 @@ void MainMenu::initButtons() {
 
 	// Массив с координатами для каждой кнопки
 	std::vector<sf::Vector2f> buttonOffsets = {
-		{offsetX * 15.5f, offsetY * 2},  // noice
+		{offsetX * 15.5f, offsetY * 2}, // noice
 		{offsetX * 15.5f, offsetY * 10}, // continue
 		{offsetX * 15.5f, offsetY * 12}, // start
 		{offsetX * 15.5f, offsetY * 14}, // settings
-		{offsetX * 15.5f, offsetY * 18}  // exit
+		{offsetX * 15.5f, offsetY * 18} // exit
 	};
 
 	// Данные о кнопках
@@ -78,8 +78,10 @@ void MainMenu::initButtons() {
 }
 
 void MainMenu::initGUI() {
+	Itext.setCharacterSize(IstateData->sd_characterSize_debug);
 	initBackground();
 	initButtons();
+
 }
 
 void MainMenu::resetGUI() {
@@ -87,49 +89,46 @@ void MainMenu::resetGUI() {
 	if (!IGUILayout.empty())
 		IGUILayout.clear();
 	backgrond_shapes.clear();
+	//// reset window
+	//auto& gfx = *IstateData->sd_gfxSettings.lock();
+	//if (gfx.fullscreen)
+	//	Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Fullscreen, gfx.contextSettings);
+	//else
+	//	Iwindow.lock()->create(gfx.resolution, gfx.title, sf::State::Windowed, gfx.contextSettings);
 
-	//einitRenderDefines();
+	//Iwindow.lock()->setFramerateLimit(gfx.frameRateLimit);
+
+//	initRenderDefines();
 	resetView();
+
 	reCaclulateCharacterSize();
-	initBackground();
-	initButtons();
+
+	initGUI();
 	IstateData->sd_reserGUI = false;
-	//std::stringstream ss;
-	//ss << "\nISD_SD_WIN:\t" << IstateData->sd_Window.lock()->getSize().x << " x " << IstateData->sd_Window.lock()->getSize().y
-	//	<< "\nnISD_SD_WIN_VS:\t" << IstateData->sd_Window.lock()->getView().getSize().x << " x " << IstateData->sd_Window.lock()->getView().getSize().y
-	//	<< "\nnISD_SD_WIN_VC:\t" << IstateData->sd_Window.lock()->getView().getCenter().x << " x " << IstateData->sd_Window.lock()->getView().getCenter().y
-	//	<< "\nnIWinRes:\t" << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
-	//	<< "\nIWIN_VS:\t" << Iwindow.lock()->getView().getSize().x << " x " << Iwindow.lock()->getView().getSize().y
-	//	<< "\nnWIN_VC:\t" << Iwindow.lock()->getView().getCenter().x << " x " << Iwindow.lock()->getView().getCenter().y
-	//	<< "\nnViev:\t" << view.getSize().x << " x " << view.getSize().y
-	//	<< "\nnRenTex:\t" << renderTexture.getTexture().getSize().x << " x " << renderTexture.getTexture().getSize().y
-	//	<< "\nnRenSprt:\t" << renderSprite.getTextureRect().size.x << " x " << renderSprite.getTextureRect().size.y
-	//	<< "\n";
-	//Logger::logStatic(ss.str(), "rGUI");
 }
 
 void MainMenu::initSounds() {
 	try {
 		for (const auto& [category, soundKey, mapKey] :
-			 {std::tuple{gfx::SoundCategory::vol_MUSIC, myConst::sounds::music_menu, "MAIN_MENU"},
-			  {gfx::SoundCategory::vol_UI, myConst::sounds::selbtn_menu, "SELECT_MENU"},
-			  {gfx::SoundCategory::vol_UI, myConst::sounds::press_newg, "PRESS_NEW_GAME"},
-			  {gfx::SoundCategory::vol_UI, myConst::sounds::press_btn, "PRESS_BUTTON"}})
+			 {std::tuple{gfx::SoundCategory::vol_MUSIC, appfn::path::sounds::music_menu, "MAIN_MENU"},
+			 {gfx::SoundCategory::vol_UI, appfn::path::sounds::selbtn_menu, "SELECT_MENU"},
+			 {gfx::SoundCategory::vol_UI, appfn::path::sounds::press_newg, "PRESS_NEW_GAME"},
+			 {gfx::SoundCategory::vol_UI, appfn::path::sounds::press_btn, "PRESS_BUTTON"}})
 			if (!loadSoundtoBuffer(category, soundKey, mapKey)) {
 				char tmp[256];
 				sprintf(tmp, "%s", soundKey);
 				throw std::exception(tmp);
 			}
 	} catch (std::exception& e) {
-		Logger::logStatic("can't load: " + std::string(e.what()), "MainMenu::initSounds()", logType::LERROR);
+		appfn::Logger::logStatic("can't load: " + std::string(e.what()), "MainMenu::initSounds()", logType::LERROR);
 	}
 
 	// Upload sounds from buffer
 	for (const auto& [mapKey, category] :
 		 {std::pair{"MAIN_MENU", gfx::SoundCategory::vol_MUSIC},
-		  {"SELECT_MENU", gfx::SoundCategory::vol_UI},
-		  {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
-		  {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
+		 {"SELECT_MENU", gfx::SoundCategory::vol_UI},
+		 {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
+		 {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
 		IsoundsMap.emplace(mapKey, IsoundBufferMap[category][mapKey]);
 	}
 
@@ -140,7 +139,7 @@ void MainMenu::initSounds() {
 MainMenu::MainMenu(StateData* statedata)
 	: State(statedata) {
 	// logger
-	Logger::logStatic("MainMenu constructor", "MainMenu");
+	appfn::Logger::logStatic("MainMenu constructor", "MainMenu");
 	initRenderDefines();
 	initGUI();
 
@@ -149,7 +148,7 @@ MainMenu::MainMenu(StateData* statedata)
 }
 
 MainMenu::~MainMenu() {
-	Logger::logStatic("MainMenu destructor", "MainMenu");
+	appfn::Logger::logStatic("MainMenu destructor", "MainMenu");
 
 	// delete buttons
 	if (!IGUILayout.empty()) IGUILayout.clear();
@@ -159,17 +158,36 @@ MainMenu::~MainMenu() {
 	IsoundBufferMap.clear();
 }
 
+void MainMenu::updateDebugTextState(const float& delta_time) {
+		IstringStream
+			<< "\nVolume: "
+			<< "\n\tMASTER: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MASTER))
+			<< "\n\tSFX: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_SFX))
+			<< "\n\tMUSIC: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MUSIC))
+			<< "\n\tAMBIENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_AMBIENT))
+			<< "\n\tENTITY: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENTITY))
+			<< "\n\tUI: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_UI))
+			<< "\n\tDIALOGUE: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_DIALOGUE))
+			<< "\n\tFOLEY: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_FOLEY))
+			<< "\n\tWEAPON: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_WEAPON))
+			<< "\n\tENVIRONMENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT));
+}
+
 void MainMenu::update(const float& delta_time) {
 	if (IstateData->sd_reserGUI) resetGUI();
 
 	updateKeytime(delta_time);
-
 	updateGUI(delta_time);
-
 	updateMousePositions(&view);
 	updateInput(delta_time);
 	updateButtons();
 	updateSounds(delta_time);
+
+	if (Idebud) {
+		updateDebugTextBase(delta_time);
+		updateDebugTextState(delta_time);
+		updateDebugText();
+	}
 }
 
 void MainMenu::updateInput(const float& delta_time) {
@@ -197,10 +215,10 @@ void MainMenu::updateButtons() {
 	if (IGUILayout["START_BTN"]->isPressed() && getKeytime())
 		Istates->push(new Process(IstateData, false));
 
-	//  if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
-	//    Istates->push(new Process(IstateData, true));
-	//    resetView();
-	//  }
+	// if (buttons["CONT_BTN"]->isPressed() && getKeytime()) {
+	//  Istates->push(new Process(IstateData, true));
+	//  resetView();
+	// }
 	if (IGUILayout["SETTINGS_BTN"]->isPressed() && getKeytime())
 		Istates->push(new SettingsState(IstateData));
 
@@ -211,33 +229,7 @@ void MainMenu::updateButtons() {
 
 void MainMenu::updateGUI(const float& delta_time) {
 	// update debug text
-	if (Idebud) {
-		IstringStream
-			<< "\nver:\t" << CMAKE_PROJECT_VERSION << "\nCurrent memory usage:\t"
-			//<< MemoryUsageMonitor::formatMemoryUsage(MemoryUsageMonitor::getCurrentMemoryUsage())
-			//<< "\nCurrent state memory usage:\t" << getMemoryUsage() << " bytes"
-			<< "\nFPS delta:\t" << 1 / delta_time << "\nFPS Clock:\t"
-			<< FPS::getFPS() << "\nFPS limit:\t"
-			<< IstateData->sd_gfxSettings.lock()->frameRateLimit
-			<< "\nDelta Time:\t" << delta_time
-			<< "\nResolution:\t" << IstateData->sd_Window.lock()->getSize().x << " x " << IstateData->sd_Window.lock()->getSize().y
-			<< "\nAntialiasing:\t" << IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
-			<< "\nvSync:\t" << IstateData->sd_gfxSettings.lock()->verticalSync
-			<< "\nMouse Pos:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y
-			<< "\nVolume: "
-			<< "\n\tMASTER: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MASTER))
-			<< "\n\tSFX: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_SFX))
-			<< "\n\tMUSIC: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_MUSIC))
-			<< "\n\tAMBIENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_AMBIENT))
-			<< "\n\tENTITY: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENTITY))
-			<< "\n\tUI: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_UI))
-			<< "\n\tDIALOGUE: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_DIALOGUE))
-			<< "\n\tFOLEY: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_FOLEY))
-			<< "\n\tWEAPON: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_WEAPON))
-			<< "\n\tENVIRONMENT: " + std::to_string(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(gfx::SoundCategory::vol_ENVIRONMENT));
-		Itext.setString(IstringStream.str());
-		IstringStream.str("");
-	}
+	
 
 	// update GUI
 	backgrond_shapes[0].rotate(sf::degrees(delta_time));
@@ -248,9 +240,9 @@ void MainMenu::updateSounds(const float& delta_time) {
 	// update for music menu
 	for (const auto& [key, category] :
 		 {std::pair{"MAIN_MENU", gfx::SoundCategory::vol_MUSIC},
-		  {"SELECT_MENU", gfx::SoundCategory::vol_UI},
-		  {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
-		  {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
+		 {"SELECT_MENU", gfx::SoundCategory::vol_UI},
+		 {"PRESS_NEW_GAME", gfx::SoundCategory::vol_UI},
+		 {"PRESS_BUTTON", gfx::SoundCategory::vol_UI}}) {
 		auto it = IsoundsMap.find(key);
 		if (it != IsoundsMap.end())
 			it->second.setVolume(IstateData->sd_VolumeCollector.lock()->getCategoryVolume(category));

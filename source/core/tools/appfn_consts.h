@@ -1,13 +1,23 @@
-#ifndef myConst_h
-#define myConst_h
+#ifndef CORE_APPFN_CONST_H
+#define CORE_APPFN_CONST_H
 
 #define ENABLE 1
 #define DISABLE 0
 
 #define __MDEBUG__ ENABLE
-
-namespace myConst {
+namespace appfn {
+namespace path {
+namespace sfile {
 const char app_name[] = "Ekzeckt";
+const char f_logger[] = "/logs.log";
+const char f_backup[] = "/backup_log.log";
+const char config_entitydata[] = "/entitysdata.json";
+const char config_inventory[] = "/inventorydata.json";
+const char config_playerdata[] = "/playerdata.json";
+const char config_window[] = "/window.json";
+const char config_noicedata[] = "/noicedata.json";
+const char config_gfxsettings[] = "/gfxsettings.json";
+};
 
 namespace fonts { // fonts
 const char data_debugfont_path[] = "fonts/Muli-Regular.ttf";
@@ -61,6 +71,7 @@ const char press_btn[] = "sounds/sfx/press_btn_01.wav";
 namespace scripts {
 const char lua_test[] = "scripts/test.lua";
 }
+};
 }; // namespace myConst
 
-#endif // myConst_h
+#endif // CORE_APPFN_CONST_H

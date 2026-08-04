@@ -4,11 +4,11 @@ namespace entityEnum {
 // Enumerations for entity state, to short saying what is the entity doing right
 // now VOID nonused (default init)
 enum class entityMovementState {
-	ems_VOID,    // non used (default)
+	ems_VOID,  // non used (default)
 	ems_STAYING, // staying is for the case that the entity is not moving
-	ems_IDLE,    // idle is for the case that the entity is not moving, but can be  used
+	ems_IDLE,  // idle is for the case that the entity is not moving, but can be used
 	ems_WALKING, // walking is for the case that the entity is moving, but not running
-	ems_RUNNING  // running is for the case that the entity is moving fast
+	ems_RUNNING // running is for the case that the entity is moving fast
 
 };
 
@@ -50,8 +50,8 @@ enum class entityState {
 // NEUTRAL that is neutral entity, but if player (you) did some bad or gut, can
 // be changed Behavior to some side NPC for that case need coments?
 enum class entityBehaviorClass {
-	ebc_VOID,     // default (like NULL)
-	ebc_PLAYER,   // player
+	ebc_VOID,   // default (like NULL)
+	ebc_PLAYER,  // player
 	ebc_FRIENDLY, // friendly entitys
 	ebc_ENEMY,
 	ebc_NEUTRAL,

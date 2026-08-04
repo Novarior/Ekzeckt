@@ -2,19 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>@DATA_BUNDLE_BUNDLE_NAME@</string>
-    <key>CFBundleShortVersionString</key>
-    <string>@DATA_BUNDLE_SHORT_VERSION_STRING@</string>
-    <key>CFBundleVersion</key>
-    <string>@DATA_BUNDLE_BUNDLE_VERSION@</string>
-    <key>CFBundleHelpBookName</key>
+  <key>CFBundleName</key>
+  <string>@DATA_BUNDLE_BUNDLE_NAME@</string>
+  <key>CFBundleShortVersionString</key>
+  <string>@DATA_BUNDLE_SHORT_VERSION_STRING@</string>
+  <key>CFBundleVersion</key>
+  <string>@DATA_BUNDLE_BUNDLE_VERSION@</string>
+  <key>CFBundleHelpBookName</key>
 	<string>@DATA_BUNDLE_GUI_IDENTIFIER@</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>@DATA_BUNDLE_COPYRIGHT@</string>
-    <key>CFBundleIconFile</key>
-    <string>@DATA_BUNDLE_ICON_NAME@</string>
-    <key>CFBundleIdentifier</key>
-    <string>@DATA_BUNDLE_GUI_IDENTIFIER@</string>    
+  <key>NSHumanReadableCopyright</key>
+  <string>@DATA_BUNDLE_COPYRIGHT@</string>
+  <key>CFBundleIconFile</key>
+  <string>@DATA_BUNDLE_ICON_NAME@</string>
+  <key>CFBundleIdentifier</key>
+  <string>@DATA_BUNDLE_GUI_IDENTIFIER@</string>  
 </dict>
 </plist>

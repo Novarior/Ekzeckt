@@ -10,7 +10,7 @@ also minimal work with MacOS frameworks (already was removed)
 - **Texture Generation**: Procedural generation of textures using SFML and magic.
 - **Noise Viewer**: Tools for Perlin and Simplex noise manipulation and visualization.
 - **L-System Trees**: Implementation of L-systems for generating tree-like structures.
-- **SFML Integration**: work with  the SFML 3.x.x, depending on the commit).
+- **SFML Integration**: work with the SFML 3.x.x, depending on the commit).
 
 ## Project Structure
 - `content/`: contains the map, items, and game entities 

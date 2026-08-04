@@ -3,7 +3,7 @@
 
 #include "../core/header.h"
 
-#include "../core/tools/LOGGER.hpp"
+#include "../core/tools/appfn_logger.hpp"
 #include "../core/math/mymath.hpp"
 
 #include "../GUI/GUI_Component.hpp"

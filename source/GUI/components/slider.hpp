@@ -10,11 +10,11 @@ template <typename T>
 class Slider:public GuiComponent {
 private:
 	sf::RectangleShape _sliderBox, _sliderFillBox;
-	sf::CircleShape  _leftCircleShape, _rightCircleShape, _sliderFillCircle;
+	sf::CircleShape _leftCircleShape, _rightCircleShape, _sliderFillCircle;
 
-	sf::Text _nameSlider; // название слайдера
-	sf::Text _textValue;  // текстовое значение слайдера
-	sf::Font& _font;      // шрифт
+	sf::Text _nameSlider;
+	sf::Text _textValue;
+	sf::Font& _font;
 	T _value;
 	T _newValue;
 	T _min;
@@ -37,8 +37,8 @@ private:
 	}
 public:
 	Slider(sf::Vector2f position, sf::Vector2f size,
-		   sf::Font& font, const unsigned character_size = 20U,
-		   T base_value = 0, T  min_val = 0, T  max_val = 0, const std::string& name = "FIX ME")
+		  sf::Font& font, const unsigned character_size = 20U,
+		  T base_value = 0, T min_val = 0, T max_val = 0, const std::string& name = "FIX ME")
 		: _font(font), _value(base_value), _newValue(base_value), _min(min_val), _max(max_val),
 		_nameSlider(font, name, character_size), _textValue(font, std::to_string(base_value), character_size) {
 
@@ -98,9 +98,10 @@ public:
 	// update slider (cricles) position and value using mouse position
 	// if mouse is on slider, slider is litle bit bigger and litle bit red
 	void update(const sf::Vector2f& mousePosView) {
+
+		mState = ComponentState::CS_IDLE;
 		if (_sliderBox.getGlobalBounds().contains(mousePosView) && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-
-
+			mState = ComponentState::CS_HOVER;
 
 			float radius = _sliderFillCircle.getRadius();
 			float minX = _sliderBox.getPosition().x - radius;
@@ -116,7 +117,7 @@ public:
 
 			float ratio = (centerX - minX) / _sliderBox.getSize().x;
 			ratio = std::fmax(0.f, std::fmin(1.f, ratio));
-			ratio = std::round(ratio * 1000.0f) / 1000.0f;
+			ratio = std::round(ratio * 100.0f) / 100.0f;
 
 
 			_value = T(_min) + ratio * (T(_max) - T(_min));

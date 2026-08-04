@@ -2,19 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>Ekzeckt</string>
-    <key>CFBundleShortVersionString</key>
-    <string>v0.11</string>
-    <key>CFBundleVersion</key>
-    <string>0.0.11</string>
-    <key>CFBundleHelpBookName</key>
+  <key>CFBundleName</key>
+  <string>Ekzeckt</string>
+  <key>CFBundleShortVersionString</key>
+  <string>v0.11</string>
+  <key>CFBundleVersion</key>
+  <string>0.0.11</string>
+  <key>CFBundleHelpBookName</key>
 	<string>com.ekzeckt</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>© 2026 GitHub: Novarior</string>
-    <key>CFBundleIconFile</key>
-    <string>ico.png</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.ekzeckt</string>    
+  <key>NSHumanReadableCopyright</key>
+  <string>© 2026 GitHub: Novarior</string>
+  <key>CFBundleIconFile</key>
+  <string>ico.png</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.ekzeckt</string>  
 </dict>
 </plist>

@@ -2,7 +2,7 @@
 #define _MAN_TEXTURE
 
 #include "../header.h"
-#include "../tools/LOGGER.hpp"
+#include "../tools/appfn_logger.hpp"
 
 
 // Создаем перечисление для текстур, чтобы можно было использовать вместо
@@ -120,17 +120,17 @@ public:
 	static inline bool loadTexture(TextureID textureID, const std::string& filePath) {
 		std::string textureName = TextureIDMapping::toString(textureID);
 		if (textureName == "texture_null") {
-			Logger::logStatic("ThrowBack TEXTURE_NAME: " + filePath, "TextureManager::loadTexture()", logType::LERROR);
+			appfn::Logger::logStatic("ThrowBack TEXTURE_NAME: " + filePath, "TextureManager::loadTexture()", logType::LERROR);
 			return false;
 		}
 
 		sf::Texture texture;
-		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
+		if (texture.loadFromFile(appfn::PathTool::getPathResourcesDir().append(filePath))) {
 			// emplase loaded texture 
 			m_textures.emplace(textureName, std::move(texture));
 			return true;
 		} else {
-			Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
+			appfn::Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
 			return false;
 		}
 	}
@@ -139,17 +139,17 @@ public:
 	static inline bool loadTexture(const std::string& textureName, const std::string& filePath) {
 		if (m_textures.find(textureName) != m_textures.end()) {
 			// if testure already exist, return true and log it
-			Logger::logStatic("texture " + textureName + " already loaded", "TextureManager::loadTexture()", logType::LINFO);
+			appfn::Logger::logStatic("texture " + textureName + " already loaded", "TextureManager::loadTexture()", logType::LINFO);
 			return true;
 		}
 
 		sf::Texture texture;
-		if (texture.loadFromFile(AppFn::getPathResourcesDir().append(filePath))) {
+		if (texture.loadFromFile(appfn::PathTool::getPathResourcesDir().append(filePath))) {
 			// emplase loaded texture 
 			m_textures.emplace(textureName, std::move(texture));
 			return true;
 		} else {
-			Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
+			appfn::Logger::logStatic("failed to load: " + textureName, "TextureManager::loadTexture()", logType::LERROR); // Логируем ошибку
 			return false;
 		}
 	}
@@ -161,7 +161,7 @@ public:
 		if (m_textures.find(textureName) != m_textures.end()) {
 			return m_textures[textureName];
 		} else { // texture with "textureName" not exist, log this and return null
-			Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
+			appfn::Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
 			return m_textures["texture_null"];
 		}
 	}
@@ -174,7 +174,7 @@ public:
 		if (m_textures.find(textureName) != m_textures.end()) {
 			return m_textures[textureName];
 		} else { // texture with "textureName" not exist, log this and return null
-			Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
+			appfn::Logger::logStatic("Texture not found: " + textureName + ", returning TEXTURE_NULL", "TextureManager::getTexture()", logType::LWARNING);
 			return m_textures["texture_null"];
 		}
 	}

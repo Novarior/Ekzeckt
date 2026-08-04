@@ -10,8 +10,8 @@ State::State(StateData* state_data)
 	Itext(*FontManager::getFont(FontID::FONT_DEBUG), "",
 		  IstateData->sd_characterSize_debug),
 	IRenderSprite(TextureManager::getTexture(TextureID::TEXTURE_NULL)) {
-  // write log message what im here doing something
-	Logger::logStatic("Start initilization state", "State::State()");
+	// write log message what im here doing something
+	appfn::Logger::logStatic("Start initilization state", "State::State()");
 
 	// init variabless from state_data to curent state
 
@@ -29,18 +29,18 @@ State::State(StateData* state_data)
 	IstringStream.str("");
 	Idebud = __MDEBUG__;
 	auto& font = *FontManager::getFont(FontID::FONT_DEBUG);
-	
+
 	Itext.setFont(font);
 	Itext.setOutlineThickness(1);
 	Itext.setOutlineColor(sf::Color::Black);
 
-	Logger::logStatic("End initilization state", "State::State()");
+	appfn::Logger::logStatic("End initilization state", "State::State()");
 	initBuffer();
 	initRenderDefines();
 	resetView();
 }
 
-State::~State() { Logger::logStatic("destroy state", "State::~State()"); }
+State::~State() { appfn::Logger::logStatic("destroy state", "State::~State()"); }
 
 // Accessors
 const bool State::getKeytime() {
@@ -50,14 +50,42 @@ const bool State::getKeytime() {
 	}
 	return false;
 }
-  ///////////////////////////////////////////
- ///////////		INITS		////////////
+void State::updateDebugTextBase(const float& delta_time) {
+	float deltaF = 1 / delta_time;
+	IstringStream
+		<< "\nver:\t" << CMAKE_PROJECT_VERSION << "\nCurrent memory usage:\t"
+		<< appfn::MemoryUsageMonitor::formatMemoryUsage(appfn::MemoryUsageMonitor::getCurrentMemoryUsage())
+		<< "\nDelta Time:\t" << delta_time
+		<< "\nFPS delta:\t" << deltaF
+		<< "\nFPS Clock:\t" << appfn::FPS::getFPS()
+		<< "\nFPS limit:\t" << IstateData->sd_gfxSettings.lock()->frameRateLimit
+		<< "\nSD_WIN_Size:\t" << IstateData->sd_Window.lock()->getSize().x << " x " << IstateData->sd_Window.lock()->getSize().y
+		<< "\nSD_WIN_View_Size:\t" << IstateData->sd_Window.lock()->getView().getSize().x << " x " << IstateData->sd_Window.lock()->getView().getSize().y
+		<< "\nSD_WIN_Center:\t" << IstateData->sd_Window.lock()->getView().getCenter().x << " x " << IstateData->sd_Window.lock()->getView().getCenter().y
+		<< "\nWIN_Size:\t" << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
+		<< "\nWIN_View_Size:\t" << Iwindow.lock()->getView().getSize().x << " x " << Iwindow.lock()->getView().getSize().y
+		<< "\nWIN_Center:\t" << Iwindow.lock()->getView().getCenter().x << " x " << Iwindow.lock()->getView().getCenter().y
+		<< "\nrViev_Size:\t" << view.getSize().x << " x " << view.getSize().y
+		<< "\nrSprite_Size:\t" << IRenderSprite.getTextureRect().size.x << " x " << IRenderSprite.getTextureRect().size.y
+		<< "\nrSprite_Texture_Size:\t" << IRenderSprite.getTexture().getSize().x << " x " << IRenderSprite.getTexture().getSize().y
+		<< "\n"
+		<< "\nAntialiasing:\t" << IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
+		<< "\nvSync:\t" << IstateData->sd_gfxSettings.lock()->verticalSync
+		<< "\nMouse Pos:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y;
+}
+
+void State::updateDebugText() {
+	Itext.setString(IstringStream.str());
+	IstringStream.str("");
+}
+///////////////////////////////////////////
+///////////		INITS		////////////
 ///////////////////////////////////////////
 
 void State::initRenderDefines() {
 	auto ws = Iwindow.lock()->getSize();
 	if (!IRenderTexture.resize({ws}))
-		Logger::logStatic("renderTexture cannot be resize", "MainMenu::initRenderDefines()", logType::LERROR);
+		appfn::Logger::logStatic("renderTexture cannot be resize", "MainMenu::initRenderDefines()", logType::LERROR);
 
 	IRenderTexture.setSmooth(true);
 	IRenderSprite.setTextureRect(sf::IntRect({0, 0}, {static_cast<int>(IRenderTexture.getSize().x), static_cast<int>(IRenderTexture.getSize().y)}));
@@ -76,28 +104,31 @@ void State::resetView() {
 	IstateData->sd_Window.lock()->setView(view);
 	Iwindow.lock()->setView(view);
 }
+
 // create shared maps with sounds and categoty, buffers and categoty
 void State::initBuffer() {
-	 IsoundsMap = std::map<std::string, sf::Sound>();
-	 IsoundBufferMap = std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>>();
+	IsoundsMap = std::map<std::string, sf::Sound>();
+	IsoundBufferMap = std::unordered_map<gfx::SoundCategory, std::map<std::string, sf::SoundBuffer>>();
 }
 
 // load sound to buffer
 bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path _namepath, std::string _typename) {
 	sf::SoundBuffer buffer;
-	auto bf = AppFn::getPathResourcesDir() += _namepath;
+	auto bf = appfn::PathTool::getPathResourcesDir() += _namepath;
 	if (!buffer.loadFromFile(bf)) {
-		Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()", logType::LERROR);
+		appfn::Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()", logType::LERROR);
 		return false;
 	}
 
-	 IsoundBufferMap[_soundcategory][_typename] = buffer;
+	IsoundBufferMap[_soundcategory][_typename] = buffer;
 	return true;
 }
 
 void State::updateKeytime(const float& delta_time) {
 	if (Ikeytime < IkeytimeMax) Ikeytime += delta_time;
 }
+
+
 
 void State::reCaclulateCharacterSize() {
 	auto ws = Iwindow.lock()->getSize();

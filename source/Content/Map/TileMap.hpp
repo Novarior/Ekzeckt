@@ -27,7 +27,7 @@ private:
 	sf::RectangleShape bariere_box; // world bounds collision
 	sf::FloatRect checkreck;
 
-	sf::Vector2i worldSizeGrid;
+	sf::Vector2u worldSizeGrid;
 	sf::Vector2i worldSizeInt;
 	sf::Vector2f worldSizeFloat;
 
@@ -39,7 +39,7 @@ private:
 	std::unique_ptr<LSystem> _treeGenerator;
 
 	std::vector<std::vector<float>> _map_heightMap; // 2d array for height map
-	std::vector<std::vector<float>> _map_biomeMap;  // 2d array for biome map
+	std::vector<std::vector<float>> _map_biomeMap; // 2d array for biome map
 	std::vector<std::vector<float>>	_map_temperatureMap; // 2d array for temperature map
 
 	std::vector<sf::Vector2f> m_listGrassBlocks;
@@ -72,7 +72,7 @@ public:
 	virtual ~TileMap();
 
 	inline const sf::Image& getMinimapImage() { return this->minimapImage; }
-	inline const sf::Vector2i& getMapSizeOnTiles() { return this->worldSizeGrid; }
+	inline const sf::Vector2u& getMapSizeOnTiles() { return this->worldSizeGrid; }
 	inline const sf::Vector2i& getMapSizeOnInt() { return this->worldSizeInt; }
 	inline const sf::Vector2f& getMapSizeOnFloat() { return this->worldSizeFloat; }
 	inline const rectangleWithOffset& getRenderArea() { return this->m_renderArea; }

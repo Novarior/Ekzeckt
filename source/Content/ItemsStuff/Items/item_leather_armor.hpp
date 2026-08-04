@@ -9,12 +9,9 @@ public:
 	virtual ~LeatherArmor() {}
 
 	void useItem() override {
-		std::cout << "You equipped " << iData.m_name << std::endl;
-		Logger::logStatic("You equipped " + iData.m_name, "CORE->ITEM", logType::LINFO);
-		// Here would be logic to equip armor and provide defense
 	}
 
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}
 };
-};     // namespace Items
+};   // namespace Items
 #endif /* ITEM_LEATHER_ARMOR */

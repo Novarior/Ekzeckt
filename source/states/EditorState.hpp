@@ -21,17 +21,18 @@
 class EditorState: public State {
 private:
 	// Variables
-	NoiceViewer* m_NoiceViewer;         // Noise viewer
-	NoiceData* m_noiceData;       // Noise data
+	NoiceViewer* m_NoiceViewer;     // Noise viewer
+	NoiceData* m_noiceData;    // Noise data
 	std::unique_ptr<TileMap> m_tileMap; // tile map
 
 	// trees
 	LSystem* myLS; // L-system for generating trees
 
 	// GUI elements (buttons, selectors, etc)
-	bool showTabmenu;                             // Flag to show or hide the tab menu
-	sf::RectangleShape tabShape;                  // Shape of the tab
+	bool showTabmenu;               // Flag to show or hide the tab menu
+	sf::RectangleShape tabShape;         // Shape of the tab
 	// Map of static selectors
+
 	std::map<std::string, gui::SliderFloat*> staticSelector;
 	std::map<std::string, gui::SliderUInt*> staticSelectorUInt;
 	gui::Selector* selector; // Current selector
@@ -39,31 +40,33 @@ private:
 	int current_View_Generator = 1; // Current view generator
 
 	// Initialization functions
-	void initButtons();   // Initialize buttons
-	void initSelectors(); // Initialize selectors
-	void initTabMenu();   // Initialize tab menu
-	void initNoice();     // Initialize noise
-	void initDebugText(); // Initialize debug text
+	void initGUI();			// init all GUI layout
+	void initButtons();		// Initialize buttons
+	void initSelectors();	// Initialize selectors
+	void initTabMenu();		// Initialize tab menu
+	void initNoice();		// Initialize noise
+	void initDebugText();	// Initialize debug text
 
 	// Update functions
-	void saveTreeAsImage(sf::RenderWindow& window);             // Save tree as image
+	void saveTreeAsImage(sf::RenderWindow& window);       // Save tree as image
 	sf::IntRect findNonTransparentRect(const sf::Image& image); // Find non-transparent rectangle in an image
-
-	void updateInput(const float& delta_time);     // Update input
-	void updateButtons(const float& delta_time);   // Update buttons
-	void updateDebugText(const float& delta_time); // Update debug text
-	void updateSounds(const float& delta_time);    // Update sounds
-
-	// Render functions
-	void renderTabMenu(sf::RenderTarget& target); // Render tab menu
+	virtual size_t getMemoryUsage() const { return sizeof(*this); }
 
 public:
 	EditorState(StateData* statedata); // Constructor
-	virtual ~EditorState();            // Destructor
+	virtual ~EditorState();      // Destructor
 
-	void update(const float& delta_time);  // Update state
-	void render(sf::RenderWindow& target); // Render state
+	void updateDebugTextState(const float& delta_time) override;
 
-	virtual size_t getMemoryUsage() const { return sizeof(*this); }
+	void resetGUI() override;
+
+	void update(const float& delta_time);			// Update state
+	void updateInput(const float& delta_time);	// Update input
+	void updateButtons(const float& delta_time);					// Update buttons
+	void updateSounds(const float& delta_time);						// Update sounds
+
+	// Render functions
+	void renderTabMenu(sf::RenderTarget& target);	// Render tab menu
+	void render(sf::RenderWindow& target);			// Render state
 };
 #endif

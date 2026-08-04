@@ -6,7 +6,7 @@
 // actions editor example: ESC for exit from editor; TAB for open sidebar menu;
 namespace ActionKeyBind {
 // basic actions
-const char ACTION_NONE[] = "";            // Default value; no action assigned
+const char ACTION_NONE[] = "";      // Default value; no action assigned
 const char ACTION_SAVE[] = "ACTION_SAVE"; // A_SAVE used for save game; save settings and etc
 const char ACTION_LOAD[] = "ACTION_LOAD";
 const char ACTION_APPLY[] = "ACTION_APPLY";
@@ -18,9 +18,9 @@ const char ACTION_FORWARD_PAGE[] = "ACTION_FORWARD_PAGE";
 
 const char ACTION_DEBUG_SWITCH[] = "DEBUG";
 // settings actions
-const char ACTION_SETTINGS_SAVE[] = "ACTION_SETTINGS_SAVE";                 // for save settings
-const char ACTION_SETTINGS_LOAD[] = "ACTION_SETTINGS_LOAD";                 // for load in set
-const char ACTION_SETTINGS_NEXT_PAGE[] = "ACTION_SETTINGS_NEXT_PAGE";       // A_NEXT_PAGE change page to right
+const char ACTION_SETTINGS_SAVE[] = "ACTION_SETTINGS_SAVE";         // for save settings
+const char ACTION_SETTINGS_LOAD[] = "ACTION_SETTINGS_LOAD";         // for load in set
+const char ACTION_SETTINGS_NEXT_PAGE[] = "ACTION_SETTINGS_NEXT_PAGE";    // A_NEXT_PAGE change page to right
 const char ACTION_SETTINGS_FORWARD_PAGE[] = "ACTION_SETTINGS_FORWARD_PAGE"; // A_FORWARD_PAGE change page to left
 
 // gameplay actions

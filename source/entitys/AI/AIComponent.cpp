@@ -12,7 +12,7 @@ AIComponent::~AIComponent() {}
 
 void AIComponent::update(const float& delta_time) {
 	// if (_follow != nullptr)
-	//     _follow->update(delta_time);
+	//   _follow->update(delta_time);
 	if (_attack != nullptr)
 		_attack->update(delta_time);
 	if (_wander != nullptr)

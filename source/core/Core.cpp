@@ -2,20 +2,18 @@
 
 // инициализация реестра предметов
 
-unsigned int FPS::mFrame = 0;
-unsigned int FPS::mFps = 0;
-sf::Clock FPS::mClock = sf::Clock();
+unsigned int appfn::FPS::mFrame = 0;
+unsigned int appfn::FPS::mFps = 0;
+sf::Clock appfn::FPS::mClock = sf::Clock();
 std::unordered_map<std::string, sf::Texture> TextureManager::m_textures;
 std::unordered_map<TextureID, std::string> TextureIDMapping::idToStringMap;
-std::filesystem::path AppFn::pResources;
-std::filesystem::path AppFn::pDocuments;
 
 // check if app directory exists
 void Core::coreInitDirectories() {
-	if (AppFn::checkAppDirectoryesExists())
-		Logger::logStatic("App directory already exists", "Core::coreInitDirectories()");
+	if (appfn::PathTool::checkAppDirectoryesExists())
+		appfn::Logger::logStatic("App directory already exists", "Core::coreInitDirectories()");
 	else
-		AppFn::createAppDirectories();
+		appfn::PathTool::createAppDirectories();
 }
 
 // coreInitialisations root data, window, fonts and etc
@@ -27,18 +25,14 @@ void Core::coreInitVariabless() {
 	cr_KeySuppors = std::make_shared<std::map<std::string, uint16_t>>();
 
 	if (!cr_LoadData()) {
-		Logger::logStatic("Failed to load data!", "Core::coreInitVariables()");
+		appfn::Logger::logStatic("Failed to load data!", "Core::coreInitVariables()");
 	}
 
-	// set supported keys
-	// emplace supporded key into map
-
 	// before load data from json file
-	//   cr_LoadData2(cr_databuffer, *cr_gfxSettings, *cr_KeyBinds,
-	//                *cr_VolumeCollector);
+	// cr_LoadData2(cr_databuffer, *cr_gfxSettings, *cr_KeyBinds *cr_VolumeCollector);
 	auto result = cr_LoadData();
 	if (!result)
-		Logger::logStatic("Failed to load keybinds!", "Core::coreInitVariables()");
+		appfn::Logger::logStatic("Failed to load keybinds!", "Core::coreInitVariables()");
 
 	// set zero in dt and restart clock
 	cr_deltaTime = 0.0f;
@@ -46,8 +40,8 @@ void Core::coreInitVariabless() {
 
 	// coreInit fonts
 	FontManager::initialise();
-	FontManager::loadFont(FontID::FONT_GAMEF_01, AppFn::getPathResourcesDir().append(myConst::fonts::data_gameproces_font_path));
-	FontManager::loadFont(FontID::FONT_DEBUG, AppFn::getPathResourcesDir().append(myConst::fonts::data_debugfont_path));
+	FontManager::loadFont(FontID::FONT_GAMEF_01, appfn::PathTool::getPathResourcesDir().append(appfn::path::fonts::data_gameproces_font_path));
+	FontManager::loadFont(FontID::FONT_DEBUG, appfn::PathTool::getPathResourcesDir().append(appfn::path::fonts::data_debugfont_path));
 
 #if __MDEBUG__ == ENABLE
 	// print to console/Loggger all data for next debug
@@ -78,7 +72,7 @@ void Core::coreInitWindow() {
 	for (auto& t : vs)
 		s << "\nvm:\t" << t.size.x << " x " << t.size.y;
 
-	Logger::logStatic(s.str(), "CORE");
+	appfn::Logger::logStatic(s.str(), "CORE");
 #endif
 	if (cr_gfxSettings->fullscreen && cr_Window->isOpen()) { // init as fullscrean mode with fullwidth reso
 		cr_Window->create(sf::VideoMode({cr_gfxSettings->_winResolutions.x, cr_gfxSettings->_winResolutions.y}),
@@ -90,32 +84,32 @@ void Core::coreInitWindow() {
 	cr_Window->setKeyRepeatEnabled(false);
 	cr_Window->setPosition({0,0});
 
-	///  keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
+	/// keyboardCocoa::setupCocoaKeyboard(cr_Window->getNativeHandle());
 }
 
 // load all textures
 void Core::coreInitTextures() {
 
 	TextureManager::initialize();
-	TextureManager::loadTexture(TextureID::TEXTURE_DEEP_OCEAN, myConst::textures::texture_DEEP_OCEAN);
-	TextureManager::loadTexture(TextureID::TEXTURE_OCEAN, myConst::textures::texture_OCEAN);
-	TextureManager::loadTexture(TextureID::TEXTURE_SAND, myConst::textures::texture_SAND);
-	TextureManager::loadTexture(TextureID::TEXTURE_GRASS, myConst::textures::texture_GRASS);
-	TextureManager::loadTexture(TextureID::TEXTURE_DIRT, myConst::textures::texture_DIRT);
-	TextureManager::loadTexture(TextureID::TEXTURE_STONE, myConst::textures::texture_STONE);
-	TextureManager::loadTexture(TextureID::TEXTURE_SNOW, myConst::textures::texture_SNOW);
-	TextureManager::loadTexture(TextureID::TEXTURE_PLAYER, myConst::sprites::texture_PLAYER);
-	TextureManager::loadTexture(TextureID::TEXTURE_SLIME, myConst::sprites::texture_SLIME);
-	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_1, myConst::gui::texture_background_mainmenu_lay_1);
-	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_2, myConst::gui::texture_background_mainmenu_lay_2);
-	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_3, myConst::gui::texture_background_mainmenu_lay_3);
+	TextureManager::loadTexture(TextureID::TEXTURE_DEEP_OCEAN, appfn::path::textures::texture_DEEP_OCEAN);
+	TextureManager::loadTexture(TextureID::TEXTURE_OCEAN, appfn::path::textures::texture_OCEAN);
+	TextureManager::loadTexture(TextureID::TEXTURE_SAND, appfn::path::textures::texture_SAND);
+	TextureManager::loadTexture(TextureID::TEXTURE_GRASS, appfn::path::textures::texture_GRASS);
+	TextureManager::loadTexture(TextureID::TEXTURE_DIRT, appfn::path::textures::texture_DIRT);
+	TextureManager::loadTexture(TextureID::TEXTURE_STONE, appfn::path::textures::texture_STONE);
+	TextureManager::loadTexture(TextureID::TEXTURE_SNOW, appfn::path::textures::texture_SNOW);
+	TextureManager::loadTexture(TextureID::TEXTURE_PLAYER, appfn::path::sprites::texture_PLAYER);
+	TextureManager::loadTexture(TextureID::TEXTURE_SLIME, appfn::path::sprites::texture_SLIME);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_1, appfn::path::gui::texture_background_mainmenu_lay_1);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_2, appfn::path::gui::texture_background_mainmenu_lay_2);
+	TextureManager::loadTexture(TextureID::TEXTURE_BACKGROUND_LAY_3, appfn::path::gui::texture_background_mainmenu_lay_3);
 	//TextureManager::loadTexture(TextureID::INVENTORY_CELL_TEXTURE, ItemTextures::inv_cell_back);
 	//TextureManager::loadTexture(TextureID::ITEMS_POISON_SMALL_REGENERATION, ItemTextures::poison::item_img_poison_small_regeneration);
 	//TextureManager::loadTexture(TextureID::ITEMS_STONE, ItemTextures::items::item_stone);
-	//TextureManager::loadTexture(TextureID::ITEMS_WOOD, ItemTextures::items::item_stone2);                                  // Временно используем текстуру камня
-	//TextureManager::loadTexture(TextureID::ITEMS_IRON_SWORD, ItemTextures::items::item_claster_crystal);                   // Временно используем текстуру кристалла
-	//TextureManager::loadTexture(TextureID::ITEMS_BREAD, ItemTextures::items::item_bread);                                  // Временно используем пустую текстуру
-	//TextureManager::loadTexture(TextureID::ITEMS_LEATHER_ARMOR, ItemTextures::item_NULL);                                  // Временно используем пустую текстуру
+	//TextureManager::loadTexture(TextureID::ITEMS_WOOD, ItemTextures::items::item_stone2);         // Временно используем текстуру камня
+	//TextureManager::loadTexture(TextureID::ITEMS_IRON_SWORD, ItemTextures::items::item_claster_crystal);     // Временно используем текстуру кристалла
+	//TextureManager::loadTexture(TextureID::ITEMS_BREAD, ItemTextures::items::item_bread);         // Временно используем пустую текстуру
+	//TextureManager::loadTexture(TextureID::ITEMS_LEATHER_ARMOR, ItemTextures::item_NULL);         // Временно используем пустую текстуру
 	//TextureManager::loadTexture(TextureID::ITEMS_HEALTH_POTION, ItemTextures::poison::item_img_poison_small_regeneration); // Временно используем текстуру яда
 	//TextureManager::loadTexture(TextureID::ITEMS_GOLD_COIN, ItemTextures::coins::item_img_gold_nugget);
 	//TextureManager::loadTexture(TextureID::COINS_GOLD_NUGGET, ItemTextures::coins::item_img_gold_nugget);
@@ -137,9 +131,9 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 	cr_Statedata.sd_gridSize = cr_gridSize;
 	auto ws = cr_Window->getSize();
 	cr_Statedata.sd_characterSize_debug = mmath::calcCharSize(ws.x, ws.y, 200U);
-	cr_Statedata.sd_characterSize_game_big = mmath::calcCharSize(ws.x, ws.y, 60U);
-	cr_Statedata.sd_characterSize_game_medium = mmath::calcCharSize(ws.x, ws.y, 85U);
-	cr_Statedata.sd_characterSize_game_small = mmath::calcCharSize(ws.x, ws.y, 100U);
+	cr_Statedata.sd_characterSize_game_big = mmath::calcCharSize(ws.x, ws.y, 82U);
+	cr_Statedata.sd_characterSize_game_medium = mmath::calcCharSize(ws.x, ws.y, 100U);
+	cr_Statedata.sd_characterSize_game_small = mmath::calcCharSize(ws.x, ws.y, 120U);
 	// boolean for gui (make for extra reset)
 	cr_Statedata.sd_reserGUI = false;
 
@@ -148,11 +142,11 @@ void Core::coreInitStateData() { // send window state stack and fonts to state d
 
 	// check if window is not null
 	if (!cr_Statedata.sd_Window.lock())
-		Logger::logStatic("LERROR::WINDOW::NOT INITED", "Core::coreInitStateData()");
+		appfn::Logger::logStatic("LERROR::WINDOW::NOT INITED", "Core::coreInitStateData()");
 
 	// check if states is not empty or null idk
 	if (!cr_Statedata.sd_States->empty())
-		Logger::logStatic("LERROR::STATES::NOT INITED", "Core::coreInitStateData()");
+		appfn::Logger::logStatic("LERROR::STATES::NOT INITED", "Core::coreInitStateData()");
 #endif
 }
 
@@ -161,15 +155,15 @@ void Core::coreInitState() {
 
 #if __MDEBUG__ == 1
 	// logger moment with states
-	Logger::logStatic("State coreInited", "Core::coreInitState()");
-	Logger::logStatic("State size: " + std::to_string(cr_State.size()),
-					  "Core::coreInitState()");
+	appfn::Logger::logStatic("State coreInited", "Core::coreInitState()");
+	appfn::Logger::logStatic("State size: " + std::to_string(cr_State.size()),
+							 "Core::coreInitState()");
 #endif
 }
 
 void Core::coreInitLua() {
 	// Инициализация Srcipts Lua VM
-	// luaL_dofile(luaVM,myConst::scripts::lua_test);
+	// luaL_dofile(luaVM,appfn::path::scripts::lua_test);
 }
 
 void Core::coreInitKeyBind() {
@@ -233,10 +227,10 @@ Core::Core() {
 	coreInitStateData();
 	coreInitState();
 
-	FPS::reset();
+	appfn::FPS::reset();
 
 #if __MDEBUG__ == 1
-	Logger::logStatic("Core Inited", "Core::Core()");
+	appfn::Logger::logStatic("Core Inited", "Core::Core()");
 #endif
 }
 
@@ -252,24 +246,24 @@ Core::~Core() {
 
 #if __MDEBUG__ == 1
 	// logger moment
-	Logger::logStatic("Core Delete...", "Core::~Core()");
+	appfn::Logger::logStatic("Core Delete...", "Core::~Core()");
 
 	if (cr_State.empty())
-		Logger::logStatic("State is empty", "Core::~Core()");
+		appfn::Logger::logStatic("State is empty", "Core::~Core()");
 	else
-		Logger::logStatic("State is not empty... mem leaked", "Core::~Core()");
+		appfn::Logger::logStatic("State is not empty... mem leaked", "Core::~Core()");
 
 	if (cr_Window == NULL)
-		Logger::logStatic("Window is null", "Core::~Core()");
+		appfn::Logger::logStatic("Window is null", "Core::~Core()");
 	else
-		Logger::logStatic("Window is null... mem leaked", "Core::~Core()");
+		appfn::Logger::logStatic("Window is null... mem leaked", "Core::~Core()");
 
-	Logger::logStatic("Core Deleted", "Core::~Core()");
+	appfn::Logger::logStatic("Core Deleted", "Core::~Core()");
 #endif
 }
 
 void Core::run() {
-	Logger::logStatic("Start main loop", "Core::run()");
+	appfn::Logger::logStatic("Start main loop", "Core::run()");
 
 	while (cr_Window->isOpen()) {
 		updateDeltaTime();
@@ -288,7 +282,7 @@ void Core::update() {
 			cr_State.top()->update(cr_deltaTime);
 
 			if (cr_State.top()->getQuit()) {
-				delete  cr_State.top();
+				delete cr_State.top();
 				cr_State.pop();
 			}
 		}
@@ -304,8 +298,12 @@ void Core::updateEventsWindow() {
 		if (event->is<sf::Event::Closed>()) {
 			cr_Window->close();
 		}
-		if (event->is < sf::Event::Resized>()) {
-			if (!cr_State.empty()) cr_State.top()->wasUpdateWindon();
+		if (event->is<sf::Event::Resized>()) {
+			const auto* resized = event->getIf<sf::Event::Resized>();
+			sf::Vector2u newSize = resized->size;
+
+			cr_gfxSettings->updateResolution(newSize);
+			if (!cr_State.empty()) cr_State.top()->resetGUI();
 		}
 	}
 }
@@ -323,5 +321,5 @@ void Core::updateSound() {
 void Core::updateDeltaTime() {
 	cr_deltaTime = 0;
 	cr_deltaTime = cr_deltaClock.restart().asSeconds();
-	FPS::update();
+	appfn::FPS::update();
 }

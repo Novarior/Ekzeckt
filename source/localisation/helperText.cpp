@@ -11,7 +11,7 @@ bool helperText::Localization::loadLocalizationFile(const std::filesystem::path&
 	std::ifstream ifs(_filename);
 	if (!ifs.is_open()) {
 		std::cerr << "LERROR: Could not load file: " << _filename << std::endl;
-		Logger::logStatic("LERROR::COULD NOT LOAD FILE: " + _filename.string(), "Localization::loadLocalizationFile()");
+		appfn::Logger::logStatic("LERROR::COULD NOT LOAD FILE: " + _filename.string(), "Localization::loadLocalizationFile()");
 		return false;
 	}
 
@@ -31,13 +31,13 @@ bool helperText::Localization::initializeLocalization(Language language) {
 	std::filesystem::path p;
 	switch (language) {
 	case Language::ENG:
-		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_EN;
+		p = appfn::PathTool::getPathResourcesDir() / appfn::path::localisation::localisation_EN;
 		break;
 	case Language::UKR:
-		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_UA;
+		p = appfn::PathTool::getPathResourcesDir() / appfn::path::localisation::localisation_UA;
 		break;
 	default:
-		p = AppFn::getPathResourcesDir() / myConst::localisation::localisation_EN;
+		p = appfn::PathTool::getPathResourcesDir() / appfn::path::localisation::localisation_EN;
 
 		std::cerr << "LERROR: Unsupported language!" << std::endl;
 		return false;
@@ -50,8 +50,8 @@ std::string helperText::Localization::getLocalizedString(const std::string& cate
 	if (loadedJson.contains(category))
 		return loadedJson[category].value(key, defaultValue);
 	else {
-		Logger::logStatic(std::string("val: '").append(key).append(" ").append(category)
-						  .append("' not found in localization."), "LoadLocalis", logType::LWARNING);
+		appfn::Logger::logStatic(std::string("val: '").append(key).append(" ").append(category)
+						 .append("' not found in localization."), "LoadLocalis", logType::LWARNING);
 		return defaultValue;
 	}
 }

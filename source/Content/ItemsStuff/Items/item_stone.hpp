@@ -9,11 +9,10 @@ public:
 	virtual ~Stone() {}
 
 	void useItem() override {
-		// print to console that you used this item
-		std::cout <<  iData.m_name << " is not usable" << std::endl;
+	
 	}
 
 	void update(const float& delta_time, sf::Vector2i mouse_pos) {}
 };
-};     // namespace Items
+};   // namespace Items
 #endif /* ITEM_STONE */

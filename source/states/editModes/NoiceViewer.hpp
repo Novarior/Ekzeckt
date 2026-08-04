@@ -1,12 +1,14 @@
 #ifndef CPP_STATE_NOICE_VIEW_HPP
 #define CPP_STATE_NOICE_VIEW_HPP
 
+#include "../../core/header.h"
+
+#include "../../core/tools/appfn_logger.hpp"
+
 #include "../../core/math/models noice/Noise_data.h"
 #include "../../core/math/models noice/Noice_PGN.hpp"
 #include "../../core/math/models noice/Noice_Perlin.hpp"
 #include "../../core/math/models noice/Noice_Simplex.hpp"
-
-#include "../../core/header.h"
 
 enum noiceType {
 	PERLIN_NOICE = 0,
@@ -46,7 +48,7 @@ private:
 	void initvariables();
 
 	// dynamin 2d array
-	std::vector<std::vector<double>> noiceMap;
+	std::vector<double> noiceMap;
 
 public:
 	NoiceViewer(NoiceData* noicedata);
