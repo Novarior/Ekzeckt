@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="source\Content\ItemsStuff\Inventory.cpp" />
     <ClCompile Include="source\Content\ItemsStuff\ItemEntity\entity_item.cpp" />
-    <ClCompile Include="source\Content\Map\block.cpp" />
+    <ClCompile Include="source\Content\Map\map_block.cpp" />
     <ClCompile Include="source\Content\Map\TileMap.cpp" />
     <ClCompile Include="source\core\Core.cpp" />
     <ClCompile Include="source\core\Core_loader.cpp" />
@@ -60,6 +60,7 @@
     <ClCompile Include="source\states\settings.cpp" />
     <ClCompile Include="source\states\State.cpp" />
     <ClCompile Include="source\core\dataCollector\_man_Fonts.cpp" />
+    <ClCompile Include="source\core\math\models fractal\SpiralModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Content\ItemsStuff\Coins.hpp" />
@@ -79,7 +80,7 @@
     <ClInclude Include="source\Content\ItemsStuff\Items\item_test.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\Items\item_wood.hpp" />
     <ClInclude Include="source\Content\ItemsStuff\itemtextures.hpp" />
-    <ClInclude Include="source\Content\Map\block.hpp" />
+    <ClInclude Include="source\Content\Map\map_block.hpp" />
     <ClInclude Include="source\Content\Map\TileMap.hpp" />
     <ClInclude Include="source\core\cmakever.h" />
     <ClInclude Include="source\core\Core.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="source\states\settings.hpp" />
     <ClInclude Include="source\states\State.hpp" />
     <ClInclude Include="source\core\dataCollector\_man_Fonts.hpp" />
+    <ClInclude Include="source\core\math\models fractal\SpiralModel.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

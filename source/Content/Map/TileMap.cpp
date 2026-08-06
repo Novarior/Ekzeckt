@@ -431,7 +431,7 @@ void TileMap::render(sf::RenderTarget* target) { // Render tiles
 	for (int x = this->m_renderArea.fromX; x < this->m_renderArea.toX; x++)
 		for (int y = this->m_renderArea.fromY; y < this->m_renderArea.toY; y++)
 			if (this->tilemap[x][y][0] != nullptr)
-				this->tilemap[x][y][0]->render(target);
+				target->draw(*tilemap[x][y][0]);
 
 	// Render trees on screen area
 	for (int i = 0; i < this->trees.size(); i++)

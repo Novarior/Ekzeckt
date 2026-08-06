@@ -192,6 +192,7 @@ Process::Process(StateData* state_data, const bool defaultLoad)
 	: State(state_data), renderSprite(TextureManager::getTexture("texture_null"))
 
 { // init Parser
+	IStateName = "Process";
 	if (defaultLoad)
 		loadGameData();
 	else
@@ -219,6 +220,11 @@ Process::~Process() {
 	delete player;
 	delete noicedata;
 	delete inventoryGUI;
+
+	for (auto& lay : IGUILayout)
+		for (auto& it : lay)
+			delete it.second;
+	IGUILayout.clear();
 
 	pausemenu.reset();
 	minimap.reset();

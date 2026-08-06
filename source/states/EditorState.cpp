@@ -6,6 +6,9 @@
 
 
 void EditorState::initGUI() {
+	IGUILayout.resize(vCount);
+	staticSelector.resize(vCount);
+	staticSelectorUInt.resize(vCount);
 	initTabMenu();
 	initButtons();
 	initSelectors();
@@ -37,23 +40,27 @@ void EditorState::initButtons() { // init buttons
 	//	|		|		|		|
 	//	|_______|_______|_______|
 
-	IGUILayout["SAVE_GENDATA"] = std::make_unique<gui::Button>(
+	IGUILayout[cViewGen::vAll]["SAVE_GENDATA"] = new gui::Button(
 		sf::Vector2f(tabPos.x, tabPos.y + tabSize.y - btnOffsetY * 2.f),
 		btnSize2, "Save");
 
-	IGUILayout["LOAD_GENDATA"] = std::make_unique<gui::Button>(
+	IGUILayout[cViewGen::vAll]["LOAD_GENDATA"] = new gui::Button(
 		sf::Vector2f(tabPos.x + btnSize2.x, tabPos.y + tabSize.y - btnOffsetY * 2.f),
 		btnSize2, "Load");
 
-	IGUILayout["G_SEED"] = std::make_unique<gui::Button>(
+	IGUILayout[cViewGen::vAll]["G_SEED"] = new gui::Button(
 		sf::Vector2f(tabPos.x, tabPos.y + tabSize.y - btnOffsetY),
 		btnSize3, "New Seed");
 
-	IGUILayout["G_NOICE"] = std::make_unique<gui::Button>(
+	IGUILayout[cViewGen::vNoice]["G_NOICE"] = new gui::Button(
 		sf::Vector2f(tabPos.x + btnSize3.x, tabPos.y + tabSize.y - btnOffsetY),
 		btnSize3, "Gen Noice");
 
-	IGUILayout["G_TREE"] = std::make_unique<gui::Button>(
+	IGUILayout[cViewGen::vSpiral]["G_SPIRAL"] = new gui::Button(
+		sf::Vector2f(tabPos.x + btnSize3.x, tabPos.y + tabSize.y - btnOffsetY),
+		btnSize3, "Gen Spiral");
+
+	IGUILayout[cViewGen::vLSystem]["G_TREE"] = new gui::Button(
 		sf::Vector2f(tabPos.x + btnSize3.x * 2.f, tabPos.y + tabSize.y - btnOffsetY),
 		btnSize3, "Gen Tree");
 
@@ -61,25 +68,25 @@ void EditorState::initButtons() { // init buttons
 
 void EditorState::initSelectors() { // init static selector in tab menu
 	auto& font = *FontManager::getFont(FontID::FONT_GAMEF_01);
-	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x, mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y));
 	//gui::SliderFloat sl(pos, size, font, charsize,baseVal, min, max, name);
 	sf::Vector2f tbPos = tabShape.getPosition();
 	sf::Vector2f tbSize = tabShape.getSize();
+	sf::Vector2f btnSize = sf::Vector2f(tabShape.getSize().x, mmath::p2pX(6.f, tbSize.y));
 	auto& ndata = m_noiceData;
 
-	staticSelectorUInt["OCTAVES"] = new gui::SliderUInt(
+	staticSelectorUInt[cViewGen::vNoice]["OCTAVES"] = new gui::SliderUInt(
 		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, ndata->octaves, 1U, 10U, "Octaves: ");
 
-	staticSelector["FREQUENCY"] = new gui::SliderFloat(
-		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(7U, IstateData->sd_Window.lock()->getSize().y)),
+	staticSelector[cViewGen::vNoice]["FREQUENCY"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(6.f, tbSize.y)),
 		btnSize, font, IstateData->sd_characterSize_game_small, ndata->frequency, 0.f, 15.f, "Frequency: ");
 
-	staticSelector["PERSISTENCE"] = new gui::SliderFloat(
-		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(14U, IstateData->sd_Window.lock()->getSize().y)),
+	staticSelector[cViewGen::vNoice]["PERSISTENCE"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(12.f, tbSize.y)),
 		btnSize, font, IstateData->sd_characterSize_game_small, ndata->persistence, 0.f, 2.0f, "Persistence: ");
 
-	staticSelector["AMPLIFIRE"] = new gui::SliderFloat(
-		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(21U, IstateData->sd_Window.lock()->getSize().y)),
+	staticSelector[cViewGen::vNoice]["AMPLIFIRE"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(18.f, tbSize.y)),
 		btnSize, font, IstateData->sd_characterSize_game_small, ndata->amplifire, 0.f, 3.f, "Amplifire: ");
 
 	std::vector<std::string> list = {"Linear", "Cosine", "Cubic", "Quintic", "Quartic", "Quadratic", "Hermite"};
@@ -88,11 +95,48 @@ void EditorState::initSelectors() { // init static selector in tab menu
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(28.f, tbSize.y)),
 		btnSize, font, IstateData->sd_characterSize_game_small, list.data(), list.size(), 0);
 
-	// set default value for static selector
-	staticSelectorUInt["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
-	staticSelector["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
-	staticSelector["AMPLIFIRE"]->setCurrentValue(m_noiceData->amplifire);
-	staticSelector["PERSISTENCE"]->setCurrentValue(m_noiceData->persistence);
+	//// set default value for static selector
+	//staticSelectorUInt[cViewGen::vNoice]["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
+	//staticSelector[cViewGen::vNoice]["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
+	//staticSelector[cViewGen::vNoice]["AMPLIFIRE"]->setCurrentValue(m_noiceData->amplifire);
+	//staticSelector[cViewGen::vNoice]["PERSISTENCE"]->setCurrentValue(m_noiceData->persistence);
+
+	auto& sData = spiralData;
+
+	staticSelector[cViewGen::vSpiral]["SPR_GALX_RAD"] = new gui::SliderFloat(
+		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, sData.galaxyRadius, 1000.f, 5000.f, "Galaxy Radius: ");
+
+	staticSelectorUInt[cViewGen::vSpiral]["SPR_ARMS"] = new gui::SliderUInt(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(6.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.spiralArms, 1U, 30U, "Spiral Arms: ");
+
+	staticSelector[cViewGen::vSpiral]["SPR_ARMS_CURVE"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(12.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.spiralArmCurvature, 0.f, 90.f, "Spiral Arms Curve: ");
+
+	staticSelector[cViewGen::vSpiral]["SPR_CORE_RAD"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(18.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.CoreRadius, 0.f, 1000.0f, "Core Radius: ");
+
+	staticSelector[cViewGen::vSpiral]["SPR_CORE_BRNTH"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(24.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.CoreBrightness, 0.f, 100.f, "Core Brightness: ");
+
+	staticSelector[cViewGen::vSpiral]["SPR_DENS_DUST"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(30.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.DustDensity, 0, 1000, "Density of Dust: ");
+
+	staticSelector[cViewGen::vSpiral]["SPR_DENS_GAS"] = new gui::SliderFloat(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(36.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.GasDensity, 0U, 10000U, "Density of Gas: ");
+
+	staticSelectorUInt[cViewGen::vSpiral]["SPR_STAR_COUNT"] = new gui::SliderUInt(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(42.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.starCount, 1000U, 30000U, "Star Cound: ");
+
+	staticSelectorUInt[cViewGen::vSpiral]["SPR_ARM_LEN"] = new gui::SliderUInt(
+		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(48.f, tbSize.y)),
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.spiralArmCount, 1000U, 30000U, "Spiral Arm Length: ");
 }
 
 void EditorState::initNoice() {
@@ -118,6 +162,23 @@ void EditorState::initNoice() {
 	m_NoiceViewer->generateNoice();
 }
 
+void EditorState::initMathMoodels() {
+	initSpiralMathModel();
+	initLSystemMathModel();
+}
+
+void EditorState::initSpiralMathModel() {
+	spiralModel = new SpiralModel(&spiralData, Iwindow.lock()->getSize());
+}
+
+void EditorState::initLSystemMathModel() {	// init LSystem
+	myLS = new LSystem();
+	myLS->setRule('d', "qd");
+	myLS->setRule('s', "d[[-qqs]qs]+qqs[+q|]-q|");
+	myLS->setOffsetPos(sf::Vector2f(IstateData->sd_Window.lock()->getSize().x / 2, IstateData->sd_Window.lock()->getSize().y * 0.90));
+	myLS->generate();
+}
+
 void EditorState::initDebugText() { // init debug text
 	//Itext.setFont(*FontManager::getFont(FontID::FONT_GAMEF_01));
 	Itext.setCharacterSize(IstateData->sd_characterSize_debug);
@@ -128,21 +189,15 @@ void EditorState::initDebugText() { // init debug text
 }
 
 EditorState::EditorState(StateData* statedata): State(statedata) {
-	// init logger
+	IStateName = "EditorState";
+
 	appfn::Logger::logStatic("Start initilization EditorState", "EditorState::EditorState()");
-	// init keybinds
+
+	strCurrentViewGen = {"vNoice", "vLSystem","vSpiral","vAll"};
 
 	initNoice();
+	initMathMoodels();
 	initGUI();
-
-	current_View_Generator = 0;
-
-	// init LSystem
-	myLS = new LSystem();
-	myLS->setRule('d', "qd");
-	myLS->setRule('s', "d[[-qqs]qs]+qqs[+q|]-q|");
-	myLS->setOffsetPos(sf::Vector2f(IstateData->sd_Window.lock()->getSize().x / 2, IstateData->sd_Window.lock()->getSize().y * 0.90));
-	myLS->generate();
 
 	appfn::Logger::logStatic("End initilization EditorState", "EditorState::EditorState()");
 }
@@ -153,13 +208,19 @@ EditorState::~EditorState() {
 	// FIXME: add save noice data to file
 	// ParserJson::saveNoiceData( m_NoiceViewer->getNoiceData());
 
+
+	for (auto& lay : IGUILayout)
+		for (auto& it : lay)
+			delete it.second;
 	IGUILayout.clear();
 
-	for (auto& it : staticSelector)
-		delete it.second;
+	for (auto& lay : staticSelector)
+		for (auto& it : lay)
+			delete it.second;
 
-	for (auto& it : staticSelectorUInt)
-		delete it.second;
+	for (auto& lay : staticSelectorUInt)
+		for (auto& it : lay)
+			delete it.second;
 
 	delete m_NoiceViewer;
 	delete selector;
@@ -174,26 +235,50 @@ void EditorState::updateDebugTextState(const float& delta_time) {
 		<< "\n\t\t['W'] Switch color mode"
 		<< "\n\t\t['E'] Change current viewport of generators"
 		<< "\n\t\t['R'] switch fast mode noices (not simplex)"
-		<< "\nCurent view generator:\t" << current_View_Generator
-		<< "\nCurent noice view mode:\t" << m_NoiceViewer->getNoiceModelName() << ":\t" << m_NoiceViewer->getNoiceModel()
-		<< "\nCurent noice color mode:\t" << m_NoiceViewer->getColorModeName() << ":\t" << m_NoiceViewer->getColorMode()
-		<< "\nNoiceData:\nSeed:\t" << m_NoiceViewer->getNoiceData()->seed
-		<< "\n\tOctaaves: " << m_noiceData->octaves
-		<< "\n\tFrequency: " << m_noiceData->frequency
-		<< "\n\tPersistence: " << m_noiceData->persistence
-		<< "\n\tAmplifire: " << m_noiceData->amplifire
-		<< "\n\tOffSet: " << m_noiceData->offsetSeed
-		<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName() << ":\t" << m_NoiceViewer->getNoiceData()->smoothMode
-		<< "\nFastMode" << m_NoiceViewer->getNoiceData()->fastMode
-		<< "\nHeigth on Cursor: " << m_NoiceViewer->getHeightMap(ImousePosWindow)
-		<< "\nTree Data:\n\tTreeSize:\t" << myLS->getSizeTree()
-		<< "\n\tTreeAxiom\t" << myLS->getAxiomSize();
+		<< "\nCurent view generator:\t" << strCurrentViewGen[current_View_Generator] << ": " << current_View_Generator;
+	switch (current_View_Generator) {
+	case cViewGen::vNoice:
+		IstringStream << "\nCurent noice view mode:\t" << m_NoiceViewer->getNoiceModelName() << ":\t" << m_NoiceViewer->getNoiceModel()
+			<< "\nCurent noice color mode:\t" << m_NoiceViewer->getColorModeName() << ":\t" << m_NoiceViewer->getColorMode()
+			<< "\nNoiceData:\nSeed:\t" << m_NoiceViewer->getNoiceData()->seed
+			<< "\n\tOctaaves: " << m_noiceData->octaves
+			<< "\n\tFrequency: " << m_noiceData->frequency
+			<< "\n\tPersistence: " << m_noiceData->persistence
+			<< "\n\tAmplifire: " << m_noiceData->amplifire
+			<< "\n\tOffSet: " << m_noiceData->offsetSeed
+			<< "\nCurent noice smooth mode:\t" << m_NoiceViewer->getNoiceSmouthName() << ":\t" << m_NoiceViewer->getNoiceData()->smoothMode
+			<< "\nFastMode" << m_NoiceViewer->getNoiceData()->fastMode
+			<< "\nHeigth on Cursor: " << m_NoiceViewer->getHeightMap(ImousePosWindow);
+		break;
+	case cViewGen::vLSystem:
+		IstringStream << "\nTree Data:\n\tTreeSize:\t" << myLS->getSizeTree()
+			<< "\n\tTreeAxiom\t" << myLS->getAxiomSize();
+		break;
+	case cViewGen::vSpiral:
+		IstringStream << "\nGalaxy Parameters:\n\tSeed: " << spiralData.seed
+			<< "\n\tRadius: " << spiralData.galaxyRadius
+			<< "\n\tCount Stars: " << spiralData.starCount
+			<< "\n\tArms: " << spiralData.spiralArms
+			<< "\n\tArms Length: " << spiralData.spiralArmCount
+			<< "\n\tArms Curvature: " << spiralData.spiralArmCurvature
+			<< "\n\tCore Radius: " << spiralData.CoreRadius
+			<< "\n\tCore Brightness: " << spiralData.CoreBrightness
+			<< "\n\tDensity Dust: " << spiralData.DustDensity
+			<< "\n\tDensity Gas: " << spiralData.GasDensity;
+		break;
+	}
 }
 
 void EditorState::resetGUI() {
 	IGUILayout.clear();
-	for (auto& it : staticSelector)	delete it.second;
-	for (auto& it : staticSelectorUInt) delete it.second;
+	for (auto& lay : staticSelector)
+		for (auto& it : lay)
+			delete it.second;
+
+	for (auto& lay : staticSelectorUInt)
+		for (auto& it : lay)
+			delete it.second;
+
 	delete m_NoiceViewer;
 	delete selector;
 
@@ -288,87 +373,149 @@ void EditorState::updateInput(const float& delta_time) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Tab) && getKeytime())
 		showTabmenu = !showTabmenu;
 
-	// update currentViewGenerator in a range from 0 to 2
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && getKeytime())
-		m_NoiceViewer->swithNoiceModel();
-
-	// switch noice model
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && getKeytime())
-		m_NoiceViewer->swithColorMode();
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && getKeytime()) {
-		if (current_View_Generator < 2)
+		if (current_View_Generator < static_cast<int>(cViewGen::vSpiral))
 			current_View_Generator++;
 		else
-			current_View_Generator = 0;
+			current_View_Generator = cViewGen::vNoice;
 	}
-	// switch noice smooth mode (fast mode)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && getKeytime())
-		m_noiceData->fastMode = !m_noiceData->fastMode;
+
+	// safe from overlapping keybinds
+	switch (current_View_Generator) {
+	case cViewGen::vNoice:
+		// switch noice smooth mode (fast mode)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && getKeytime())
+			m_noiceData->fastMode = !m_noiceData->fastMode;
+		// switch noice model
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && getKeytime())
+			m_NoiceViewer->swithColorMode();
+		// update currentViewGenerator in a range from 0 to 2
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && getKeytime())
+			m_NoiceViewer->swithNoiceModel();
+		break;
+	case cViewGen::vLSystem:
+		break;
+	case cViewGen::vSpiral:
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::G) && getKeytime())
+			spiralModel->regenerateSpiral();
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle) && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+			zoomView();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle) && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl))
+			resetView();
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))
+			moveView();
+
+
+
+
+		break;
+	}
 }
 
 
 
 void EditorState::updateButtons(const float& delta_time) {
-	for (auto& it : IGUILayout)
-		it.second->update(ImousePosView);
+	sf::Vector2f mouseF(ImousePosWindow);
 
-	for (auto& it : staticSelectorUInt)
-		it.second->update(ImousePosView);
+	for (auto& it : IGUILayout[cViewGen::vAll])
+		it.second->update(mouseF);
 
-	for (auto& it : staticSelector)
-		it.second->update(ImousePosView);
+	for (auto& it : IGUILayout[current_View_Generator])
+		it.second->update(mouseF);
 
-	selector->update(delta_time, ImousePosView);
+	for (auto& it : staticSelectorUInt[current_View_Generator])
+		it.second->update(mouseF);
 
+	for (auto& it : staticSelector[current_View_Generator])
+		it.second->update(mouseF);
+
+	selector->update(delta_time, mouseF);
+
+	// global btns
 	// update buttons using switch case for each button
+	if (IGUILayout[cViewGen::vAll]["SAVE_GENDATA"]->isPressed()) {
+		// fixme: add save noice data to file
+	}
+	if (IGUILayout[cViewGen::vAll]["LOAD_GENDATA"]->isPressed()) {
+		// fixme: add load noice data from file
+		staticSelectorUInt[cViewGen::vNoice]["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
+		staticSelector[cViewGen::vNoice]["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
+		staticSelector[cViewGen::vNoice]["AMPLIFIRE"]->setCurrentValue(m_noiceData->amplifire);
+		staticSelector[cViewGen::vNoice]["PERSISTENCE"]->setCurrentValue(m_noiceData->persistence);
+		selector->setActiveElement(m_noiceData->smoothMode);
+	}
+	if (IGUILayout[cViewGen::vAll]["G_SEED"]->isPressed() && getKeytime()) {
+		uint64_t ns = mmath::splitmix64(std::rand());;
+		m_noiceData->seed = ns;
+		spiralData.seed = ns;
+	}
+	//scope butons
+
+	auto& ssui = staticSelectorUInt[cViewGen::vNoice];
+	auto& ssf = staticSelector[cViewGen::vNoice];
 	switch (current_View_Generator) {
-	case 0: // noice case
-		if (staticSelectorUInt["OCTAVES"]->isValueChanged()) {
-			m_noiceData->octaves = staticSelectorUInt["OCTAVES"]->getValue();
-			staticSelectorUInt["OCTAVES"]->closeChangeValue();
+	case cViewGen::vNoice: // noice case 
+		if (ssui["OCTAVES"]->isValueChanged()) {
+			m_noiceData->octaves = ssui["OCTAVES"]->getValue();
 		}
-		if (staticSelector["FREQUENCY"]->isValueChanged()) {
-			m_noiceData->frequency = staticSelector["FREQUENCY"]->getValue();
-			staticSelector["FREQUENCY"]->closeChangeValue();
+		if (ssf["FREQUENCY"]->isValueChanged()) {
+			m_noiceData->frequency = ssf["FREQUENCY"]->getValue();
 		}
-		if (staticSelector["PERSISTENCE"]->isValueChanged()) {
-			m_noiceData->persistence = staticSelector["PERSISTENCE"]->getValue();
-			staticSelector["PERSISTENCE"]->closeChangeValue();
+		if (ssf["PERSISTENCE"]->isValueChanged()) {
+			m_noiceData->persistence = ssf["PERSISTENCE"]->getValue();
 		}
-		if (staticSelector["AMPLIFIRE"]->isValueChanged()) {
-			m_noiceData->amplifire = staticSelector["AMPLIFIRE"]->getValue();
-			staticSelector["AMPLIFIRE"]->closeChangeValue();
+		if (ssf["AMPLIFIRE"]->isValueChanged()) {
+			m_noiceData->amplifire = ssf["AMPLIFIRE"]->getValue();
 		}
-		if (IGUILayout["G_SEED"]->isPressed() && getKeytime()) {
-			m_noiceData->seed = mmath::splitmix64(std::rand());
-		}
-		if (IGUILayout["G_NOICE"]->isPressed() && getKeytime()) {
+		if (IGUILayout[cViewGen::vNoice]["G_NOICE"]->isPressed() && getKeytime()) {
 			m_NoiceViewer->generateNoice();
 		}
-		if (IGUILayout["SAVE_GENDATA"]->isPressed()) {
-			// fixme: add save noice data to file
-		}
-		if (IGUILayout["LOAD_GENDATA"]->isPressed()) {
-			// fixme: add load noice data from file
-			staticSelectorUInt["OCTAVES"]->setCurrentValue(m_noiceData->octaves);
-			staticSelector["FREQUENCY"]->setCurrentValue(m_noiceData->frequency);
-			staticSelector["AMPLIFIRE"]->setCurrentValue(m_noiceData->amplifire);
-			staticSelector["PERSISTENCE"]->setCurrentValue(m_noiceData->persistence);
-			selector->setActiveElement(m_noiceData->smoothMode);
-		}
+
 		m_NoiceViewer->setNoiceData(m_noiceData);
 		break;
-	case 1: // tree case
-		if (IGUILayout["G_TREE"]->isPressed()) {
+	case cViewGen::vLSystem: // tree case
+		if (IGUILayout[cViewGen::vLSystem]["G_TREE"]->isPressed()) {
 			myLS->generate();
 			saveTreeAsImage(*IstateData->sd_Window.lock());
+		}
+		break;
+	case cViewGen::vSpiral:
+		if (IGUILayout[cViewGen::vSpiral]["G_SPIRAL"]->isPressed() && getKeytime()) {
+			spiralModel->regenerateSpiral();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_GALX_RAD"]->isValueChanged()) {
+			spiralData.galaxyRadius = staticSelector[cViewGen::vSpiral]["SPR_GALX_RAD"]->getValue();
+		}
+		if (staticSelectorUInt[cViewGen::vSpiral]["SPR_ARMS"]->isValueChanged()) {
+			spiralData.spiralArms = staticSelectorUInt[cViewGen::vSpiral]["SPR_ARMS"]->getValue();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_ARMS_CURVE"]->isValueChanged()) {
+			spiralData.spiralArmCurvature = staticSelector[cViewGen::vSpiral]["SPR_ARMS_CURVE"]->getValue();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_CORE_RAD"]->isValueChanged()) {
+			spiralData.CoreRadius = staticSelector[cViewGen::vSpiral]["SPR_CORE_RAD"]->getValue();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_CORE_BRNTH"]->isValueChanged()) {
+			spiralData.CoreBrightness = staticSelector[cViewGen::vSpiral]["SPR_CORE_BRNTH"]->getValue();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_DENS_DUST"]->isValueChanged()) {
+			spiralData.DustDensity = staticSelector[cViewGen::vSpiral]["SPR_DENS_DUST"]->getValue();
+		}
+		if (staticSelector[cViewGen::vSpiral]["SPR_DENS_GAS"]->isValueChanged()) {
+			spiralData.GasDensity = staticSelector[cViewGen::vSpiral]["SPR_DENS_GAS"]->getValue();
+		}
+		if (staticSelectorUInt[cViewGen::vSpiral]["SPR_STAR_COUNT"]->isValueChanged()) {
+			spiralData.starCount = staticSelectorUInt[cViewGen::vSpiral]["SPR_STAR_COUNT"]->getValue();
+		}
+		if (staticSelectorUInt[cViewGen::vSpiral]["SPR_ARM_LEN"]->isValueChanged()) {
+			spiralData.spiralArmCount = staticSelectorUInt[cViewGen::vSpiral]["SPR_ARM_LEN"]->getValue();
 		}
 		break;
 	default: // default case
 		break;
 	}
-	selector->update(delta_time, ImousePosView);
+	selector->update(delta_time, mouseF);
 	m_noiceData->smoothMode = selector->getActiveElementID();
 }
 
@@ -378,7 +525,7 @@ void EditorState::update(const float& delta_time) {
 	// update keytime for next function used it for keypress delay
 	updateKeytime(delta_time);
 	updateInput(delta_time);
-	updateMousePositions();
+	updateMousePositions(&IView);
 
 	myLS->update(delta_time);
 	// if tab menu is open then update buttons
@@ -395,38 +542,55 @@ void EditorState::update(const float& delta_time) {
 void EditorState::renderTabMenu(sf::RenderTarget& target) {
 	target.draw(tabShape);
 
-	for (auto& it : staticSelector)
+	for (auto& it : staticSelector[current_View_Generator])
 		target.draw(*it.second);
 
-	for (auto& it : staticSelectorUInt)
+	for (auto& it : staticSelectorUInt[current_View_Generator])
 		target.draw(*it.second);
 
-	for (auto& it : IGUILayout)
+	for (auto& it : IGUILayout[cViewGen::vAll])
+		target.draw(*it.second);
+	for (auto& it : IGUILayout[current_View_Generator])
 		target.draw(*it.second);
 
-	selector->render(target);
+	if (current_View_Generator == cViewGen::vNoice)
+		selector->render(target);
 }
 
 void EditorState::render(sf::RenderWindow& target) {
-	// layer 0 - noice render and tree render
+	// layer 0 - math models (noice, trees, etc)
+
+	IRenderTexture.clear();
+	IRenderTexture.setView(IView);
+
 	switch (current_View_Generator) {
-	case 0: // call noice render
+	case cViewGen::vAll: break; // cannot contain any generators in "all layout" 
+	case cViewGen::vNoice: // call noice render
 		if (m_NoiceViewer != nullptr)
-			m_NoiceViewer->render(target);
+			m_NoiceViewer->render(IRenderTexture);
 		break;
-	case 1: // call tree render
+	case cViewGen::vLSystem: // call tree render
 		if (myLS != nullptr)
-			myLS->render(target);
+			myLS->render(IRenderTexture);
+		break;
+	case cViewGen::vSpiral:
+		IRenderTexture.draw(*spiralModel);
 		break;
 	default:
 		break;
 	}
+
+	IRenderTexture.setView(IRenderTexture.getDefaultView());
 	// layer 1 - tab menu render
 	if (showTabmenu)
-		renderTabMenu(target);
+		renderTabMenu(IRenderTexture);
 
 	// layer 2 - debug text render
 	// render debug text
 	if (Idebud)
-		target.draw(Itext);
+		IRenderTexture.draw(Itext);
+
+
+	IRenderTexture.display();
+	target.draw(IRenderSprite);
 }

@@ -6,6 +6,7 @@
 #include "editModes/NoiceViewer.hpp"
 
 #include "../core/math/models fractal/LSystem.hpp"
+#include "../core/math/models fractal/SpiralModel.hpp"
 
 #include "../Content/Map/TileMap.hpp"
 
@@ -16,10 +17,17 @@
 #include "../GUI/components/slider.hpp"
 
 
-
+enum cViewGen {
+	vNoice = 0,
+	vLSystem,
+	vSpiral,
+	vAll,
+	vCount
+};
 // The EditorState class represents the state of the game editor
 class EditorState: public State {
 private:
+	std::array<std::string, 4> strCurrentViewGen;
 	// Variables
 	NoiceViewer* m_NoiceViewer;     // Noise viewer
 	NoiceData* m_noiceData;    // Noise data
@@ -27,24 +35,31 @@ private:
 
 	// trees
 	LSystem* myLS; // L-system for generating trees
+	SpiralModel* spiralModel;
+	ModelData spiralData;
 
 	// GUI elements (buttons, selectors, etc)
 	bool showTabmenu;               // Flag to show or hide the tab menu
 	sf::RectangleShape tabShape;         // Shape of the tab
 	// Map of static selectors
 
-	std::map<std::string, gui::SliderFloat*> staticSelector;
-	std::map<std::string, gui::SliderUInt*> staticSelectorUInt;
+	std::vector<std::map<std::string, gui::SliderFloat*>> staticSelector;
+	std::vector<std::map<std::string, gui::SliderUInt*>> staticSelectorUInt;
 	gui::Selector* selector; // Current selector
 
-	int current_View_Generator = 1; // Current view generator
+	int current_View_Generator = cViewGen::vSpiral; // Current view generator
 
 	// Initialization functions
 	void initGUI();			// init all GUI layout
 	void initButtons();		// Initialize buttons
 	void initSelectors();	// Initialize selectors
 	void initTabMenu();		// Initialize tab menu
+
 	void initNoice();		// Initialize noise
+	void initMathMoodels();
+	void initSpiralMathModel();
+	void initLSystemMathModel();
+
 	void initDebugText();	// Initialize debug text
 
 	// Update functions

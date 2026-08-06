@@ -37,8 +37,8 @@ private:
 	}
 public:
 	Slider(sf::Vector2f position, sf::Vector2f size,
-		  sf::Font& font, const unsigned character_size = 20U,
-		  T base_value = 0, T min_val = 0, T max_val = 0, const std::string& name = "FIX ME")
+		   sf::Font& font, const unsigned character_size = 20U,
+		   T base_value = 0, T min_val = 0, T max_val = 0, const std::string& name = "FIX ME")
 		: _font(font), _value(base_value), _newValue(base_value), _min(min_val), _max(max_val),
 		_nameSlider(font, name, character_size), _textValue(font, std::to_string(base_value), character_size) {
 
@@ -85,7 +85,10 @@ public:
 	// destructor
 	~Slider() {}
 
-	const T getValue() const { return _value; }
+	const T getValue()  {
+		return _value;
+		valueWasChanged = false;
+	}
 	void setCurrentValue(T _val) {
 		if (_min < _val < _max) {
 			_value = _val;
@@ -93,7 +96,6 @@ public:
 		}
 	}
 	const bool isValueChanged() const { return valueWasChanged; }
-	void closeChangeValue() { valueWasChanged = false; }
 
 	// update slider (cricles) position and value using mouse position
 	// if mouse is on slider, slider is litle bit bigger and litle bit red
@@ -121,7 +123,7 @@ public:
 
 
 			_value = T(_min) + ratio * (T(_max) - T(_min));
-			_value= std::round(_value * 1000.0f) / 1000.0f;
+			_value = std::round(_value * 1000.0f) / 1000.0f;
 
 			if (_value != _newValue) {
 				isChanged = true;

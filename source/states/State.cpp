@@ -9,7 +9,7 @@ State::State(StateData* state_data)
 	: IstateData(state_data),
 	Itext(*FontManager::getFont(FontID::FONT_DEBUG), "",
 		  IstateData->sd_characterSize_debug),
-	IRenderSprite(TextureManager::getTexture(TextureID::TEXTURE_NULL)) {
+	IRenderSprite(TextureManager::getTexture(TextureID::TEXTURE_NULL)), IStateName("Base") {
 	// write log message what im here doing something
 	appfn::Logger::logStatic("Start initilization state", "State::State()");
 
@@ -55,6 +55,7 @@ void State::updateDebugTextBase(const float& delta_time) {
 	IstringStream
 		<< "\nver:\t" << CMAKE_PROJECT_VERSION << "\nCurrent memory usage:\t"
 		<< appfn::MemoryUsageMonitor::formatMemoryUsage(appfn::MemoryUsageMonitor::getCurrentMemoryUsage())
+		<< "\nCurrent State:\t" << IStateName
 		<< "\nDelta Time:\t" << delta_time
 		<< "\nFPS delta:\t" << deltaF
 		<< "\nFPS Clock:\t" << appfn::FPS::getFPS()
@@ -65,22 +66,22 @@ void State::updateDebugTextBase(const float& delta_time) {
 		<< "\nWIN_Size:\t" << Iwindow.lock()->getSize().x << " x " << Iwindow.lock()->getSize().y
 		<< "\nWIN_View_Size:\t" << Iwindow.lock()->getView().getSize().x << " x " << Iwindow.lock()->getView().getSize().y
 		<< "\nWIN_Center:\t" << Iwindow.lock()->getView().getCenter().x << " x " << Iwindow.lock()->getView().getCenter().y
-		<< "\nrViev_Size:\t" << view.getSize().x << " x " << view.getSize().y
+		<< "\nrViev_Size:\t" << IView.getSize().x << " x " << IView.getSize().y
 		<< "\nrSprite_Size:\t" << IRenderSprite.getTextureRect().size.x << " x " << IRenderSprite.getTextureRect().size.y
 		<< "\nrSprite_Texture_Size:\t" << IRenderSprite.getTexture().getSize().x << " x " << IRenderSprite.getTexture().getSize().y
 		<< "\n"
 		<< "\nAntialiasing:\t" << IstateData->sd_Window.lock()->getSettings().antiAliasingLevel
 		<< "\nvSync:\t" << IstateData->sd_gfxSettings.lock()->verticalSync
-		<< "\nMouse Pos:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y;
+		<< "\nMouse Pos Window:\t" << ImousePosWindow.x << " x " << ImousePosWindow.y
+		<< "\nMouse Pos Screen:\t" << ImousePosScreen.x << " x " << ImousePosScreen.y
+		<< "\nMouse Pos View:\t" << ImousePosView.x << " x " << ImousePosView.y
+		<< "\nMouse Pos Grid:\t" << ImousePosGrid.x << " x " << ImousePosWindow.y;
 }
 
 void State::updateDebugText() {
 	Itext.setString(IstringStream.str());
 	IstringStream.str("");
 }
-///////////////////////////////////////////
-///////////		INITS		////////////
-///////////////////////////////////////////
 
 void State::initRenderDefines() {
 	auto ws = Iwindow.lock()->getSize();
@@ -93,16 +94,40 @@ void State::initRenderDefines() {
 }
 
 void State::resetView() {
-	view.setSize(sf::Vector2f(
+	IView.setSize(sf::Vector2f(
 		static_cast<float>(IstateData->sd_Window.lock()->getSize().x),
 		static_cast<float>(IstateData->sd_Window.lock()->getSize().y)));
 
-	view.setCenter(sf::Vector2f(
+	IView.setCenter(sf::Vector2f(
 		static_cast<float>(IstateData->sd_Window.lock()->getSize().x) / 2,
 		static_cast<float>(IstateData->sd_Window.lock()->getSize().y) / 2));
 
-	IstateData->sd_Window.lock()->setView(view);
-	Iwindow.lock()->setView(view);
+	Iwindow.lock()->setView(IView);
+}
+
+void State::moveView() {
+	sf::Vector2f offset = sf::Vector2f(ImouseOldPosView - ImousePosWindow);
+	IView.move(offset);
+}
+
+void State::zoomView() {
+	auto viewsize = IView.getSize();
+	auto offset = float(ImouseOldPosView.x - ImousePosWindow.x);
+	float newWidth = viewsize.x - offset;
+	float newHeight = viewsize.y - offset;
+
+	newWidth = std::max(newWidth, 320.f);
+	newHeight = std::max(newHeight, 180.f);
+
+	float originalAspect = viewsize.x / viewsize.y;
+	float newAspect = newWidth / newHeight;
+
+	if (newAspect > originalAspect)
+		newWidth = newHeight * originalAspect;
+	else if (newAspect < originalAspect)
+		newHeight = newWidth / originalAspect;
+
+	IView.setSize({newWidth, newHeight});
 }
 
 // create shared maps with sounds and categoty, buffers and categoty
@@ -114,7 +139,7 @@ void State::initBuffer() {
 // load sound to buffer
 bool State::loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path _namepath, std::string _typename) {
 	sf::SoundBuffer buffer;
-	auto bf = appfn::PathTool::getPathResourcesDir() += _namepath;
+	auto& bf = appfn::PathTool::getPathResourcesDir() += _namepath;
 	if (!buffer.loadFromFile(bf)) {
 		appfn::Logger::logStatic("Failed to load sound buffer", "State::loadSoundtoBuffer()", logType::LERROR);
 		return false;
@@ -128,8 +153,6 @@ void State::updateKeytime(const float& delta_time) {
 	if (Ikeytime < IkeytimeMax) Ikeytime += delta_time;
 }
 
-
-
 void State::reCaclulateCharacterSize() {
 	auto ws = Iwindow.lock()->getSize();
 	IstateData->sd_characterSize_debug = mmath::calcCharSize(ws.x, ws.y, 200U);
@@ -139,7 +162,7 @@ void State::reCaclulateCharacterSize() {
 }
 
 void State::updateMousePositions(sf::View* view) {
-
+	ImouseOldPosView = ImousePosWindow;
 	ImousePosScreen = sf::Mouse::getPosition();
 	ImousePosWindow = sf::Mouse::getPosition(*Iwindow.lock());
 
@@ -148,8 +171,8 @@ void State::updateMousePositions(sf::View* view) {
 
 	ImousePosView = Iwindow.lock()->mapPixelToCoords(sf::Mouse::getPosition(*Iwindow.lock()));
 	ImousePosGrid = sf::Vector2i(
-		static_cast<int>(ImousePosView.x) / static_cast<int>(IgridSize),
-		static_cast<int>(ImousePosView.y) / static_cast<int>(IgridSize));
+		ImousePosView.x / static_cast<int>(IgridSize),
+		ImousePosView.y / static_cast<int>(IgridSize));
 
 	Iwindow.lock()->setView(Iwindow.lock()->getDefaultView());
 }

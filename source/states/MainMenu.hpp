@@ -8,6 +8,8 @@
 #include "settings.hpp"
 
 #include "../core/cmakever.h"
+#include "../core/math/models fractal/SpiralModel.hpp"
+
 #include "../localisation/helperText.hpp"
 
 #include "../GUI/GUI_Component.hpp"
@@ -20,11 +22,15 @@ private:
 	// Background textures and shapes
 	std::vector<sf::Texture> background_textures;
 	std::vector<sf::RectangleShape> backgrond_shapes;
+	std::unique_ptr<SpiralModel> sModel;
+	ModelData sData;
 
 	// Initialization methods
 	void initButtons();  // Initialize buttons
 	void initBackground(); // Initialize background
 	void initGUI();    // Initialize GUI
+
+	void initBackgroundSpiral();
 	void initSounds();   // Initialize sounds
 
 	// Elements for start

@@ -8,7 +8,7 @@ struct NoiceData {
 	int gridSize = 0;
 	float chanceToSpawnTree = 0.0f;
 	// data 4-gen 
-	int seed = 0;
+	unsigned long long seed = 0;
 	int offsetSeed = 0;
 	unsigned octaves = 0;
 	float amplifire = 0.f;

@@ -1,6 +1,6 @@
 #include "../../core/header.h"
 
-#include "block.hpp"
+#include "map_block.hpp"
 
 BrickBlock::BrickBlock(sf::Vector2i size, sf::Vector2i position, sf::Color color, bool collision, sf::Texture& texture, unsigned short type, bool isAnim, bool isSetTree)
 	: m_sprite(texture, {{0, 0}, {size}}), m_type(type), m_isAnim(isAnim), isSetTree(isSetTree), m_collision(collision), m_size(size) {
@@ -38,8 +38,8 @@ void BrickBlock::updateAnimation() {
 	}
 }
 
-void BrickBlock::render(sf::RenderTarget* target) {
-	target->draw(this->m_sprite);
+void BrickBlock::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	target.draw(this->m_sprite);
 }
 
 uint16_t BrickBlock::currentFrame = 0;

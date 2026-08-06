@@ -53,15 +53,16 @@ public:
 class State {
 private:
 protected:
+	std::string IStateName;
 	// Variables
 	StateData* IstateData;						// Pointer to shared state data
 	std::stack<State*>* Istates;				// Stack of states
 	std::weak_ptr<sf::RenderWindow> Iwindow;	// Weak pointer to the SFML window
-	sf::View view;
+	sf::View IView;
 	sf::RenderTexture IRenderTexture;
 	sf::Sprite IRenderSprite;
 	std::weak_ptr<std::map<std::string, uint16_t>> IKeySupports;			// Map of Binds keys
-	std::map<std::string, std::unique_ptr<gui::GuiComponent>> IGUILayout;	// map of GUI
+	std::vector<std::map<std::string, gui::GuiComponent*>> IGUILayout;	// map of GUI
 
 	// Resources
 	bool Iquit;			// Flag to quit the state
@@ -76,6 +77,8 @@ protected:
 	sf::Vector2f ImousePosView;
 	sf::Vector2i ImousePosGrid;
 
+	sf::Vector2i ImouseOldPosView;
+
 	std::stringstream IstringStream; // Stream for debug string
 	sf::Text Itext;         // Debug text
 
@@ -86,7 +89,10 @@ protected:
 	void initBuffer();					// Initialize buffer
 	void reCaclulateCharacterSize();	// Recalculate character size
 	void initRenderDefines();
+
 	void resetView();
+	void moveView();
+	void zoomView();
 
 	virtual bool loadSoundtoBuffer(gfx::SoundCategory _soundcategory, std::filesystem::path, std::string _typename);
 
