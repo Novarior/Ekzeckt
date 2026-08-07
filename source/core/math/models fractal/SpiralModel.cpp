@@ -2,13 +2,13 @@
 
 #include <random>
 
-SpiralModel::SpiralModel(ModelData* data, sf::Vector2u winSize):mData(data) {
-	mCenter = sf::Vector2f(winSize.x / 2.f, winSize.y / 2.f);
+SpiralModel::SpiralModel(ModelData* data):mData(data) {
 	regenerateSpiral();
 }
 
 SpiralModel::~SpiralModel() {
 	clearModel();
+
 }
 
 void SpiralModel::clearModel() {
@@ -21,7 +21,9 @@ void SpiralModel::clearModel() {
 
 void SpiralModel::regenerateSpiral() {
 	clearModel();
-	mLines = sf::VertexArray(sf::PrimitiveType::Lines, mData->spiralArmCount);
+	int cArm = mData->spiralArms * mData->spiralArmCount;
+
+	mLines = sf::VertexArray(sf::PrimitiveType::Lines, cArm);
 	mPointStar = sf::VertexArray(sf::PrimitiveType::Points, mData->starCount);
 	mStarPlus = sf::VertexArray(sf::PrimitiveType::Lines, mData->starCount); // 2 лінії на + = 4 вертекси
 	mDust = sf::VertexArray(sf::PrimitiveType::Points, mData->DustDensity);
@@ -114,7 +116,9 @@ void SpiralModel::generateSpiralArms() {
 		sf::Color previousColor;
 		bool isFirstPoint = true;
 
-		for (float angle = 0.f; angle < 4 * 3.14159f; angle += angleStep) {
+		float angle = 0.f;
+		for (int i = 0; i <= mData->spiralArmCount; i += 2) {
+			angle += angleStep;
 			sf::Vector2f point = calculateSpiralPoint(angle, mData->CoreRadius);
 
 			float finalAngle = angle + armOffset;
@@ -128,15 +132,13 @@ void SpiralModel::generateSpiralArms() {
 			jitteredPoint.x += jitter * std::cos(finalAngle);
 			jitteredPoint.y += jitter * std::sin(finalAngle);
 
-			jitteredPoint += mCenter;
-
 			// Обраховуємо інтенсивність від центру до краю рукава
 			float distFromCenter = std::sqrt(jitteredPoint.x * jitteredPoint.x + jitteredPoint.y * jitteredPoint.y);
 			float normalizedIntensity = intensityDist(generator) * (1.0f - distFromCenter / mData->galaxyRadius * 0.3f);
 			sf::Color armColor = getArmColor(normalizedIntensity);
 
 			if (!isFirstPoint) {
-				if (lineIndex + 1 >= mData->spiralArmCount) break;
+				if (i + 1 >= mData->spiralArmCount) break;
 
 				mLines[lineIndex].position = previousPoint;
 				mLines[lineIndex].color = previousColor;
@@ -150,9 +152,10 @@ void SpiralModel::generateSpiralArms() {
 			previousPoint = jitteredPoint;
 			previousColor = armColor;
 			isFirstPoint = false;
+
 		}
 
-		if (lineIndex >= mData->spiralArmCount) break;
+		if (lineIndex >= mData->spiralArmCount * mData->spiralArms) break;
 	}
 }
 
@@ -187,12 +190,7 @@ void SpiralModel::generateStars() {
 			starPos.y = radius * std::sin(angle);
 		}
 
-		starPos += mCenter;
-
-		float distFromCenter = std::sqrt(
-			(starPos.x - mCenter.x) * (starPos.x - mCenter.x) +
-			(starPos.y - mCenter.y) * (starPos.y - mCenter.y)
-		);
+		float distFromCenter = std::sqrt((starPos.x * starPos.x) + (starPos.y * starPos.y));
 		uint8_t alpha = static_cast<uint8_t>(alphaDist(generator) * (1.f - distFromCenter / mData->galaxyRadius * 0.5f));
 
 		// Отримуємо колір зірки передавши float
@@ -243,7 +241,6 @@ void SpiralModel::generateDust() {
 		sf::Vector2f dustPos = calculateSpiralPoint(angle, mData->CoreRadius);
 		dustPos.x += offsetDist(generator);
 		dustPos.y += offsetDist(generator);
-		dustPos += mCenter;
 
 		// Різні відтінки коричневого для пилу
 		int dustType = colorVariation(generator);
@@ -286,7 +283,6 @@ void SpiralModel::generateGas() {
 		sf::Vector2f armOffset = calculateSpiralPoint(angle, mData->CoreRadius);
 		gasPos.x += armOffset.x * 0.3f;
 		gasPos.y += armOffset.y * 0.3f;
-		gasPos += mCenter;
 
 		// Різні відтінки синього/фіолетового для газу
 		int gasType = colorVariation(generator);

@@ -113,7 +113,7 @@ void MainMenu::resetGUI() {
 }
 
 void MainMenu::initBackgroundSpiral() {
-	sModel = std::make_unique<SpiralModel>(&sData, Iwindow.lock()->getSize());
+	sModel = std::make_unique<SpiralModel>(&sData);
 }
 
 void MainMenu::initSounds() {

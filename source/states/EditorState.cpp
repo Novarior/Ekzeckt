@@ -104,7 +104,7 @@ void EditorState::initSelectors() { // init static selector in tab menu
 	auto& sData = spiralData;
 
 	staticSelector[cViewGen::vSpiral]["SPR_GALX_RAD"] = new gui::SliderFloat(
-		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, sData.galaxyRadius, 1000.f, 5000.f, "Galaxy Radius: ");
+		tbPos, btnSize, font, IstateData->sd_characterSize_game_small, sData.galaxyRadius, 1'500.f, 150'000.f, "Galaxy Radius: ");
 
 	staticSelectorUInt[cViewGen::vSpiral]["SPR_ARMS"] = new gui::SliderUInt(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(6.f, tbSize.y)),
@@ -132,11 +132,11 @@ void EditorState::initSelectors() { // init static selector in tab menu
 
 	staticSelectorUInt[cViewGen::vSpiral]["SPR_STAR_COUNT"] = new gui::SliderUInt(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(42.f, tbSize.y)),
-		btnSize, font, IstateData->sd_characterSize_game_small, sData.starCount, 1000U, 30000U, "Star Cound: ");
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.starCount, 1000U, 100000U, "Star Cound: ");
 
 	staticSelectorUInt[cViewGen::vSpiral]["SPR_ARM_LEN"] = new gui::SliderUInt(
 		sf::Vector2f(tbPos.x, tbPos.y + mmath::p2pX(48.f, tbSize.y)),
-		btnSize, font, IstateData->sd_characterSize_game_small, sData.spiralArmCount, 1000U, 30000U, "Spiral Arm Length: ");
+		btnSize, font, IstateData->sd_characterSize_game_small, sData.spiralArmCount, 100U, 500U, "Spiral Arm Length: ");
 }
 
 void EditorState::initNoice() {
@@ -159,7 +159,7 @@ void EditorState::initNoice() {
 
 	// init data for noice viewer
 	m_NoiceViewer = new NoiceViewer(m_noiceData);
-	m_NoiceViewer->generateNoice();
+	//m_NoiceViewer->generateNoice();
 }
 
 void EditorState::initMathMoodels() {
@@ -168,7 +168,7 @@ void EditorState::initMathMoodels() {
 }
 
 void EditorState::initSpiralMathModel() {
-	spiralModel = new SpiralModel(&spiralData, Iwindow.lock()->getSize());
+	spiralModel = new SpiralModel(&spiralData);
 }
 
 void EditorState::initLSystemMathModel() {	// init LSystem
@@ -176,7 +176,7 @@ void EditorState::initLSystemMathModel() {	// init LSystem
 	myLS->setRule('d', "qd");
 	myLS->setRule('s', "d[[-qqs]qs]+qqs[+q|]-q|");
 	myLS->setOffsetPos(sf::Vector2f(IstateData->sd_Window.lock()->getSize().x / 2, IstateData->sd_Window.lock()->getSize().y * 0.90));
-	myLS->generate();
+	//myLS->generate();
 }
 
 void EditorState::initDebugText() { // init debug text
@@ -194,6 +194,9 @@ EditorState::EditorState(StateData* statedata): State(statedata) {
 	appfn::Logger::logStatic("Start initilization EditorState", "EditorState::EditorState()");
 
 	strCurrentViewGen = {"vNoice", "vLSystem","vSpiral","vAll"};
+	current_View_Generator = cViewGen::vSpiral; // Current view generator
+	IView.move(-IView.getCenter());
+
 
 	initNoice();
 	initMathMoodels();
@@ -255,7 +258,7 @@ void EditorState::updateDebugTextState(const float& delta_time) {
 			<< "\n\tTreeAxiom\t" << myLS->getAxiomSize();
 		break;
 	case cViewGen::vSpiral:
-		IstringStream << "\nGalaxy Parameters:\n\tSeed: " << spiralData.seed
+		IstringStream << "\nUse[W A S D] to move\nGalaxy Parameters:\n\tSeed: " << spiralData.seed
 			<< "\n\tRadius: " << spiralData.galaxyRadius
 			<< "\n\tCount Stars: " << spiralData.starCount
 			<< "\n\tArms: " << spiralData.spiralArms
@@ -265,6 +268,7 @@ void EditorState::updateDebugTextState(const float& delta_time) {
 			<< "\n\tCore Brightness: " << spiralData.CoreBrightness
 			<< "\n\tDensity Dust: " << spiralData.DustDensity
 			<< "\n\tDensity Gas: " << spiralData.GasDensity;
+
 		break;
 	}
 }
@@ -396,6 +400,11 @@ void EditorState::updateInput(const float& delta_time) {
 	case cViewGen::vLSystem:
 		break;
 	case cViewGen::vSpiral:
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) IView.move({-10.f, 0.f});
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) IView.move({10.f, 0.f});
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) IView.move({0.f, 10.f});
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) IView.move({0.f, -10.f});
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::G) && getKeytime())
 			spiralModel->regenerateSpiral();
 

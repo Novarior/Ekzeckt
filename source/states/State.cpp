@@ -113,11 +113,19 @@ void State::moveView() {
 void State::zoomView() {
 	auto viewsize = IView.getSize();
 	auto offset = float(ImouseOldPosView.x - ImousePosWindow.x);
-	float newWidth = viewsize.x - offset;
-	float newHeight = viewsize.y - offset;
 
-	newWidth = std::max(newWidth, 320.f);
-	newHeight = std::max(newHeight, 180.f);
+	// Logarithmic zoom factor
+	// log(1 + |offset|) gives smoother, non-linear scaling
+	float zoomFactor = 1.f + std::log(1.f + std::abs(offset) * 0.005f);
+
+	// Apply direction (zoom in/out)
+	if (offset < 0) zoomFactor = 1.f / zoomFactor;
+
+	float newWidth = viewsize.x / zoomFactor;
+	float newHeight = viewsize.y / zoomFactor;
+
+	newWidth = std::min(1'000'000.f, std::max(newWidth, 320.f));
+	newHeight = std::min(1'000'000.f, std::max(newHeight, 180.f));
 
 	float originalAspect = viewsize.x / viewsize.y;
 	float newAspect = newWidth / newHeight;

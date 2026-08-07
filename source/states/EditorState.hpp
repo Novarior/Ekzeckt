@@ -47,7 +47,7 @@ private:
 	std::vector<std::map<std::string, gui::SliderUInt*>> staticSelectorUInt;
 	gui::Selector* selector; // Current selector
 
-	int current_View_Generator = cViewGen::vSpiral; // Current view generator
+	int current_View_Generator; // Current view generator
 
 	// Initialization functions
 	void initGUI();			// init all GUI layout
